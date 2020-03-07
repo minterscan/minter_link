@@ -1,0 +1,30 @@
+.cp.wallets-switcher {
+  display: flex;
+  justify-content: space-between;
+
+  .arrow {
+    @extend .noselect;
+    @extend .flex-center;
+
+    width: 3rem;
+    color: #8e8e8e;
+    cursor: pointer;
+  }
+
+  .arrow:hover {
+    animation-duration: .85s;
+    animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
+  }
+
+  .arrow.prev:hover {
+    animation-name: bounce-left;
+  }
+  .arrow.next:hover {
+    animation-name: bounce-right;
+  }
+
+  .item {
+    @extend .flex-center;
+    width: 15rem;
+  }
+}

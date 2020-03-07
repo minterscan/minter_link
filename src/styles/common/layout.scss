@@ -1,0 +1,33 @@
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  height: 100%;
+  background: #f0f2f5 !important;
+}
+
+.app.ant-layout {
+  height: 0;
+  min-width: 30rem;
+  min-height: 100vh;
+  background: #fff;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.app.popup {
+  height: 600px;
+}
+
+.app.popup {
+  width: 35rem;
+}
+
+.app.tab {
+  max-width: 50rem;
+}

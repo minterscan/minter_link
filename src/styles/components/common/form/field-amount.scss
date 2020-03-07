@@ -1,0 +1,15 @@
+.cp.field-amount {
+  flex-shrink: 0;
+  position: relative;
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    right: .7rem;
+    transform: translateY(-50%);
+    padding: .5rem;
+    cursor: pointer;
+    background: #fff;
+    padding-right: 1rem;
+  }
+}

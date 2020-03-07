@@ -1,0 +1,86 @@
+.view.notification {
+  @extend .modal-form;
+
+  .action-send {
+    height: 100%;
+    margin-top: -1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .hash {
+    flex-grow: 1;
+  }
+
+  .wallet {
+    color: #fff;
+    padding: 1.5rem;
+    margin: 0 -1.5rem;
+    background-color: var(--color);
+    text-align: center;
+
+    .address {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .amount,
+  .wallet {
+    margin-bottom: 12px;
+  }
+
+  .payload,
+  .merchant-address {
+    margin-bottom: 24px;
+  }
+
+  .merchant-info {
+    margin-bottom: 6px;
+  }
+
+  .ant-alert {
+    padding-left: 50px;
+  }
+
+  .amount {
+    .ant-alert-icon {
+      top: 14px;
+    }
+
+    .ant-alert-message {
+      display: flex;
+      align-items: center;
+
+      .value {
+        font-size: 1.5rem;
+      }
+
+      .not-enough {
+        color: #888888;
+        margin: 0 0 0 1rem;
+        flex-grow: 1;
+        text-align: right;
+        line-height: 1;
+      }
+    }
+  }
+
+  .ant-alert-icon {
+    top: 6px;
+    margin: 0 1rem 0 0;
+
+    svg {
+      display: block;
+    }
+  }
+
+  .buttons {
+    @extend .flex-center;
+
+    button:last-child {
+      margin-right: 0;
+    }
+  }
+}

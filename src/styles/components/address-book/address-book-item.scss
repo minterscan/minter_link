@@ -1,0 +1,29 @@
+.cp .address-book-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .5rem;
+  border-bottom: 1px solid #d9d9d9;
+
+  .name-address {
+    flex-grow: 1;
+
+    .label {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+
+  .menu {
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
+
+    button {
+      margin: 0 0 0 .5rem;
+    }
+  }
+
+  &:hover .menu {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,10 @@
+.view.address-book {
+  height: 0;
+  flex-grow: 1;
+
+  .empty {
+    @extend .flex-center;
+    font-size: 1rem;
+    height: 100%;
+  }
+}

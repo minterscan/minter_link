@@ -1,0 +1,16 @@
+button.ant-btn {
+  line-height: 30px;
+
+  i svg {
+    display: block;
+  }
+}
+
+button.ant-btn.ant-btn-lg {
+  line-height: 40px;
+
+  span {
+    line-height: 38px;
+    vertical-align: top;
+  }
+}

@@ -1,0 +1,15 @@
+.cp.convert-estimate {
+  padding: 0 0 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  span {
+    font-weight: bold;
+  }
+
+  .coin,
+  button {
+    margin: 0 0 0 .5rem;
+  }
+}

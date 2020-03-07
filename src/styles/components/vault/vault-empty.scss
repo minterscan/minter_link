@@ -1,0 +1,12 @@
+.cp.vault-empty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  button {
+    width: 12rem;
+    margin: 0 0 1rem 0;
+  }
+}

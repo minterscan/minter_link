@@ -1,0 +1,18 @@
+@import "vault-import";
+@import "vault-export";
+@import "vault-new-wallet";
+@import "vault-import-wallet";
+
+.app.route.vault.cp.loading {
+  transition: opacity .5s ease-in-out;
+}
+
+.app.route.vault.loaded:after {
+  opacity: 0;
+}
+
+.view.vault {
+  @extend .view;
+
+  height: 100%;
+}

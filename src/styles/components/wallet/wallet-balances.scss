@@ -1,0 +1,14 @@
+.cp.wallet-balances {
+  @extend .wallet-data;
+  font-size: 1.25rem;
+  margin: -2rem 0 0 0;
+
+  .amount {
+    width: 10rem;
+    text-align: right;
+  }
+
+  .coin {
+    flex-grow: 1;
+  }
+}

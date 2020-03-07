@@ -1,0 +1,81 @@
+.view.home {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  transition: opacity .13s ease-in-out;
+
+  .logo {
+    margin: 0 0 4rem 0;
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin: 0;
+      transition: all .2s ease-in-out;
+    }
+  }
+
+  .wave {
+    position: absolute;
+    bottom: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.logged-in {
+    opacity: 0;
+  }
+
+  form {
+    width: 20rem;
+    transition: opacity .1s ease-in-out;
+
+    input {
+      display: block;
+    }
+
+    button {
+      font-size: 16px;
+    }
+  }
+
+  button {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .import {
+    color: #fff;
+    bottom: 1rem;
+    position: absolute;
+    z-index: 2;
+    transition: opacity .1s ease-in-out;
+  }
+}
+
+.app.popup {
+  .view.home {
+    .logo {
+      margin-bottom: 2rem;
+
+      .fingerprint {
+        width: 160px;
+        height: 160px;
+      }
+
+      .bip {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .wave {
+      bottom: -2rem;
+    }
+
+    .import {
+      bottom: .9rem;
+    }
+  }
+}

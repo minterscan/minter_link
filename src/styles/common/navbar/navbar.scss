@@ -1,0 +1,58 @@
+.header.ant-layout-header {
+  padding: 1.5rem;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .logo {
+    height: 100%;
+    float: left;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .ant-menu {
+    font-size: 1rem;
+    border-bottom: none;
+
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+  
+  .start {
+    display: flex;
+    align-items: center;
+  }
+
+  .center {
+    @extend .flex-center;
+    font-size: 1.25rem;
+    flex-shrink: 1;
+    flex-grow: 1;
+  }
+
+  .end {
+    flex-shrink: 0;
+
+    .ant-btn {
+      margin: 0 0 0 .5rem;
+    }
+  }
+}
+
+.app.notification {
+  .header.ant-layout-header {
+    .start,
+    .end {
+      display: none;
+    }
+  }
+}

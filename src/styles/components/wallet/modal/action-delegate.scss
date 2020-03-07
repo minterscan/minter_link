@@ -1,0 +1,10 @@
+.cp.action-delegate {
+  @extend .action;
+
+  .cp.field-amount {
+    .ant-input-number {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+}

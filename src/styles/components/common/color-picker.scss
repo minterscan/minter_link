@@ -1,0 +1,20 @@
+.cp.color-picker {
+  width: 100%;
+  max-width: 40rem;
+  color: #fff;
+  margin: 0;
+  padding: 6px 6px calc(6px - .1rem) 6px;
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+
+  li {
+    @extend .flex-center;
+    cursor: pointer;
+    height: 2rem;
+    width: calc(10% - .1rem);
+    margin: 0 .1rem .1rem 0;
+  }
+}

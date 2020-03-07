@@ -1,0 +1,48 @@
+.cp.vault-wallet {
+  height: 100%;
+  display: flex;
+  z-index: 2;
+  position: relative;
+  flex-direction: column;
+
+  .slick-arrow {
+    font-size: 2rem;
+  }
+
+  .ant-card-actions {
+    @extend .flex-center;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3rem;
+    opacity: 0;
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-between;
+    border-bottom: 0;
+    border-left: 1px solid #e8e8e8;
+    transition: opacity .2s ease-in-out;
+
+    li {
+      @extend .flex-center;
+
+      flex-grow: 1;
+      height: 100%;
+      width: 100% !important;
+      float: none;
+      margin: 0;
+
+      span {
+        @extend .flex-center;
+
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  &:hover .ant-card-actions {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,100 @@
+.action {
+  .ant-form {
+    @extend .tx-form;
+  }
+
+  .insufficient-funds {
+    position: absolute;
+    color: rgb(172, 27, 27);
+    bottom: -2.2rem;
+    left: 1.5rem;
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .ant-select,
+  .ant-input-number {
+    width: 100%;
+  }
+
+  .ant-form-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .ant-switch {
+    margin: 0 .5rem 0 0;
+  }
+
+  .hash {
+    @extend .flex-center;
+    height: 12rem;
+
+    div {
+      text-align: center;
+    }
+
+    svg {
+      margin: 0 0 1rem 0;
+    }
+
+    a {
+      display: block;
+      font-size: 1rem;
+    }
+  }
+
+  .ant-form-item-control::after {
+    display: none;
+  }
+
+  .select-form-item {
+    margin-bottom: .75rem;
+  }
+}
+
+.form-dropdown {
+  .name {
+    font-weight: bold;
+  }
+
+  .public-key {
+    font-size: .75rem;
+  }
+}
+
+.form-select {
+  .ant-select-selection {
+    border-top-width: 1 !important;
+  }
+
+  .ant-select-selection--single {
+    min-height: 38px;
+    height: auto !important;
+  }
+
+  .ant-select-selection__rendered {
+    min-height: 38px;
+
+    &:after {
+      content: '';
+      clear: both;
+      font-size: 0;
+      line-height: 0;
+      display: table;
+    }
+  }
+
+  .ant-select-selection-selected-value {
+    .name {
+      font-weight: bold;
+    }
+
+    .public-key {
+      font-size: .75rem;
+      line-height: 1;
+      margin-bottom: .75rem;
+    }
+  }
+}

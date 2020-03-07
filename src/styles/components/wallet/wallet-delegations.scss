@@ -1,0 +1,19 @@
+.cp.delegations {
+  @extend .wallet-data;
+  font-size: 1.25rem;
+  margin: -2rem 0 0 0;
+
+  .pub-key {
+    width: 10rem;
+  }
+
+  .value {
+    flex-grow: 1;
+    text-align: right;
+  }
+
+  .coin {
+    width: 12rem;
+    text-align: right;
+  }
+}

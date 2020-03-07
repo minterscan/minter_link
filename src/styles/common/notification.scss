@@ -1,0 +1,10 @@
+.app.notification {
+  display: block;
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+
+  .view.notification {
+    min-height: calc(100vh - 64px);
+  }
+}

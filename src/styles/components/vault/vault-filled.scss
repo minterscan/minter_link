@@ -1,0 +1,15 @@
+.cp.vault-filled {
+  height: 100%;
+  position: relative;
+
+  .color {
+    display: block;
+    z-index: 1;
+    top: -1.5rem;
+    left: -1.5rem;
+    right: -1.5rem;
+    height: 10rem;
+    position: absolute;
+    background-color: var(--color);
+  }
+}

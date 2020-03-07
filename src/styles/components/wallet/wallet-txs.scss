@@ -1,0 +1,48 @@
+.cp.wallet-txs {
+  @extend .wallet-data;
+  margin: -2rem 0 0 0;
+
+  .head {
+    .ant-pagination {
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  .hash-from-payload {
+    width: 11rem;
+    display: flex;
+    align-items: center;
+
+    .hash-from {
+      width: 8rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    svg {
+      cursor: pointer;
+      margin: 0 0 0 1rem;
+      font-size: 1.5rem;
+      transition: transform 0.2s ;
+      outline: none;
+      position: relative;
+    }
+
+    svg:hover {
+      animation-duration: .6s;
+      animation-name: bounce-top;
+      animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
+    }
+  }
+
+  .type-amount {
+    flex-grow: 1;
+    text-align: right;
+  }
+
+  .amount {
+    font-size: 1.25rem;
+    margin: 0 0 0 1rem;
+  }
+}

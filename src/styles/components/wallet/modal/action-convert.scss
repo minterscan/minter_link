@@ -1,0 +1,10 @@
+.cp.action-convert {
+  @extend .action;
+
+  .mode-menu {
+    display: inline-flex;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+  }
+}

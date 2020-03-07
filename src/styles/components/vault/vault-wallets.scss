@@ -1,0 +1,48 @@
+.cp.vault-wallets {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  list-style: none;
+
+  .ant-carousel,
+  .ant-carousel .slick-slider,
+  .ant-carousel .slick-list, {
+    height: 100%;
+  }
+
+  .ant-carousel .slick-slide {
+    height: 100%;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .ant-carousel .custom-slick-arrow {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    top: 1rem;
+    width: 3rem;
+    margin: 0;
+    font-size: 25px;
+    color: #1790ff;
+  }
+
+  .ant-carousel .slick-prev {
+    left: 0;
+  }
+
+  .ant-carousel .slick-next {
+    right: 0;
+  }
+
+  .ant-carousel .custom-slick-arrow:before {
+    display: none;
+  }
+  .ant-carousel .custom-slick-arrow:hover {
+    opacity: 0.5;
+  }
+
+  .ant-carousel .slick-slide h3 {
+    color: #fff;
+  }
+}
