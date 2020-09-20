@@ -34,11 +34,11 @@ export default class WalletSelect extends Mixins(Base) {
   }
 
   @Watch('defaultValue', { immediate: true })
-  onDefaultValueChange (value: string) {
+  onDefaultValueChange (value: string): void {
     this.change(value)
   }
 
-  filterOption (input: string, option: VNode) {
+  filterOption (input: string, option: VNode): boolean {
     if (!option.componentOptions) { return false }
     if (!option.componentOptions.children) { return false }
     if (!option.componentOptions.children.length) { return false }

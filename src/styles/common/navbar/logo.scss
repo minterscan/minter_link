@@ -1,14 +1,4 @@
 .cp.logo {
   position: relative;
-
-  .fingerprint {
-    animation: rotate 20s linear infinite;
-  }
-
-  .bip {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+  cursor: pointer;
 }

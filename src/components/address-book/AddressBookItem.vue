@@ -7,11 +7,11 @@
       </div>
     </div>
     <div class="menu">
-      <clipboard-button :text="item.address" shape="circle">
+      <clipboard-button :text="item.address" shape="circle" size="small">
         <a-icon type="copy" slot="content" />
       </clipboard-button>
-      <a-button shape="circle" icon="setting" @click="editContact()" />
-      <a-button shape="circle" icon="close" @click="deleteContact()" />
+      <a-button shape="circle" size="small" icon="setting" @click="editContact()" />
+      <a-button shape="circle" size="small" icon="close" @click="deleteContact()" />
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@ import AddressLink from '@/components/common/address/AddressLink.vue'
 import ClipboardButton from '@/components/common/ClipboardButton.vue'
 
 @Component({
+  name: 'AddressBookItem',
   components: { AddressLink, ClipboardButton }
 })
 export default class Item extends Mixins(Base) {
@@ -49,7 +50,7 @@ export default class Item extends Mixins(Base) {
           await this.postman.addressBookItemDelete(this.item.address)
           this.addressBook.commitItemDelete(this.item.address)
         } catch (e) {
-          this.ui.commitError(e.message)
+          this.ui.commitError(e)
         }
       }
     })

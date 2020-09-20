@@ -11,6 +11,8 @@ export default class Input extends Vue {
   }
 
   protected focus () {
+    if (!this.$refs.input) return
+
     const input = this.$refs.input as HTMLInputElement
 
     input.focus()

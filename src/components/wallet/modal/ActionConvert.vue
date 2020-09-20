@@ -6,14 +6,18 @@
     class="cp action-convert"
     @ok="hash ? reset() : submit()"
     :okText="hash ? 'Convert again' : 'Convert'"
-    :okButtonProps="{ props: { disabled: loading || invalid } }"
+    :okButtonProps="{ props: { disabled: loading || (!hash && invalid) } }"
     @cancel="close()"
     cancelText="Close"
     :cancelButtonProps="{ props: { disabled: loading } }"
     :confirmLoading="loading"
   >
+    <!-- Success -->
     <tx-success v-if="hash" :hash="hash" />
+
+    <!-- Content -->
     <template v-else>
+      <!-- Convert mode switcher -->
       <div class="mode-menu">
         <a-radio-group v-model="mode">
           <a-radio-button
@@ -42,8 +46,8 @@ import TxSuccess from '@/components/common/tx/TxSuccess.vue'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import BuyCoinForm from '@/components/wallet/forms/BuyCoinForm.vue'
 import SellCoinForm from '@/components/wallet/forms/SellCoinForm.vue'
-import SellAllCoinForm from '@/components/wallet/forms/SellAllCoinForm.vue'
 import { MinterWalletBalance, UIWalletConvertMode } from '@/model/Wallet'
+import SellAllCoinForm from '@/components/wallet/forms/SellAllCoinForm.vue'
 
 @Component({
   name: 'ActionConvert',
@@ -80,17 +84,17 @@ export default class ActionConvert extends Mixins(Base) {
   }
 
   @Watch('mode')
-  onModeChange () {
+  onModeChange (): void {
     this.invalid = true
   }
 
   @Watch('ui.error')
-  onUiErrorChange () {
+  onUiErrorChange (): void {
     this.loading = false
   }
 
   @Watch('state.wallet.balances', { immediate: true })
-  onWalletBalancesChange (balances: MinterWalletBalance[]) {
+  onWalletBalancesChange (balances: MinterWalletBalance[]): void {
     this.coins = []
 
     balances.map((item) => {
@@ -125,7 +129,6 @@ export default class ActionConvert extends Mixins(Base) {
   }
 
   submit (): void {
-    this.loading = true
     this.$root.$emit(AppEvent.FormSubmit)
   }
 

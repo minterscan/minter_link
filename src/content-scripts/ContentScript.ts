@@ -1,47 +1,114 @@
-import { APP_PORT } from '@/model/App'
 import pckg from './../../package.json'
-import postman from '@/services/Postman'
-import { MinterLinkEvent } from 'minter-connect'
+import Channel from '@/services/Channel'
 import { browser } from 'webextension-polyfill-ts'
-import { LetterSubject, Letter } from '@/model/Letter'
+import { PostmanService } from '@/services/Postman'
+import { Letter, LetterSubject, ContentScriptLetterSubject } from '@/model/Letter'
+import { ConnectRequest, Merchant, MinterLinkEvent, PaymentRequest, SignRequest } from 'minter-connect'
 
 export default class ContentScript {
+  postman: PostmanService
+  channel: Channel | null = null
+  status = false
+  wallet = ''
+  readonly domain = location.hostname
+  readonly handlers: {
+    [key: string]: Function;
+  } = {
+    [ContentScriptLetterSubject.EventVaultStatusChange]: this.handleStatus.bind(this),
+    [ContentScriptLetterSubject.EventVaultActiveWalletChange]: this.handleActiveWallet.bind(this),
+    [LetterSubject.ConnectAccept]: this.dispatchConnectAccept.bind(this),
+    [LetterSubject.ConnectReject]: this.dispatchConnectReject.bind(this),
+    [LetterSubject.PaymentAccept]: this.dispatchPaymentAccept.bind(this),
+    [LetterSubject.PaymentReject]: this.dispatchPaymentReject.bind(this),
+    [LetterSubject.SignAccept]: this.dispatchSignAccept.bind(this),
+    [LetterSubject.SignReject]: this.dispatchSignReject.bind(this)
+  }
+
   constructor () {
-    this.subscribe()
+    this.postman = new PostmanService()
+    this.connect()
+  }
+
+  /**
+   * Connect to background port channel
+   */
+  connect () {
+    this.channel = new Channel(this.domain)
+
+    this.channel.port.onDisconnect.addListener(this.portReconnect)
+  }
+
+  /**
+   * Auto reconnect
+   */
+  portReconnect () {
+    // Reset port
+    this.channel = null
+    // Attempt to reconnect after 1 second
+    setTimeout(this.connect, 1000 * 1)
   }
 
   /**
    * Subscribe on events
    */
   subscribe () {
-    // Wait for tab activation before init
+    if (!this.channel) return
+
+    // Listen for DOM events from tab
+    document.addEventListener(MinterLinkEvent.SignRequest, this.handleSignRequest.bind(this))
+    document.addEventListener(MinterLinkEvent.ConnectRequest, this.handleConnectRequest.bind(this))
+    document.addEventListener(MinterLinkEvent.PaymentRequest, this.handlePaymentRequest.bind(this))
+
+    this.channel.port.onMessage.addListener((letter: Letter) => {
+      if (letter.subject === ContentScriptLetterSubject.ResponseVaultStatus) {
+        this.status = letter.body
+        this.handleStatus(this.status)
+      }
+      if (letter.subject === ContentScriptLetterSubject.ResponseVaultActiveWallet) {
+        this.wallet = letter.body
+        this.handleActiveWallet(this.wallet)
+      }
+    })
+
+    browser.runtime.onMessage.addListener((message: Letter) => {
+      try {
+        return this.handlers[message.subject](message.body)
+      } catch (e) {
+        throw new Error(`Unknown message type: ${message.subject}`)
+      }
+    })
+
+    // Fetch actual data on tab activation
+    window.addEventListener('focus', async () => {
+      await this.init()
+    })
+
+    // Same on window Alt+Tab
     document.addEventListener('visibilitychange', async () => {
       if (document.visibilityState) {
         await this.init()
       }
     })
+  }
 
-    // Listen for Payment request from tab
-    document.addEventListener(MinterLinkEvent.PaymentRequest, this.handlePaymentRequest)
-
-    // Listen for Postman messages on browser port open
-    browser.runtime.onConnect.addListener(port => {
-      if (port.name === APP_PORT) {
-        port.onMessage.addListener(async (message: Letter) => {
-          if (message.subject === LetterSubject.GetVaultStatus) {
-            await this.dispatchIsUnlocked()
-          }
-
-          if (message.subject === LetterSubject.PaymentReject) {
-            return this.dispatchPaymentReject()
-          }
-
-          if (message.subject === LetterSubject.PaymentAccept) {
-            return this.dispatchPaymentAccept()
-          }
-        })
-      }
-    })
+  /**
+   * Prepare request for Minter Link
+   * Pass Merchant info & data
+   *
+   * @param event
+   */
+  prepareRequest (event: Event): {
+    merchant: Merchant;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+  } {
+    return {
+      merchant: {
+        name: (event as CustomEvent).detail.merchant.name,
+        url: this.domain
+      },
+      data: (event as CustomEvent).detail.data
+    }
   }
 
   /**
@@ -50,11 +117,12 @@ export default class ContentScript {
   async init () {
     this.dispatchVersion()
     this.dispatchIsInstalled()
-    await this.dispatchIsUnlocked()
+    this.dispatchStatus()
+    this.dispatchActiveWallet()
   }
 
   /**
-   * Send extension version
+   * Dispatch extension version to active tab
    */
   dispatchVersion (): void {
     const event = new CustomEvent(MinterLinkEvent.Version, { detail: pckg.version })
@@ -63,7 +131,7 @@ export default class ContentScript {
   }
 
   /**
-   * Send is extension installed
+   * Dispatch is extension installed to active tab
    */
   dispatchIsInstalled (): void {
     const event = new CustomEvent(MinterLinkEvent.IsInstalled, { detail: true })
@@ -74,11 +142,37 @@ export default class ContentScript {
   /**
    * Send extension status
    */
-  async dispatchIsUnlocked (): Promise<void> {
-    const message = await postman.getVaultStatus()
-    const event = new CustomEvent(MinterLinkEvent.IsUnlocked, { detail: message })
+  dispatchStatus (): void {
+    if (this.channel) this.channel.requestVaultStatus()
+  }
+
+  /**
+   * Send active Wallet to website
+   */
+  dispatchActiveWallet (): void {
+    if (this.channel) this.channel.requestActiveWallet()
+  }
+
+  /**
+   * Dispatch Connect rejected event to tab
+   */
+  async dispatchConnectReject (): Promise<boolean> {
+    const event = new CustomEvent(MinterLinkEvent.ConnectReject)
 
     document.dispatchEvent(event)
+
+    return false
+  }
+
+  /**
+   * Dispatch Connect accepted event to tab
+   */
+  async dispatchConnectAccept (): Promise<boolean> {
+    const event = new CustomEvent(MinterLinkEvent.ConnectAccept, { detail: true })
+
+    document.dispatchEvent(event)
+
+    return true
   }
 
   /**
@@ -95,8 +189,8 @@ export default class ContentScript {
   /**
    * Dispatch Payment accepted event to tab
    */
-  async dispatchPaymentAccept (): Promise<boolean> {
-    const event = new CustomEvent(MinterLinkEvent.PaymentAccept)
+  async dispatchPaymentAccept (hash: string): Promise<boolean> {
+    const event = new CustomEvent(MinterLinkEvent.PaymentAccept, { detail: hash })
 
     document.dispatchEvent(event)
 
@@ -104,11 +198,72 @@ export default class ContentScript {
   }
 
   /**
-   * Dispatch Payment request to Extension background script
+   * Dispatch Payment rejected event to tab
+   */
+  async dispatchSignReject (): Promise<boolean> {
+    const event = new CustomEvent(MinterLinkEvent.SignReject)
+
+    document.dispatchEvent(event)
+
+    return false
+  }
+
+  /**
+   * Dispatch Payment accepted event to tab
+   */
+  async dispatchSignAccept (signedMessage: string): Promise<boolean> {
+    const event = new CustomEvent(MinterLinkEvent.SignAccept, { detail: signedMessage })
+
+    document.dispatchEvent(event)
+
+    return true
+  }
+
+  /**
+   * Send extension status
+   */
+  handleStatus (status: boolean): void {
+    const event = new CustomEvent(MinterLinkEvent.IsUnlocked, { detail: status })
+    document.dispatchEvent(event)
+  }
+
+  /**
+   * Send active Wallet to website (if website connected)
+   */
+  handleActiveWallet (wallet: string): void {
+    document.dispatchEvent(new CustomEvent(MinterLinkEvent.Wallet, { detail: wallet }))
+  }
+
+  /**
+   * Dispatch Payment request to background script
    *
    * @param event
    */
   async handlePaymentRequest (event: Event) {
-    await postman.paymentRequest((event as CustomEvent).detail)
+    const request: PaymentRequest = this.prepareRequest(event)
+
+    return this.postman.paymentRequest(request)
+  }
+
+  /**
+   * Dispatch Connect request to background script
+   *
+   * @param event
+   */
+  async handleConnectRequest (event: Event) {
+    const request: ConnectRequest = this.prepareRequest(event)
+
+    return this.postman.connectRequest(request)
+  }
+
+  /**
+   * Dispatch Sign request to background script
+   *
+   * @param event
+   */
+  async handleSignRequest (event: Event) {
+    const request: SignRequest = this.prepareRequest(event)
+
+    return this.postman.signRequest(request)
   }
 }

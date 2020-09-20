@@ -1,18 +1,35 @@
 <template >
   <a-modal
     centered
-    @ok="submit"
-    @cancel="close"
     okText="Save changes"
     cancelText="Close"
+    @cancel="close()"
     :visible="visible"
     :confirmLoading="loading"
-    :title="state.walletLabel | short"
+    :destroyOnClose="true"
+    title="Wallet settings  "
+    wrapClassName="cp wallet-edit"
   >
     <!-- Loading Indicator -->
     <loading v-show="loading" />
 
-    <wallet-meta-form :changeColor="changeColor" :changeLabel="changeLabel" />
+    <!-- Form -->
+    <wallet-meta-form :changeIcon="changeIcon" :changeLabel="changeLabel" />
+
+    <!-- Buttons -->
+    <template slot="footer">
+      <a-button ghost type="danger" @click="deleteWallet()">
+        Delete
+      </a-button>
+      <div>
+        <a-button key="back" @click="close()">
+          Close
+        </a-button>
+        <a-button key="submit" type="primary" :loading="loading" @click="submit()">
+          Save changes
+        </a-button>
+      </div>
+    </template>
   </a-modal>
 </template>
 
@@ -25,8 +42,6 @@ import Loading from '@/components/common/Loading.vue'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import WalletMetaForm from '@/components/wallet/forms/WalletMetaForm.vue'
 
-const AUTO_CLOSE_TIMEOUT = 500
-
 @Component({
   name: 'WalletEdit',
   components: { Loading, WalletMetaForm }
@@ -38,7 +53,7 @@ export default class WalletEdit extends Mixins(Base, MetaForm) {
   @Watch('state.wallet')
   onWalletChange (wallet: MinterWallet): void {
     this.label = wallet.meta.label
-    this.color = wallet.meta.color
+    this.icon = wallet.meta.icon
   }
 
   mounted (): void {
@@ -51,27 +66,59 @@ export default class WalletEdit extends Mixins(Base, MetaForm) {
     })
   }
 
+  deleteWallet (): void {
+    this.$confirm({
+      parentContext: this,
+      title: 'Are you sure want to delete this wallet?',
+      content: 'It can not be undone!',
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: async () => {
+        try {
+          if (!this.state.vault) { return }
+
+          const activeWallet = await this.postman.deleteWallet()
+
+          // Switch active wallet
+          this.state.commitVaultWalletDelete(this.state.vault.activeWallet)
+          this.state.commitVaultActiveWallet(activeWallet)
+
+          // Close modal window
+          this.visible = false
+        } catch (e) {
+          this.ui.commitError(e)
+        }
+      }
+    })
+  }
+
   async submit (): Promise<void> {
     try {
       this.loading = true
 
-      await this.postman.setVaultActiveWalletMeta({
-        label: this.label,
-        color: this.color
+      await this.postman.setVaultWalletMeta({
+        address: this.state.vault.activeWallet,
+        meta: {
+          label: this.label,
+          icon: this.icon
+        }
       })
 
       setTimeout(() => {
-        this.close()
         this.state.commitVaultWalletLabel(this.label)
-        this.state.commitVaultWalletColor(this.color)
-      }, AUTO_CLOSE_TIMEOUT)
+        this.state.commitVaultWalletIcon(this.icon)
+        this.close()
+      }, this.config.const.autoRedirectTimeout)
     } catch (e) {
       this.loading = false
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
     }
   }
 
   close (): void {
+    this.label = ''
+    this.icon = ''
     this.visible = false
   }
 }

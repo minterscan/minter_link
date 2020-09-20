@@ -2,14 +2,25 @@
   height: 100%;
   position: relative;
 
-  .color {
+  // Colors
+  $bg-color: #fff;
+  // $bg-color: var(--color);
+  $dot-color: rgb(0, 0, 0);
+
+  // Dimensions
+  $dot-size: 2px;
+  $dot-space: 22px;
+
+  &:before {
+    @extend .background-striped;
+    
+    content: '';
     display: block;
     z-index: 1;
     top: -1.5rem;
     left: -1.5rem;
     right: -1.5rem;
-    height: 10rem;
+    height: 9.5rem;
     position: absolute;
-    background-color: var(--color);
   }
 }

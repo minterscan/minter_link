@@ -28,22 +28,37 @@
         />
       </a-form-item>
 
-      <!-- Payload Switcher -->
-      <a-form-item>
-        <a-switch id="with-payload" v-model="withPayload" />
-        <label for="with-payload" title="Payload">Payload</label>
+      <!-- Advanced -->
+      <a-form-item class="advanced">
+        <a-switch id="advanced" v-model="advanced" />
+        <label for="advanced">Advanced Mode</label>
+      </a-form-item >
+
+      <!-- Gas Coin -->
+      <a-form-item class="fee-coin" v-if="advanced">
+          <label>Coin to pay fee:</label>
+          <wallet-coin-select
+          :coins="walletCoins"
+          :change="changeGasCoin"
+          placeholder="Coin to pay fee"
+        />
       </a-form-item>
 
-      <!-- Payload -->
-      <a-form-item v-if="withPayload">
+      <!-- Payload Input -->
+      <a-form-item v-if="advanced">
         <a-textarea
           v-model="payload"
           :disabled="loading"
           placeholder="Message"
-          :autosize="{ minRows: 3, maxRows: 6 }"
+          :autoSize="{ minRows: 3, maxRows: 6 }"
         />
       </a-form-item>
     </a-form>
+
+    <!-- Low balance indicatoЩr -->
+    <template v-if="this.coinToBuy !== ''">
+      <div class="insufficient-funds" v-if="incufficientFeeFunds">Insufficient funds for fee</div>
+    </template>
   </div>
 </template>
 
@@ -81,7 +96,7 @@ export default class SellAllCoinForm extends Mixins(Base, TxForm) {
   }
 
   @Watch('coinToSell', { immediate: true })
-  onCoinToSellChange (coin: string) {
+  onCoinToSellChange (coin: string): void {
     if (!this.state) return
     if (!this.state.wallet) return
     if (!this.state.wallet.balances) return
@@ -99,27 +114,30 @@ export default class SellAllCoinForm extends Mixins(Base, TxForm) {
     this.coinToBuy = coin
   }
 
-  reset (): void {
+  resetForm (): void {
     this.coinToSell = ''
     this.coinToBuy = ''
     this.payload = ''
     this.loading = false
+    this.advanced = false
   }
 
   async submit (): Promise<void> {
     try {
       this.loading = true
+
       const response = await this.postman.txSellAll({
+        gasCoin: this.gasCoin,
         coinToBuy: this.coinToBuy,
         coinToSell: this.coinToSell,
         payload: this.payload
       })
-      const hash = response.data.data.hash
-      this.$root.$emit(AppEvent.TxHash, hash)
-      this.loading = false
+
+      this.resetForm()
+      this.$root.$emit(AppEvent.TxHash, response.data.data.hash)
     } catch (e) {
-      this.reset()
-      this.ui.commitError(e.message)
+      this.loading = false
+      this.ui.commitError(e)
     }
   }
 }

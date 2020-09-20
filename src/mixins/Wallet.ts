@@ -13,20 +13,23 @@ export default class Wallet extends Mixins(Base) {
     this.subscribe(address)
   }
 
+  // Fetch wallet balances from explorer
   async fetch (address: string) {
     try {
       const balances = await this.postman.getAddressBalances(address)
 
       this.state.commitVaultWalletBalance({ address: address, balances })
     } catch (e) {
-      this.ui.commitError('Can not load balances')
+      this.ui.commitError(e)
     }
   }
 
+  // Subscribe to wallet balances updates from explorer WS
   subscribe (address: string) {
     this.ws.subscribeToWallet(address, this.onBalanceUpdate)
   }
 
+  // Unsubscribe from explorer WS
   unsubscribe (address: string) {
     if (address) this.ws.unsubscribeFromWallet(address)
   }

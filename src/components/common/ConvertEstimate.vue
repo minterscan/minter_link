@@ -49,11 +49,11 @@ export default class ConvertEstimate extends Mixins(Base) {
   @Watch('coinToSell')
   @Watch('valueToBuy')
   @Watch('valueToSell')
-  onInputChange () {
+  onInputChange (): void {
     this.reset()
   }
 
-  estimate () {
+  estimate (): void {
     if (this.mode === UIWalletConvertMode.Buy) { this.estimateBuy() }
     if (this.mode === UIWalletConvertMode.Sell) { this.estimateSell() }
     if (this.mode === UIWalletConvertMode.SellAll) { this.estimateSell() }
@@ -76,7 +76,7 @@ export default class ConvertEstimate extends Mixins(Base) {
       this.willPay = estimate.will_pay
       this.commission = estimate.commission
     } catch (e) {
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
     }
   }
 
@@ -91,7 +91,7 @@ export default class ConvertEstimate extends Mixins(Base) {
       this.willGet = estimate.will_get
       this.commission = estimate.commission
     } catch (e) {
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
     }
   }
 }

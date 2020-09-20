@@ -1,7 +1,6 @@
 <template>
   <div class="cp logo">
-    <icon class="fingerprint" name="fingerprint" scale="11" />
-    <icon class="bip" name="bip" scale="7" />
+    <icon class="logo" name="bip" scale="11" />
   </div>
 </template>
 
@@ -16,7 +15,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
   components: { Icon }
 })
 export default class Logo extends Mixins(Base) {
-  @Prop({ default: false }) showText!: boolean
+  @Prop({ default: false }) simple!: boolean
 
   get isHome (): boolean {
     return this.$route.path === ERouter.Home

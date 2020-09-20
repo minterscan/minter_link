@@ -8,7 +8,7 @@ import { coinToBuffer } from 'minterjs-tx/src/helpers'
 import { PreparedTxData, TxSellRequest } from '@/model/Tx'
 
 // Tx.SellCoin
-export async function handleTxSell (message: Letter): Promise<AxiosResponse> {
+export async function handleTxSell (message: Letter): Promise<AxiosResponse|undefined> {
   const data: TxSellRequest = message.body
   const txData: PreparedTxData = new TxDataSell({
     coinToBuy: coinToBuffer(data.coinToBuy),
@@ -17,5 +17,5 @@ export async function handleTxSell (message: Letter): Promise<AxiosResponse> {
     minimumValueToBuy: `0x${convertToPip(0, 'hex')}`
   })
 
-  return handleTx(txData, TX_TYPE.SELL, data.payload)
+  return handleTx(txData, TX_TYPE.SELL, data.payload, data.gasCoin)
 }

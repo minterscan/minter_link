@@ -1,5 +1,5 @@
 <template>
-  <app class="app popup" />
+  <app class="app popup" type="app" />
 </template>
 
 <script lang="ts">

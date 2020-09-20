@@ -1,7 +1,7 @@
 <template>
   <a-popover title="Message" trigger="click" v-model="visible">
     <template slot="content">{{ payload | base64 }}</template>
-    <icon name="message" scale="2" />
+    <icon class="icon-payload" name="message" scale="1.5" />
   </a-popover>
 </template>
 

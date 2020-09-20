@@ -1,9 +1,33 @@
 button.ant-btn {
   line-height: 30px;
 
-  i svg {
+  i {
+    position: relative;
+    margin-top: -2px;
+  }
+
+  svg {
     display: block;
   }
+}
+
+button.ant-btn.ant-btn-action.ant-btn-background-ghost {
+  color: $color-action;
+  border-color: $color-action;
+}
+
+button.ant-btn.ant-btn-action.ant-btn-background-ghost:hover {
+  color: #fff;
+  background-color: $color-action !important;
+}
+
+button.ant-btn.ant-btn-action.ant-btn-background-ghost:disabled {
+  color: #f5f5f5;
+  border-color: #f5f5f5;
+}
+
+button.ant-btn.ant-btn-sm {
+  line-height: 22px;
 }
 
 button.ant-btn.ant-btn-lg {

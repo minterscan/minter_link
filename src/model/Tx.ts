@@ -60,6 +60,7 @@ export type PreparedTxData = {
 
 export type TxSendRequest = {
   address: string;
+  gasCoin: string;
   coin: string;
   amount: string;
   payload: string;
@@ -68,6 +69,7 @@ export type TxSendRequest = {
 export type TxDelegateRequest = {
   pubKey: string;
   coin: string;
+  gasCoin: string;
   stake: string;
   payload: string;
 }
@@ -75,11 +77,13 @@ export type TxDelegateRequest = {
 export type TxUnbondRequest = {
   pubKey: string;
   coin: string;
+  gasCoin: string;
   stake: string;
   payload: string;
 }
 
 export type TxBuyRequest = {
+  gasCoin: string;
   coinToBuy: string;
   valueToBuy: string;
   coinToSell: string;
@@ -87,6 +91,7 @@ export type TxBuyRequest = {
 }
 
 export type TxSellRequest = {
+  gasCoin: string;
   coinToSell: string;
   valueToSell: string;
   coinToBuy: string;
@@ -94,6 +99,7 @@ export type TxSellRequest = {
 }
 
 export type TxSellAllRequest = {
+  gasCoin: string;
   coinToSell: string;
   coinToBuy: string;
   payload: string;

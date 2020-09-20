@@ -1,0 +1,11 @@
+.cp.wallet-menu {
+  .ant-btn {
+    opacity: .5;
+    margin: 0 0 0 .5rem;
+    transition: opacity .2s ease-in-out;
+  }
+
+  .ant-btn:hover {
+    opacity: 1;
+  }
+}

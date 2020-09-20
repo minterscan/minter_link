@@ -1,7 +1,19 @@
 <template>
   <div class="view address-book">
-    <!-- List -->
-    <address-book-list v-if="Object.keys(addressBook.sorted).length" />
+    <!-- Headet -->
+    <view-header title="Contacts">
+      <template slot="extra">
+        <a-button type="dashed" key="1" shape="circle" icon="plus" @click="addItem()" />
+      </template>
+    </view-header>
+
+    <!-- Content -->
+    <div class="view-content" v-if="Object.keys(addressBook.sorted).length">
+      <address-book-item
+        :key="key"
+        :item="item"
+        v-for="(item, key) in addressBook.sorted" />
+    </div>
 
     <!-- Empty list -->
     <div class="empty" v-else>No contacts yet</div>
@@ -13,13 +25,19 @@
 
 <script lang="ts">
 import Base from '@/mixins/Base'
+import { AppEvent } from '@/model/App'
 import { Component, Mixins } from 'vue-property-decorator'
-import AddressBookList from '@/components/address-book/AddressBookList.vue'
+import ViewHeader from '@/components/common/ViewHeader.vue'
+import AddressBookItem from '@/components/address-book/AddressBookItem.vue'
 import AddressBookItemEdit from '@/components/address-book/modal/AddressBookItemEdit.vue'
 
 @Component({
-  name: 'AddressBook.vue',
-  components: { AddressBookList, AddressBookItemEdit }
+  name: 'AddressBook',
+  components: { AddressBookItem, AddressBookItemEdit, ViewHeader }
 })
-export default class Contacts extends Mixins(Base) {}
+export default class AddressBook extends Mixins(Base) {
+  addItem () {
+    this.$root.$emit(AppEvent.AddressBookItemOpen)
+  }
+}
 </script>

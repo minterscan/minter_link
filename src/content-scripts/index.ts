@@ -1,7 +1,12 @@
 import ContentScript from './ContentScript'
+import { injectScript } from './InjectScript'
 
-const script = new ContentScript()
+injectScript()
 
+// Wait for DOM ready
 document.addEventListener('DOMContentLoaded', async () => {
+  const script = new ContentScript()
+
+  script.subscribe()
   script.init()
 })

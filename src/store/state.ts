@@ -1,14 +1,27 @@
 import Vue from 'vue'
-import { VaultWallets, Vault } from '@/model/Vault'
 import { VuexModule, Module, Mutation } from 'vuex-module-decorators'
+import { VaultWallets, Vault, VaultConnectedWebsites } from '@/model/Vault'
 import { MinterWallet, MinterWalletBalance, MinterWalletTxs } from '@/model/Wallet'
 
+const VAULT: Vault = {
+  activeWallet: '',
+  wallets: {},
+  connectedWebsites: {}
+}
+
 @Module({ namespaced: true, name: 'state' })
-export default class State extends VuexModule {
+export default class StateStore extends VuexModule {
   loggedIn = false
   expiry = 0
   vaultExist = false
-  vault: Vault | null = null
+  vault = VAULT
+
+  /**
+   * Is Vault Empty
+   */
+  get empty (): boolean {
+    return !Object.keys(this.vault.wallets).length
+  }
 
   /**
    * All wallets
@@ -52,8 +65,13 @@ export default class State extends VuexModule {
   }
 
   @Mutation
-  commitVault (vault: Vault | null) {
-    this.vault = vault
+  commitVault (vault: Vault) {
+    Vue.set(this, 'vault', vault)
+  }
+
+  @Mutation
+  commitVaultReset () {
+    this.vault = VAULT
   }
 
   @Mutation
@@ -85,10 +103,10 @@ export default class State extends VuexModule {
   }
 
   @Mutation
-  commitVaultWalletColor (color: string) {
+  commitVaultWalletIcon (icon: string) {
     if (!this.vault) { return }
 
-    Vue.set(this.vault.wallets[this.vault.activeWallet].meta, 'color', color)
+    Vue.set(this.vault.wallets[this.vault.activeWallet].meta, 'icon', icon)
   }
 
   @Mutation
@@ -103,5 +121,12 @@ export default class State extends VuexModule {
     if (!this.vault) { return }
 
     Vue.set(this.vault.wallets[data.address], 'balances', data.balances)
+  }
+
+  @Mutation
+  commitVaultConnectedWebsites (connectedWebsites: VaultConnectedWebsites) {
+    if (!this.vault) { return }
+
+    Vue.set(this.vault, 'connectedWebsites', connectedWebsites)
   }
 }

@@ -24,7 +24,7 @@
         <a-input-number
           :min="0"
           size="large"
-          v-model="valueToBuy"
+          v-model.number="valueToBuy"
           :disabled="loading"
           placeholder="Buy Amount"
         />
@@ -37,22 +37,37 @@
         />
       </a-form-item>
 
-      <!-- Payload Switcher -->
-      <a-form-item>
-        <a-switch id="with-payload" v-model="withPayload" />
-        <label for="with-payload" title="Payload">Payload</label>
+      <!-- Advanced -->
+      <a-form-item class="advanced">
+        <a-switch id="advanced" v-model="advanced" />
+        <label for="advanced">Advanced Mode</label>
+      </a-form-item >
+
+      <!-- Gas Coin -->
+      <a-form-item class="fee-coin" v-if="advanced">
+          <label>Coin to pay fee:</label>
+          <wallet-coin-select
+          :coins="walletCoins"
+          :change="changeGasCoin"
+          placeholder="Coin to pay fee"
+        />
       </a-form-item>
 
-      <!-- Payload -->
-      <a-form-item v-if="withPayload">
+      <!-- Payload Input -->
+      <a-form-item v-if="advanced">
         <a-textarea
           v-model="payload"
           :disabled="loading"
           placeholder="Message"
-          :autosize="{ minRows: 3, maxRows: 6 }"
+          :autoSize="{ minRows: 3, maxRows: 6 }"
         />
       </a-form-item>
     </a-form>
+
+    <!-- Low balance indicator -->
+    <template v-if="this.valueToBuy !== ''">
+      <div class="insufficient-funds" v-if="incufficientFeeFunds">Insufficient funds for fee</div>
+    </template>
   </div>
 </template>
 
@@ -95,15 +110,17 @@ export default class BuyCoinForm extends Mixins(TxForm) {
     this.coinToSell = coin
   }
 
-  reset (): void {
+  resetForm (): void {
     this.payload = ''
     this.loading = false
+    this.advanced = false
   }
 
   async submit (): Promise<void> {
     try {
       this.loading = true
       const response = await this.postman.txBuy({
+        gasCoin: this.gasCoin,
         coinToBuy: this.coinToBuy,
         coinToSell: this.coinToSell,
         valueToBuy: this.valueToBuy,
@@ -113,8 +130,8 @@ export default class BuyCoinForm extends Mixins(TxForm) {
       this.$root.$emit(AppEvent.TxHash, hash)
       this.loading = false
     } catch (e) {
-      this.reset()
-      this.ui.commitError(e.message)
+      this.resetForm()
+      this.ui.commitError(e)
     }
   }
 }

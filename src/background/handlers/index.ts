@@ -1,4 +1,4 @@
-import { LetterSubject } from '@/model/Letter'
+import { LetterSubject, ContentScriptLetterSubject } from '@/model/Letter'
 import { handleTxBuy } from '@/background/handlers/tx/buy'
 import { handleTxSell } from '@/background/handlers/tx/sell'
 import { handleTxSellAll } from '@/background/handlers/tx/sellAll'
@@ -14,6 +14,7 @@ import { handleSetPassword } from '@/background/handlers/keyring/setPassword'
 import { handleDeletePassword } from '@/background/handlers/keyring/deletePassword'
 import { handleCmdVaultCreate } from '@/background/handlers/vault/create'
 import { handleCmdVaultPing } from '@/background/handlers/vault/ping'
+import { handleCmdVaultDelete } from '@/background/handlers/vault/delete'
 import { handleGetVaultExist } from '@/background/handlers/vault/getExist'
 import { handleGetVaultEncoded } from '@/background/handlers/vault/getEncoded'
 import { handleGetVaultPublicData } from '@/background/handlers/vault/getPublicData'
@@ -33,13 +34,31 @@ import { handleGetVaultStatus } from '@/background/handlers/vault/getStatus'
 import { handlePaymentRequest } from '@/background/handlers/content-script/paymentRequest'
 import { handlePaymentAccept } from '@/background/handlers/content-script/paymentAccept'
 import { handlePaymentReject } from '@/background/handlers/content-script/paymentReject'
+import { handleSignRequest } from '@/background/handlers/content-script/signRequest'
+import { handleSignAccept } from '@/background/handlers/content-script/signAccept'
+import { handleSignReject } from '@/background/handlers/content-script/signReject'
+import { handleCmdSign } from '@/background/handlers/vault/sign'
+import { handleCmdConnectedWebsitesDelete } from './vault/deleteConnectedWebsite'
+import { handleCmdConnectedWebsitesAdd } from './vault/addConnectedWebsite'
+import { handleConnectReject } from './content-script/connectReject'
+import { handleConnectAccept } from './content-script/connectAccept'
+import { handleConnectRequest } from './content-script/connectRequest'
+import { handleRequestVaultStatus } from './vault/requestStatus'
+import { handleRequestVaultActiveWallet } from './vault/requestActiveWallet'
+import { handleGetWalletSeed } from './wallet/getSeed'
+import { handleSetSettingsAutoLock } from '@/background/handlers/settings/setAutoLock'
+import { handleGetSettingsPublicData } from '@/background/handlers/settings/getPublicData'
 
 type BrowserMessageHandlers = {
   [key in LetterSubject]: Function;
 }
 
+type PortMessageHandlers = {
+  [key: string]: Function;
+}
+
 // Map Letter subjects to handlers
-const handlers: BrowserMessageHandlers = {
+export const handlers: BrowserMessageHandlers = {
   [LetterSubject.GetPasswordExpiry]: handleGetPasswordExpiry,
   [LetterSubject.SetPassword]: handleSetPassword,
   [LetterSubject.DeletePassword]: handleDeletePassword,
@@ -47,6 +66,7 @@ const handlers: BrowserMessageHandlers = {
   [LetterSubject.SetVaultActiveWalletMeta]: handleSetVaultActiveWalletMeta,
   [LetterSubject.CmdVaultCreate]: handleCmdVaultCreate,
   [LetterSubject.CmdVaultPing]: handleCmdVaultPing,
+  [LetterSubject.CmdVaultDelete]: handleCmdVaultDelete,
   [LetterSubject.GetVaultStatus]: handleGetVaultStatus,
   [LetterSubject.GetVaultEncoded]: handleGetVaultEncoded,
   [LetterSubject.GetVaultExist]: handleGetVaultExist,
@@ -54,9 +74,12 @@ const handlers: BrowserMessageHandlers = {
   [LetterSubject.CmdWalletCreate]: handleCmdWalletCreate,
   [LetterSubject.CmdWalletImport]: handleCmdWalletImport,
   [LetterSubject.CmdWalletDelete]: handleCmdWalletDelete,
+  [LetterSubject.CmdConnectedWebsitesAdd]: handleCmdConnectedWebsitesAdd,
+  [LetterSubject.CmdConnectedWebsitesDelete]: handleCmdConnectedWebsitesDelete,
   [LetterSubject.GetWalletBalances]: handleGetWalletBalances,
   [LetterSubject.GetWalletDelegations]: handleGetWalletDelegations,
   [LetterSubject.GetWalletTxs]: handleGetWalletTxs,
+  [LetterSubject.GetWalletSeed]: handleGetWalletSeed,
   [LetterSubject.GetValidators]: handleGetValidators,
   [LetterSubject.GetCoins]: handleGetCoins,
   [LetterSubject.TxSend]: handleTxSend,
@@ -69,11 +92,23 @@ const handlers: BrowserMessageHandlers = {
   [LetterSubject.GetAddressBookEncoded]: handleGetAddressBookEncoded,
   [LetterSubject.CmdAddressBookItemAdd]: handleCmdAddressBookItemAdd,
   [LetterSubject.CmdAddressBookItemDelete]: handleCmdAddressBookItemDelete,
+  [LetterSubject.GetSettingsPublicData]: handleGetSettingsPublicData,
+  [LetterSubject.SetSettingsAutoLock]: handleSetSettingsAutoLock,
   [LetterSubject.EstimateBuy]: handleEstimateBuy,
   [LetterSubject.EstimateSell]: handleEstimateSell,
+  [LetterSubject.ConnectRequest]: handleConnectRequest,
+  [LetterSubject.ConnectAccept]: handleConnectAccept,
+  [LetterSubject.ConnectReject]: handleConnectReject,
+  [LetterSubject.SignRequest]: handleSignRequest,
+  [LetterSubject.SignAccept]: handleSignAccept,
+  [LetterSubject.SignReject]: handleSignReject,
   [LetterSubject.PaymentRequest]: handlePaymentRequest,
   [LetterSubject.PaymentAccept]: handlePaymentAccept,
-  [LetterSubject.PaymentReject]: handlePaymentReject
+  [LetterSubject.PaymentReject]: handlePaymentReject,
+  [LetterSubject.CmdSign]: handleCmdSign
 }
 
-export default handlers
+export const contentScriptHandlers: PortMessageHandlers = {
+  [ContentScriptLetterSubject.RequestVaultStatus]: handleRequestVaultStatus,
+  [ContentScriptLetterSubject.RequestVaultActiveWallet]: handleRequestVaultActiveWallet
+}

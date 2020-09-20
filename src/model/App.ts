@@ -1,5 +1,3 @@
-export const APP_PORT = 'minter:link'
-
 export enum AppEvent {
   Login = 'login',
   TxHash = 'tx:hash',
@@ -8,6 +6,7 @@ export enum AppEvent {
   FormInvalid = 'form:invalid',
   FormSuccess = 'form:success',
   WalletMetaOpen = 'wallet:meta:open',
+  WalletSeed = 'wallet:seed',
   WalletActionSendOpen = 'wallet:action:send:open',
   WalletActionSendClose = 'wallet:action:send:close',
   WalletActionConvertOpen = 'wallet:action:convert:open',
@@ -17,6 +16,9 @@ export enum AppEvent {
   WalletActionUnbondOpen = 'wallet:action:unbond:open',
   WalletActionUnbondClose = 'wallet:action:unbond:close',
   AddressBookItemOpen = 'address_book:item:open',
+  ExportSeedUnlock = 'vault:export_seed:unlock:open',
+  VaultDeleteUnlock = 'vault:delete:unlock:open',
+  VaultUnlocked = 'vault:unlocked'
 }
 
 export enum AppSendMode {

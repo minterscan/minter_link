@@ -1,11 +1,33 @@
-import store from '@/background/store'
 import crypto from '@/services/Crypto'
+import settings from '@/services/Settings'
 
-// Default key expiration is 1 hour
-const PASSWORD_LIFETIME = 60 * 60 * 1000
+export enum ObservableProps {
+  Key = 'key',
+  Expiry = 'expiry',
+}
+
+export type Observers = {
+  [ObservableProps.Key]: Function[];
+  [ObservableProps.Expiry]: Function[];
+}
 
 // Keyring controller
 export class KeyringService {
+  private _key = ''
+  private _expiry = 0
+  private _destroyTimeout!: NodeJS.Timeout
+  private _observers: Observers = {
+    key: [],
+    expiry: []
+  }
+
+  /**
+   * Get key expiration timestamp
+   */
+  get expiry (): number {
+    return this._expiry
+  }
+
   /**
    * Get key status
    *
@@ -13,27 +35,34 @@ export class KeyringService {
    * false = expired
    */
   get expired (): boolean {
-    return (!store.expiry || Date.now() > store.expiry)
+    return (!this.expiry || Date.now() > this.expiry)
   }
 
   /**
    * Get decrypted key
    */
   get key (): string {
-    if (this.expired) {
-      this.destroy()
-    } else {
+    if (!this.expired) {
       this.touch()
     }
 
-    return store.password
+    return this._key
   }
 
-  /**
-   * Get key expiration timestamp
-   */
-  get expiry (): number {
-    return store.expiry
+  setKey (value: string) {
+    const oldValue = this._key
+
+    this._key = value
+
+    if (oldValue !== value) this.notifySubscribers(ObservableProps.Key, value)
+  }
+
+  setExpiry (value: number) {
+    const oldValue = this._expiry
+
+    this._expiry = value
+
+    if (oldValue !== value) this.notifySubscribers(ObservableProps.Expiry, value)
   }
 
   /**
@@ -54,22 +83,48 @@ export class KeyringService {
    * @param password
    */
   attach (password: string): void {
-    store.password = crypto.encryptSHA3(password)
+    this.setKey(crypto.encryptSHA3(password))
   }
 
   /**
    * Update key expiration
    */
   touch (): void {
-    store.expiry = Date.now() + PASSWORD_LIFETIME
+    this.setExpiry(Date.now() + settings.autoLock)
+
+    global.clearTimeout(this._destroyTimeout)
+    this._destroyTimeout = global.setTimeout(this.destroy.bind(this), settings.autoLock)
   }
 
   /**
    * Delete key & reset key expiration
    */
   destroy (): void {
-    store.password = ''
-    store.expiry = 0
+    this.setKey('')
+    this.setExpiry(0)
+    global.clearTimeout(this._destroyTimeout)
+  }
+
+  /**
+   * Subscribe observers
+   *
+   * @param property
+   * @param callback
+   */
+  subscribe (property: ObservableProps, callback: Function): void {
+    this._observers[property].push(callback)
+  }
+
+  /**
+   * Notify observers about Minter Link updates
+   *
+   * @param property
+   * @param value
+   */
+  private notifySubscribers (property: ObservableProps, value: number|string): void {
+    for (let i = 0; i < this._observers[property].length; i++) {
+      this._observers[property][i](value)
+    }
   }
 }
 

@@ -11,7 +11,10 @@
     dropdownClassName="form-dropdown"
   >
     <a-select-option v-for="(item, key) in wallets" :key="key" :value="item.address">
-      <div class="name" v-if="item.meta.label">{{ item.meta.label }}</div>
+      <div class="name">
+        <span class="icon" v-if="item.meta.icon">{{ item.meta.icon }}</span>
+        <template v-if="item.meta.label">{{ item.meta.label }}</template>
+      </div>
       <div class="public-key">{{ item.address }}</div>
     </a-select-option>
   </a-select>
@@ -36,11 +39,11 @@ export default class WalletSelect extends Mixins(Base) {
   }
 
   @Watch('defaultValue', { immediate: true })
-  onDefaultValueChange (value: string) {
+  onDefaultValueChange (value: string): void {
     this.change(value)
   }
 
-  filterOption (input: string, option: VNode) {
+  filterOption (input: string, option: VNode): boolean {
     if (!option.componentOptions) { return false }
     if (!option.componentOptions.children) { return false }
     if (!option.componentOptions.children.length) { return false }

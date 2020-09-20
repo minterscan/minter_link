@@ -1,18 +1,22 @@
-import UI from '@/store/ui'
+import config from '@/config'
 import RootStore from '@/store'
-import State from '@/store/state'
+import UIStore from '@/store/ui'
+import StateStore from '@/store/state'
+import { Config } from '@/model/Config'
 import { ERouter } from '@/model/Router'
-import AddressBook from '@/store/addressBook'
+import SettingsStore from '@/store/settings'
+import AddressBookStore from '@/store/addressBook'
 import { browser } from 'webextension-polyfill-ts'
 import { getModule } from 'vuex-module-decorators'
 import { Vue, Component } from 'vue-property-decorator'
 import crypto, { CryptoService } from '@/services/Crypto'
-import postman, { PostmanService } from '@/services/Postman'
+import { PostmanService } from '@/services/Postman'
 import ws, { MinterWsDataProvider } from '@/providers/MinterWs'
 
-const ui = getModule(UI, RootStore)
-const state = getModule(State, RootStore)
-const addressBook = getModule(AddressBook, RootStore)
+const ui = getModule(UIStore, RootStore)
+const state = getModule(StateStore, RootStore)
+const settings = getModule(SettingsStore, RootStore)
+const addressBook = getModule(AddressBookStore, RootStore)
 
 /**
  * Base mixins, map store & services to Vue
@@ -24,15 +28,19 @@ export default class Base extends Vue {
     return ws
   }
 
-  get ui (): UI {
+  get ui (): UIStore {
     return ui
   }
 
-  get state (): State {
+  get state (): StateStore {
     return state
   }
 
-  get addressBook (): AddressBook {
+  get settings (): SettingsStore {
+    return settings
+  }
+
+  get addressBook (): AddressBookStore {
     return addressBook
   }
 
@@ -41,9 +49,14 @@ export default class Base extends Vue {
   }
 
   get postman (): PostmanService {
-    return postman
+    return new PostmanService()
   }
 
+  get config (): Config {
+    return config
+  }
+
+  // TODO: implement i18n
   t (key: string): string {
     return browser.i18n.getMessage(key)
   }

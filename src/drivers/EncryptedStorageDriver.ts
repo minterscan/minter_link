@@ -1,6 +1,7 @@
 import crypto from '@/services/Crypto'
 import { Ledger } from '@/model/Ledger'
 import storage from '@/services/Storage'
+import { ApplicationError, ErrorCode } from '@/model/Error'
 import keyring, { KeyringService } from '@/services/Keyring'
 
 /**
@@ -13,7 +14,8 @@ export class EncryptedStorageDriver {
     addressBook: {},
     vault: {
       activeWallet: '',
-      wallets: {}
+      wallets: {},
+      connectedWebsites: {}
     }
   }
 
@@ -48,7 +50,7 @@ export class EncryptedStorageDriver {
       }
       return this.set(encryptedString)
     } catch (e) {
-      throw new Error('Can not save data')
+      throw new ApplicationError(ErrorCode.StorageSave)
     }
   }
 
@@ -56,15 +58,21 @@ export class EncryptedStorageDriver {
    * Check is Storage exist
    */
   async exist (): Promise<boolean> {
-    const vault = await storage.get(this.id)
+    try {
+      const instance = await this.get()
 
-    return !!vault
+      return !!instance
+    } catch (e) {
+      return false
+    }
   }
 
   /**
-   * Open encrypted storage with Keyring
+   * Open encrypted Storage with key
    */
   async open (): Promise<Ledger> {
+    if (!this.keyring.key) throw new ApplicationError(ErrorCode.Unauthorized)
+
     const message = await this.get()
     const decryptedData = crypto.decryptAES(message, this.keyring.key)
 
@@ -78,21 +86,21 @@ export class EncryptedStorageDriver {
    */
   async ping (password: string): Promise<void> {
     try {
-      const message = await storage.get(this.id)
+      const message = await this.get()
       crypto.decryptAES(message, crypto.encryptSHA3(password))
     } catch (e) {
-      throw new Error('Wrong password')
+      throw new ApplicationError(ErrorCode.PasswordWrong)
     }
   }
 
   /**
    * Destroy Storage
    */
-  async destroy (): Promise<void> {
+  async destroy (): Promise<boolean> {
     try {
-      await storage.clear()
+      return storage.clear()
     } catch (e) {
-      throw new Error('Can not destroy vault')
+      throw new ApplicationError(ErrorCode.StorageDestroy)
     }
   }
 }

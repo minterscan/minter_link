@@ -1,6 +1,6 @@
 {
   "name": "minter-link",
-  "version": "0.1.4",
+  "version": "0.1.10",
   "private": true,
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "ant-design-vue": "^1.4.12",
+    "ant-design-vue": "^1.6.5",
     "axios": "^0.19.2",
     "bignumber.js": "^9.0.0",
     "centrifuge": "^2.3.0",
@@ -22,6 +22,7 @@
     "core-js": "^3.6.4",
     "crypto-js": "^4.0.0",
     "entity-decode": "^2.0.2",
+    "ethereumjs-util": "^6.2.0",
     "js-base64": "^2.5.2",
     "minter-connect": "^1.0.0",
     "minterjs-tx": "^7.5.1",
@@ -71,6 +72,6 @@
     "vue-cli-plugin-browser-extension": "~0.24.0",
     "vue-template-compiler": "^2.6.11",
     "webextension-polyfill": "^0.6.0",
-    "webextension-polyfill-ts": "^0.12.0"
+    "webextension-polyfill-ts": "^0.14.0"
   }
 }

@@ -3,7 +3,7 @@ import { AddressBookItem, AddressBook } from '@/model/AddressBook'
 import { Module, Mutation, VuexModule } from 'vuex-module-decorators'
 
 @Module({ namespaced: true, name: 'addressBook' })
-export default class Book extends VuexModule {
+export default class AddressBookStore extends VuexModule {
   book: AddressBook = {}
 
   /**

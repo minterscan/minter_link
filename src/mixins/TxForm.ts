@@ -1,8 +1,9 @@
+import Big from 'bignumber.js'
 import Base from '@/mixins/Base'
 import { ETxType } from '@/model/Tx'
 import { AppEvent } from '@/model/App'
 import { Validator } from '@/model/Validator'
-import { MinterWalletBalance } from '@/model/Wallet'
+import { ECoin, MinterWalletBalance } from '@/model/Wallet'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 
 /**
@@ -11,6 +12,9 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 
 @Component
 export default class TxForm extends Mixins(Base) {
+  type = ETxType.Send
+  gasCoin: string = ECoin.BIP
+  gasCoinBipPrice = 1
   coinToBuy = ''
   coinToSell = ''
   valueToBuy = ''
@@ -23,13 +27,35 @@ export default class TxForm extends Mixins(Base) {
   hash = ''
   payload = ''
   withPayload = false
+  advanced = false
 
   get invalid (): boolean {
     return true
   }
 
+  // Max payload size 1024 bytes
+  // https://github.com/MinterTeam/minter-go-node/blob/master/core/transaction/executor.go#L20
   get invalidPayload (): boolean {
     return (new TextEncoder().encode(this.payload)).length > 1024
+  }
+
+  get gasCoinAmount (): string {
+    if (!this.state.wallet) return '0'
+    if (!this.state.wallet.balances) return '0'
+
+    const balance = this.state.wallet.balances.find((item) => item.coin === this.gasCoin)
+
+    if (!balance) return '0'
+
+    return balance.amount
+  }
+
+  get fee (): string {
+    return this.getFee(this.type)
+  }
+
+  get incufficientFeeFunds (): boolean {
+    return !this.hash && new Big(this.gasCoinAmount).isLessThan(new Big(this.fee))
   }
 
   @Watch('state.wallet.balances', { immediate: true })
@@ -47,9 +73,15 @@ export default class TxForm extends Mixins(Base) {
     this.$root.$emit(AppEvent.FormInvalid, this.invalid)
   }
 
-  @Watch('withPayload')
-  onWithPayloadChange () {
+  @Watch('advanced')
+  onWithPayloadChange (value: boolean) {
     this.payload = ''
+    if (!value) this.gasCoin = ECoin.BIP
+  }
+
+  @Watch('gasCoin', { immediate: true })
+  onGasCoinChange (value: string) {
+    if (value !== ECoin.BIP) this.fetchGasCoinBipPrice()
   }
 
   mounted (): void {
@@ -72,7 +104,7 @@ export default class TxForm extends Mixins(Base) {
     const baseFee = fees[txType]
     const payloadBytesLength = (new TextEncoder().encode(this.payload)).length
     const payloadFee = payloadBytesLength ? payloadBytesLength * 2 : 0
-    const fee = (baseFee + payloadFee) * FEE_UNIT
+    const fee = (baseFee + payloadFee) * FEE_UNIT * this.gasCoinBipPrice
 
     return `${fee}`
   }
@@ -83,7 +115,7 @@ export default class TxForm extends Mixins(Base) {
 
       this.validators = Object.freeze(validators.sort((a, b) => +a.stake > +b.stake ? -1 : 1))
     } catch (e) {
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
     }
   }
 
@@ -93,20 +125,38 @@ export default class TxForm extends Mixins(Base) {
 
       this.coins = Object.freeze(coins.map((item) => item.symbol))
     } catch (e) {
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
+    }
+  }
+
+  async fetchGasCoinBipPrice () {
+    try {
+      const estimate = await this.postman.estimateSell({
+        coinToBuy: ECoin.BIP,
+        coinToSell: this.gasCoin,
+        valueToSell: '1'
+      })
+
+      this.gasCoinBipPrice = new Big(estimate.will_get).dividedBy(10 ** 18).toNumber()
+    } catch (e) {
+      this.ui.commitError(e)
     }
   }
 
   listen (): void {
     this.$root.$on(AppEvent.FormSubmit, this.submit)
-    this.$root.$on(AppEvent.FormReset, this.reset)
+    this.$root.$on(AppEvent.FormReset, this.resetForm)
+  }
+
+  changeGasCoin (coin: string): void {
+    this.gasCoin = coin
   }
 
   submit (): void {
     this.loading = true
   }
 
-  reset (): void {
+  resetForm (): void {
     this.coinToBuy = ''
     this.coinToSell = ''
     this.valueToBuy = ''

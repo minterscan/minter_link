@@ -6,9 +6,9 @@
     :visible="true"
     :okText="hash ? 'Unbond again' : 'Unbond'"
     cancelText="Close"
-    @ok="hash ? reset() : submit()"
+    @ok="hash ? resetHash() : submit()"
     :confirmLoading="loading"
-    :okButtonProps="{ props: { disabled: loading || invalid } }"
+    :okButtonProps="{ props: { disabled: loading || (!hash && invalid) } }"
     :cancelButtonProps="{ props: { disabled: loading } }"
     @cancel="close"
   >
@@ -26,10 +26,9 @@
         <a-input-group compact>
           <a-input-number
             :min="0"
-            :max="10"
-            :step="0.1"
             size="large"
-            v-model="stake"
+            v-model.number="stake"
+            decimalSeparator=","
             :disabled="loading"
             placeholder="Amount"
           />
@@ -37,17 +36,29 @@
         </a-input-group>
       </a-form-item>
 
-      <!-- Payload -->
-      <a-form-item>
-        <a-switch id="with-payload" v-model="withPayload" />
-        <label for="with-payload" title="Payload">Payload</label>
+      <!-- Advanced -->
+      <a-form-item class="advanced">
+        <a-switch id="advanced" v-model="advanced" />
+        <label for="advanced">Advanced Mode</label>
+      </a-form-item >
+
+      <!-- Gas Coin -->
+      <a-form-item class="fee-coin" v-if="advanced">
+          <label>Coin to pay fee:</label>
+          <wallet-coin-select
+          :coins="walletCoins"
+          :change="changeGasCoin"
+          placeholder="Coin to pay fee"
+        />
       </a-form-item>
-      <a-form-item v-if="withPayload">
+
+      <!-- Payload Input -->
+      <a-form-item v-if="advanced">
         <a-textarea
           v-model="payload"
           :disabled="loading"
           placeholder="Message"
-          :autosize="{ minRows: 3, maxRows: 6 }"
+          :autoSize="{ minRows: 3, maxRows: 6 }"
         />
       </a-form-item>
     </a-form>
@@ -67,10 +78,11 @@ import TxSuccess from '@/components/common/tx/TxSuccess.vue'
 import CoinSelect from '@/components/common/form/CoinSelect.vue'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import ValidatorSelect from '@/components/common/form/ValidatorSelect.vue'
+import WalletCoinSelect from '@/components/common/form/WalletCoinSelect.vue'
 
 @Component({
   name: 'ActionUnbond',
-  components: { CoinSelect, Icon, Loading, TxSuccess, ValidatorSelect }
+  components: { CoinSelect, Icon, Loading, TxSuccess, ValidatorSelect, WalletCoinSelect }
 })
 export default class ActionUnbond extends Mixins(TxForm) {
   pubKey = ''
@@ -89,7 +101,7 @@ export default class ActionUnbond extends Mixins(TxForm) {
   }
 
   @Watch('coin')
-  onCoinChange () {
+  onCoinChange (): void {
     this.stake = ''
   }
 
@@ -101,28 +113,35 @@ export default class ActionUnbond extends Mixins(TxForm) {
     this.pubKey = pubKey
   }
 
-  reset (): void {
+  resetForm (): void {
     this.pubKey = ''
     this.coin = ''
     this.stake = ''
-    this.hash = ''
     this.loading = false
+    this.advanced = false
+  }
+
+  resetHash (): void {
+    this.hash = ''
   }
 
   async submit (): Promise<void> {
     try {
       this.loading = true
+
       const response = await this.postman.txUnbond({
         pubKey: this.pubKey,
         coin: this.coin,
         stake: this.stake,
+        gasCoin: this.gasCoin,
         payload: this.payload
       })
+
+      this.resetForm()
       this.hash = response.data.data.hash
-      this.loading = false
     } catch (e) {
-      this.reset()
-      this.ui.commitError(e.message)
+      this.loading = false
+      this.ui.commitError(e)
     }
   }
 

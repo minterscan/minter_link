@@ -3,8 +3,8 @@ import RootStore from '@/store'
 import State from '@/store/state'
 import { Route } from 'vue-router'
 import { ERouter } from '@/model/Router'
-import postman from '@/services/Postman'
 import { getModule } from 'vuex-module-decorators'
+import { PostmanService } from '@/services/Postman'
 
 const ui = getModule(UI, RootStore)
 const state = getModule(State, RootStore)
@@ -14,6 +14,7 @@ const state = getModule(State, RootStore)
  * Set data to Vuex
  */
 async function tryAccessVault () {
+  const postman = new PostmanService()
   const expiry = await postman.getPasswordExpiry()
   const status = await postman.getVaultStatus()
   const vaultExist = await postman.getVaultExist()
@@ -35,20 +36,25 @@ export async function authGuard (to: Route, from: Route, next: Function) {
     ui.commitLoading(true)
     await tryAccessVault()
 
+    // Route is not protected, exit
     if (!to.meta.protected) next()
 
+    // Login → Vault auto redirect
     if (!from.name && to.path === ERouter.Home && state.loggedIn) {
       next(ERouter.Vault)
     }
 
+    // Logged out, redirect to Home
     if (to.meta.protected && !state.loggedIn) {
       next(ERouter.Home)
     }
 
     next()
   } catch (e) {
-    ui.commitError(e.message)
+    ui.commitError(e)
   } finally {
-    ui.commitLoading(false)
+    setTimeout(() => {
+      ui.commitLoading(false)
+    }, 10)
   }
 }

@@ -12,6 +12,9 @@ module.exports = {
       ])
     ]
   },
+  chainWebpack: (config) => {
+    config.resolve.symlinks(false)
+  },
   pages: {
     popup: {
       template: 'public/browser-extension.html',
@@ -26,11 +29,6 @@ module.exports = {
     notification: {
       template: 'public/browser-extension.html',
       entry: './src/notification/main.ts',
-      title
-    },
-    options: {
-      template: 'public/browser-extension.html',
-      entry: './src/options/main.ts',
       title
     }
   },
@@ -52,7 +50,7 @@ module.exports = {
     loaderOptions: {
       less: {
         modifyVars: {
-          'primary-color': '#5024C5'
+          'primary-color': '#000'
         },
         javascriptEnabled: true
       }

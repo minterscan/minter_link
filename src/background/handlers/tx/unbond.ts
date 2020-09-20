@@ -8,7 +8,7 @@ import TxDataUnbond from 'minterjs-tx/src/tx-data/unbond'
 import { PreparedTxData, TxUnbondRequest } from '@/model/Tx'
 
 // Tx.Unbond
-export async function handleTxUnbond (message: Letter): Promise<AxiosResponse> {
+export async function handleTxUnbond (message: Letter): Promise<AxiosResponse|undefined> {
   const data: TxUnbondRequest = message.body
   const txData: PreparedTxData = new TxDataUnbond({
     pubKey: toBuffer(data.pubKey),
@@ -16,5 +16,5 @@ export async function handleTxUnbond (message: Letter): Promise<AxiosResponse> {
     stake: `0x${convertToPip(data.stake, 'hex')}`
   })
 
-  return handleTx(txData, TX_TYPE.UNBOND, data.payload)
+  return handleTx(txData, TX_TYPE.UNBOND, data.payload, data.gasCoin)
 }

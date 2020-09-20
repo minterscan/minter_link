@@ -1,4 +1,4 @@
-.cp .address-book-item {
+.cp.address-book-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12,18 +12,15 @@
       font-size: 1rem;
       font-weight: bold;
     }
-  }
 
-  .menu {
-    opacity: 0;
-    transition: opacity .15s ease-in-out;
-
-    button {
-      margin: 0 0 0 .5rem;
+    .address a {
+      padding: 0;
     }
   }
 
-  &:hover .menu {
-    opacity: 1;
+  .menu {
+    button {
+      margin: 0 0 0 .5rem;
+    }
   }
 }

@@ -32,11 +32,11 @@ export default class CoinSelect extends Vue {
   @Prop({ default: 'Coin' }) placeholder!: string
 
   @Watch('coins')
-  onCoinsChange (coins: string[]) {
+  onCoinsChange (coins: string[]): void {
     this.coinsFiltered = coins.slice(0, MAX_COINS_COUNT)
   }
 
-  filterOption (input: string, option: VNode) {
+  filterOption (input: string, option: VNode): boolean {
     if (!option.componentOptions) { return false }
     if (!option.componentOptions.children) { return false }
     if (!option.componentOptions.children.length) { return false }
@@ -47,7 +47,7 @@ export default class CoinSelect extends Vue {
     )
   }
 
-  handleCoinSearch (input: string) {
+  handleCoinSearch (input: string): void {
     const result: string[] = []
     const query = input.trim().toLowerCase()
 

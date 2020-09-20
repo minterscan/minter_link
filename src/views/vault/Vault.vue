@@ -2,7 +2,7 @@
   <div class="view vault">
     <template v-if="state.vault">
       <!-- Empty Vault -->
-      <vault-empty v-if="empty" />
+      <vault-empty v-if="state.empty" />
 
       <!-- Wallets -->
       <vault-filled v-else />
@@ -29,11 +29,5 @@ import VaultFilled from '@/components/vault/VaultFilled.vue'
     })
   }
 })
-export default class Vault extends Mixins(Base) {
-  get empty (): boolean {
-    if (!this.state.vault) return true
-
-    return !Object.keys(this.state.vault.wallets).length
-  }
-}
+export default class Vault extends Mixins(Base) {}
 </script>

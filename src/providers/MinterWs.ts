@@ -1,12 +1,12 @@
 import config from '@/config'
 import Centrifuge from 'centrifuge'
-import { CentrifugeTxsResponse, CentrifugeAddressResponse} from '@/model/Centrifuge'
+import { CentrifugeTxsResponse, CentrifugeAddressResponse } from '@/model/Centrifuge'
 
 /**
  * Minter WebSocket Data Provider
  */
 export class MinterWsDataProvider {
-  protected centrifuge: Centrifuge = new Centrifuge(config.wsUrl, { debug: true })
+  protected centrifuge: Centrifuge = new Centrifuge(config.explorerWsUrl, { debug: true })
   protected walletSubscriptions: { [key: string]: Centrifuge.Subscription } = {}
   protected txsSubscription: Centrifuge.Subscription | null = null
 
@@ -16,22 +16,20 @@ export class MinterWsDataProvider {
 
   /**
    * Subscribe to Transactions channel
-   * 
-   * @param callback 
+   *
+   * @param callback
    */
   subscribeToTxs (callback: Function) {
-    if (this.centrifuge.getSub('transactions')) return
-
-    this.centrifuge.subscribe('transactions', (response: CentrifugeTxsResponse) => {
+    this.txsSubscription = this.centrifuge.subscribe('transactions', (response: CentrifugeTxsResponse) => {
       callback(response.data)
     })
   }
 
   /**
    * Subscribe to Address channel
-   * 
-   * @param address 
-   * @param callback 
+   *
+   * @param address
+   * @param callback
    */
   subscribeToWallet (address: string, callback: Function) {
     if (this.centrifuge.getSub(address)) {
@@ -45,7 +43,7 @@ export class MinterWsDataProvider {
 
   /**
    * Unsubscribe from Address channel
-   * 
+   *
    * @param address
    */
   unsubscribeFromWallet (address: string) {
@@ -59,7 +57,10 @@ export class MinterWsDataProvider {
    * Unsubscribe from Transactions channel
    */
   unsubscribeFromTxs () {
-    if (this.txsSubscription) this.txsSubscription.unsubscribe()
+    if (this.txsSubscription) {
+      this.txsSubscription.unsubscribe()
+      this.txsSubscription.removeAllListeners()
+    }
   }
 }
 

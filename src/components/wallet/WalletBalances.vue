@@ -51,7 +51,7 @@ export default class WalletBalances extends Mixins(Base) {
   }
 
   @Watch('state.wallet.balances', { immediate: true })
-  onBalancesChange (balances: MinterWalletBalance[]) {
+  onBalancesChange (balances: MinterWalletBalance[]): void {
     if (balances) {
       this.balances = balances.slice().sort((a, b) => a.coin < b.coin ? -1 : 1)
     }

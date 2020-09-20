@@ -12,7 +12,5 @@
 }
 
 .view.vault {
-  @extend .view;
-
-  height: 100%;
+  padding-top: 0;
 }

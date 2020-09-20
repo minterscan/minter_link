@@ -28,14 +28,14 @@ export default class WalletLabelInput extends Mixins(Base, Input) {
   }
 
   @Watch('state.vault.wallets', { immediate: true })
-  onWalletsChange (wallets: VaultWallets) {
+  onWalletsChange (wallets: VaultWallets): void {
     if (wallets && this.fresh) {
       this.label = `Wallet ${Object.keys(wallets).length + 1}`
     }
   }
 
   @Watch('state.wallet.meta.label', { immediate: true })
-  onWalletColorChange (label: string) {
+  onWalletColorChange (label: string): void {
     if (this.fresh) { return }
 
     this.label = label

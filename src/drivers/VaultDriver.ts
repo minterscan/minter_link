@@ -1,7 +1,7 @@
 import crypto from '@/services/Crypto'
-import { Vault, VaultWallets } from '@/model/Vault'
 import { MinterWallet, MinterWalletMeta } from '@/model/Wallet'
 import { EncryptedStorageDriver } from '@/drivers/EncryptedStorageDriver'
+import { Vault, VaultWallets, VaultConnectedWebsites, DeleteConnectedWebsiteRequest } from '@/model/Vault'
 
 /**
  * Encrypted Vault Driver
@@ -9,7 +9,7 @@ import { EncryptedStorageDriver } from '@/drivers/EncryptedStorageDriver'
 export class VaultDriver extends EncryptedStorageDriver {
   /**
    * Get Vault public data:
-   * 
+   *
    * - wallets[]
    * -- address
    * -- meta
@@ -28,7 +28,8 @@ export class VaultDriver extends EncryptedStorageDriver {
 
     return {
       activeWallet: vault.activeWallet,
-      wallets: publicWallets
+      wallets: publicWallets,
+      connectedWebsites: vault.connectedWebsites
     }
   }
 
@@ -36,26 +37,50 @@ export class VaultDriver extends EncryptedStorageDriver {
    * Get active Wallet address
    */
   async getActiveWalletAddress (): Promise<string> {
-    const { vault } = await this.open()
-    const wallet = vault.wallets[vault.activeWallet]
+    try {
+      const { vault } = await this.open()
 
-    return wallet ? wallet.address : ''
+      return vault.activeWallet
+    } catch (e) {
+      // TODO: refactor this shit
+      return ''
+    }
+  }
+
+  /**
+   * Get active Wallet seed
+   */
+  async getWalletSeed (address = ''): Promise<string> {
+    const { vault } = await this.open()
+    const wallet = vault.wallets[address || vault.activeWallet]
+
+    return wallet.seed || ''
   }
 
   /**
    * Get active Wallet seed
    */
   async getActiveWalletSeed (): Promise<string> {
-    const { vault } = await this.open()
-    const wallet = vault.wallets[vault.activeWallet]
-
-    return (wallet && wallet.seed) ? wallet.seed : ''
+    return this.getWalletSeed()
   }
 
   /**
-   * Add wallet to Vault 
-   * 
-   * @param wallet 
+   * Get connected websites list
+   */
+  async getConnectedWebsites (): Promise<VaultConnectedWebsites> {
+    try {
+      const { vault } = await this.open()
+
+      return vault.connectedWebsites
+    } catch (e) {
+      return {}
+    }
+  }
+
+  /**
+   * Add wallet to Vault
+   *
+   * @param wallet
    */
   async addWallet (wallet: MinterWallet): Promise<number> {
     const ledger = await this.open()
@@ -71,13 +96,13 @@ export class VaultDriver extends EncryptedStorageDriver {
 
   /**
    * Set active Wallet
-   * 
-   * @param address 
+   *
+   * @param address
    */
-  async setActiveWallet (address: string): Promise<void> {
+  async setActiveWallet (wallet: string): Promise<void> {
     const ledger = await this.open()
 
-    ledger.vault.activeWallet = address
+    ledger.vault.activeWallet = wallet
 
     const encryptedData = crypto.encryptAES(JSON.stringify(ledger), this.keyring.key)
 
@@ -86,13 +111,13 @@ export class VaultDriver extends EncryptedStorageDriver {
 
   /**
    * Set active Wallet Meta
-   * 
-   * @param data 
+   *
+   * @param data
    */
-  async setActiveWalletMeta (data: MinterWalletMeta): Promise<void> {
+  async setActiveWalletMeta (data: { address: string; meta: MinterWalletMeta }): Promise<void> {
     const ledger = await this.open()
 
-    ledger.vault.wallets[ledger.vault.activeWallet].meta = data
+    ledger.vault.wallets[data.address].meta = data.meta
 
     const encryptedData = crypto.encryptAES(JSON.stringify(ledger), this.keyring.key)
 
@@ -113,6 +138,43 @@ export class VaultDriver extends EncryptedStorageDriver {
     await this.set(encryptedData.toString())
 
     return keys.length > 0 ? keys[0] : ''
+  }
+
+  /**
+   * Add connected website to Vault
+   *
+   * @param domain
+   */
+  async addConnectedWebsite (domain: string): Promise<VaultConnectedWebsites> {
+    const ledger = await this.open()
+
+    // If Active Wallet websites is not exist
+    if (!(ledger.vault.activeWallet in ledger.vault.connectedWebsites)) {
+      ledger.vault.connectedWebsites[ledger.vault.activeWallet] = {}
+    }
+
+    ledger.vault.connectedWebsites[ledger.vault.activeWallet][domain] = (new Date()).valueOf()
+
+    const encryptedData = crypto.encryptAES(JSON.stringify(ledger), this.keyring.key)
+
+    await this.set(encryptedData.toString())
+
+    return ledger.vault.connectedWebsites
+  }
+
+  /**
+   * Delete connected website from Vault
+   */
+  async deleteConnectedWebsite (request: DeleteConnectedWebsiteRequest): Promise<VaultConnectedWebsites> {
+    const ledger = await this.open()
+
+    delete ledger.vault.connectedWebsites[request.address][request.domain]
+
+    const encryptedData = crypto.encryptAES(JSON.stringify(ledger), this.keyring.key)
+
+    await this.set(encryptedData.toString())
+
+    return ledger.vault.connectedWebsites
   }
 }
 

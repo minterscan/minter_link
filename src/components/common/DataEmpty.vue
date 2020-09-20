@@ -7,6 +7,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class DataEmpty extends Vue {
-  @Prop({ default: '' }) text!: string
+  @Prop({ default: 'Empty' }) text!: string
 }
 </script>

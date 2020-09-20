@@ -1,9 +1,22 @@
 .header.ant-layout-header {
   padding: 1.5rem;
-  background: #fff;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  &:before {
+    @extend .background-striped;
+
+    content: '';
+    display: block;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    position: absolute;
+  }
 
   .logo {
     height: 100%;
@@ -12,28 +25,27 @@
     align-items: center;
 
     svg {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
     }
   }
 
-  .ant-menu {
-    font-size: 1rem;
-    border-bottom: none;
-
-    a {
-      color: #000;
-      text-decoration: none;
-    }
+  .start,
+  .center,
+  .end {
+    position: relative;
+    z-index: 2;
   }
   
   .start {
+    width: 80px;
     display: flex;
     align-items: center;
   }
 
   .center {
     @extend .flex-center;
+
     font-size: 1.25rem;
     flex-shrink: 1;
     flex-grow: 1;
@@ -41,10 +53,6 @@
 
   .end {
     flex-shrink: 0;
-
-    .ant-btn {
-      margin: 0 0 0 .5rem;
-    }
   }
 }
 

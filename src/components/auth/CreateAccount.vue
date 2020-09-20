@@ -6,7 +6,6 @@
         <a-input
           ref="input"
           size="large"
-          shape="round"
           type="password"
           v-model="password"
           placeholder="Password"
@@ -17,7 +16,6 @@
       <a-form-item layout="vertical">
         <a-input
           size="large"
-          shape="round"
           type="password"
           @keyup.enter="submit()"
           v-model="passwordRepeat"
@@ -29,8 +27,8 @@
       <a-form-item>
         <a-button
           block
-          type="primary"
-          shape="round"
+          ghost
+          type="action"
           size="large"
           icon="login"
           :disabled="invalid"
@@ -45,12 +43,11 @@
 <script lang="ts">
 import Base from '@/mixins/Base'
 import Input from '@/mixins/Input'
+import { AppEvent } from '@/model/App'
 import { ERouter } from '@/model/Router'
+import { ErrorCode } from '@/model/Error'
 import Logo from '@/components/common/Logo.vue'
 import { Component, Mixins } from 'vue-property-decorator'
-import { AppEvent } from '@/model/App'
-
-const AUTO_REDIRECT_TIMEOUT = 200
 
 @Component({
   name: 'CreateAccount',
@@ -89,7 +86,7 @@ export default class CreateAccount extends Mixins(Base, Input) {
 
       setTimeout(() => {
         this.navigate(ERouter.Vault)
-      }, AUTO_REDIRECT_TIMEOUT)
+      }, this.config.const.autoRedirectTimeout)
     } catch (e) {
       this.handleError(e)
       this.ui.commitLoading(false)
@@ -100,15 +97,15 @@ export default class CreateAccount extends Mixins(Base, Input) {
 
   private handleError (e: Error | null = null): void {
     if (this.passwordsAreShort) {
-      this.ui.commitError('Password too short')
+      this.ui.commitError(new Error(ErrorCode.PasswordShort))
       return
     }
     if (this.passwordsNotEqual) {
-      this.ui.commitError('Passwords does not match')
+      this.ui.commitError(new Error(ErrorCode.PasswordMismatch))
       return
     }
     if (e) {
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
     }
   }
 

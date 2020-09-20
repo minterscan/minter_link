@@ -1,29 +1,95 @@
 .view.notification {
   @extend .modal-form;
 
-  .action-send {
+  height: 100vh;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    flex-grow: 1;
     height: 100%;
-    margin-top: -1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
 
+  .icon {
+    padding: 2rem 0;
+    position: relative;
+
+    svg {
+      position: relative;
+      background: #fff;
+      display: block;
+      margin: 0 auto;
+    }
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      border: 1px dashed #ccc;
+    }
+  }
+
+  .warning {
+    text-align: center;
+  }
+
   .hash {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    height: 12rem;
   }
 
   .wallet {
+    @extend .background-striped;
+    
     color: #fff;
-    padding: 1.5rem;
+    padding: 1rem;
     margin: 0 -1.5rem;
-    background-color: var(--color);
     text-align: center;
+
+    .label {
+      margin: 0 auto;
+      font-size: 1.2rem;
+      width: 15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      span {
+        font-size: 2rem;
+        margin: 0 1rem 0 0;
+      }
+    }
+
+    a {
+      color: #fff;
+    }
 
     .address {
       font-weight: bold;
-      margin-bottom: 1rem;
+      margin-bottom: .5rem;
     }
+
+    .balance {
+      color: #f8b002;
+    }
+  }
+
+  .wallet-empty {
+    background: rgb(199, 199, 199);
+    padding: 1rem;
+    margin: 0 -1.5rem 1rem;
+    font-size: 1rem;
+    text-align: center;
   }
 
   .amount,
@@ -34,6 +100,10 @@
   .payload,
   .merchant-address {
     margin-bottom: 24px;
+  }
+
+  .merchant-address {
+    text-align :center;
   }
 
   .merchant-info {
@@ -58,7 +128,7 @@
       }
 
       .not-enough {
-        color: #888888;
+        color: #ff4d4f;
         margin: 0 0 0 1rem;
         flex-grow: 1;
         text-align: right;
@@ -78,6 +148,7 @@
 
   .buttons {
     @extend .flex-center;
+    margin: 1rem 0 0 0;
 
     button:last-child {
       margin-right: 0;

@@ -1,7 +1,17 @@
 import config from '@/config'
 import { getQuery } from '@/services/Util'
 import axios, { AxiosResponse } from 'axios'
+import { ApplicationError } from '@/model/Error'
 import { EstimateBuyRequest, EstimateSellRequest, EstimateSellAllRequest } from '@/model/Estimate'
+
+// Response interceptor
+axios.interceptors.response.use(function (response) {
+  // Any status code that lie within the range of 2xx cause this function to trigger
+  return response
+}, function (error) {
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  throw new ApplicationError(error.response.data.error.code)
+})
 
 const baseUrl = config.gateApiBaseUrl
 

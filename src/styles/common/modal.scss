@@ -1,0 +1,23 @@
+.ant-modal-root {
+  .ant-modal-header {
+    @extend .background-striped;
+
+    .ant-modal-title {
+      color: #fff;  
+    }
+  }
+
+  .ant-modal-content {
+    overflow: hidden;
+    background: none;
+  }
+
+  .ant-modal-body,
+  .ant-modal-footer {
+    background: #fff;
+  }
+
+  .ant-modal-footer {
+    padding: 10px 24px;
+  }
+}

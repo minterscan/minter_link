@@ -1,12 +1,11 @@
 <template>
-  <span class="cp clipboard-button">
-    <a-button :shape="shape" @click="copy()" :type="type" v-if="shape">
-      <slot name="content">Copy</slot>
-    </a-button>
-    <a-button @click="copy()" :type="type" v-else>
-      <slot name="content">Copy</slot>
-    </a-button>
-  </span>
+  <a-button
+    :size="size"
+    :type="type"
+    shape="circle"
+    icon="copy"
+    @click="copy()"
+  />
 </template>
 
 <script lang="ts">
@@ -20,6 +19,7 @@ export default class ClipboardButton extends Vue {
   @Prop({ default: '' }) text!: string
   @Prop({ default: '' }) shape!: string
   @Prop({ default: '' }) type!: string
+  @Prop({ default: 'default' }) size!: string
 
   async copy (): Promise<void> {
     if (clipboard.isSupported()) {

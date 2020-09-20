@@ -29,7 +29,8 @@
               ref="input"
               size="large"
               v-model="label"
-              placeholder="POPE"
+              placeholder="Name"
+              @keyup.enter="submit()"
             >
               <a-icon slot="prefix" type="flag" />
             </a-input>
@@ -42,6 +43,7 @@
               size="large"
               v-model="address"
               placeholder="Mx..."
+              @keyup.enter="submit()"
             >
               <a-icon slot="prefix" type="deployment-unit" />
             </a-input>
@@ -61,10 +63,8 @@ import Loading from '@/components/common/Loading.vue'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import AddressLink from '@/components/common/address/AddressLink.vue'
 
-const AUTO_CLOSE_TIMEOUT = 1000
-
 @Component({
-  name: 'ContactEdit',
+  name: 'AddressBookItemEdit',
   components: { AddressLink, Loading }
 })
 export default class AddressBookItemEdit extends Mixins(Base) {
@@ -91,6 +91,8 @@ export default class AddressBookItemEdit extends Mixins(Base) {
   }
 
   async submit (): Promise<void> {
+    if (!this.valid) return
+
     this.loading = true
 
     const item = await this.postman.addressBookItemAdd({
@@ -101,7 +103,7 @@ export default class AddressBookItemEdit extends Mixins(Base) {
     setTimeout(() => {
       this.close()
       this.addressBook.commitItemEdit(item)
-    }, AUTO_CLOSE_TIMEOUT)
+    }, this.config.const.autoRedirectTimeout)
   }
 
   reset (): void {

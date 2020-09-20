@@ -2,25 +2,18 @@
   <a-layout-header class="header" v-if="visible">
     <div class="start">
       <!-- Logo -->
-      <router-link to="/vault" v-if="state.vault"><logo /></router-link>
-      <router-link to="/" v-else><logo :showText="true" /></router-link>
+      <logo @click.native="openMenu()" :simple="true" />
     </div>
 
     <!-- Wallets -->
     <div class="center">
       <wallets-switcher />
-      <address-book-title />
     </div>
 
     <!-- Buttons -->
     <div class="end">
-      <template v-if="state.loggedIn">
-        <a-button shape="circle" icon="user" size="large" @click="toggleVaultMenu()" />
-      </template>
+      <wallet-menu v-if="Object.keys(this.state.vault.wallets).length" />
     </div>
-
-    <!-- Menu -->
-    <vault-menu :visible="vaultMenuVisible" :close="toggleVaultMenu" />
   </a-layout-header>
 </template>
 
@@ -29,13 +22,12 @@ import Base from '@/mixins/Base'
 import { ERouter } from '@/model/Router'
 import Logo from '@/components/common/Logo.vue'
 import { Component, Mixins } from 'vue-property-decorator'
-import VaultMenu from '@/components/common/navbar/Menu.vue'
+import WalletMenu from '@/components/wallet/WalletMenu.vue'
 import WalletsSwitcher from '@/components/common/navbar/WalletsSwitcher.vue'
-import AddressBookTitle from '@/components/address-book/AddressBookTitle.vue'
 
 @Component({
   name: 'Navbar',
-  components: { AddressBookTitle, Logo, VaultMenu, WalletsSwitcher }
+  components: { Logo, WalletMenu, WalletsSwitcher }
 })
 export default class Navbar extends Mixins(Base) {
   vaultMenuVisible = false
@@ -44,8 +36,10 @@ export default class Navbar extends Mixins(Base) {
     return this.$route.path !== ERouter.Home
   }
 
-  toggleVaultMenu () {
-    this.vaultMenuVisible = !this.vaultMenuVisible
+  openMenu (): void {
+    if (!this.state.loggedIn) return
+
+    this.ui.commitMenuVisible(true)
   }
 }
 </script>

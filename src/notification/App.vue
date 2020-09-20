@@ -1,5 +1,5 @@
 <template>
-  <app class="app notification" />
+  <app class="app notification" type="notification" />
 </template>
 
 <script lang="ts">

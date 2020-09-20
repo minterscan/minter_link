@@ -1,0 +1,52 @@
+.cp.settings-wallets {
+  .ant-card {
+    margin: 0 0 2rem 0;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    .wallet {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .end {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .meta {
+        .icon {
+          margin: 0 .5rem 0 0;
+        }
+      }
+
+      a {
+        padding: 0;
+      }
+    }
+    
+    .seed {
+      padding: 16px 15px 16px 60px;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin: 0;
+    }
+  
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  
+      li {
+        display: flex;
+        padding: .5rem 0;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+  }
+}

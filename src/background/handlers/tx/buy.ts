@@ -10,7 +10,7 @@ import { TxBuyRequest, PreparedTxData } from '@/model/Tx'
 const MAX_VALUE_TO_SELL = Number.MAX_SAFE_INTEGER
 
 // Tx.BuyCoin
-export async function handleTxBuy (message: Letter): Promise<AxiosResponse> {
+export async function handleTxBuy (message: Letter): Promise<AxiosResponse|undefined> {
   const data: TxBuyRequest = message.body
   const txData: PreparedTxData = new TxDataBuy({
     coinToBuy: coinToBuffer(data.coinToBuy),
@@ -19,5 +19,5 @@ export async function handleTxBuy (message: Letter): Promise<AxiosResponse> {
     maximumValueToSell: `0x${convertToPip(MAX_VALUE_TO_SELL, 'hex')}`
   })
 
-  return handleTx(txData, TX_TYPE.BUY, data.payload)
+  return handleTx(txData, TX_TYPE.BUY, data.payload, data.gasCoin)
 }

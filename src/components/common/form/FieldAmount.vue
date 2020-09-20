@@ -5,6 +5,7 @@
       size="large"
       :defaultValue="Number(defaultValue)"
       v-model.number="amount"
+      decimalSeparator=","
       :placeholder="placeholder"
     />
     <a-icon type="up" @click="useMax()" class="icon" />
@@ -23,8 +24,8 @@ export default class FieldAmount extends Mixins(Base) {
 
   @Prop() max!: string
   @Prop() change!: Function
-  @Prop({ default: 'Amount' }) placeholder!: string
   @Prop({ default: '' }) defaultValue!: string
+  @Prop({ default: 'Amount' }) placeholder!: string
 
   @Watch('defaultValue')
   onDefaultValueChange (value: string) {
@@ -42,7 +43,7 @@ export default class FieldAmount extends Mixins(Base) {
   }
 
   @Watch('max')
-  onMaxChange () {
+  onMaxChange (): void {
     if (this.isUseMax) this.useMax()
   }
 

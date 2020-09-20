@@ -7,7 +7,8 @@
 
     <!-- Wallet Label -->
     <div class="item">
-      {{ state.walletLabel | short }}
+      <span v-if="state.wallet">{{ state.wallet.meta.icon }}</span>
+      {{ state.walletLabel | short(7, 16) }}
     </div>
 
     <!-- Next -->
@@ -26,7 +27,7 @@ import Icon from 'vue-awesome/components/Icon.vue'
 import { Component, Mixins } from 'vue-property-decorator'
 
 @Component({
-  name: 'WalletsSwitcher.vue',
+  name: 'WalletsSwitcher',
   components: { Icon }
 })
 export default class NavbarWalletsSwitcher extends Mixins(Base) {
@@ -39,10 +40,7 @@ export default class NavbarWalletsSwitcher extends Mixins(Base) {
   }
 
   get visible (): boolean {
-    return (
-      this.$route.path === ERouter.Vault ||
-      this.$route.path === ERouter.Notification
-    )
+    return this.$route.path === ERouter.Vault
   }
 
   mounted (): void {
@@ -63,6 +61,7 @@ export default class NavbarWalletsSwitcher extends Mixins(Base) {
     })
   }
 
+  // TODO: fetch wallets from background storage instead of Vuex
   async prev (): Promise<void> {
     if (this.loading) { return }
     if (!this.state.wallets) { return }

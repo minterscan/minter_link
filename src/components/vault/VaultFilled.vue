@@ -1,10 +1,9 @@
 <template>
   <div class="cp vault-filled">
-    <div class="color" :style="`--color: ${state.wallet.meta.color}`">
-      <div class="first"></div>
-      <div class="second"></div>
-    </div>
+    <!-- Vault -->
     <vault-wallet />
+
+    <!-- Modals -->
     <modal-wallet-edit />
     <modal-action-send v-if="actionSendVisible" />
     <modal-action-convert v-if="actionConvertVisible" />
@@ -40,11 +39,11 @@ export default class VaultFilled extends Base {
   actionDelegateVisible = false
   actionUnbondVisible = false
 
-  mounted () {
+  mounted (): void {
     this.listen()
   }
 
-  listen () {
+  listen (): void {
     // Send
     this.$root.$on('wallet:action:send:open', () => {
       this.actionSendVisible = true

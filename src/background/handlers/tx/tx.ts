@@ -8,7 +8,7 @@ import { coinToBuffer } from 'minterjs-tx/src/helpers'
 import TxSignature from 'minterjs-tx/src/tx-signature'
 
 // Tx wrapper
-export async function handleTx (txData: PreparedTxData, type: string, payload: string): Promise<AxiosResponse> {
+export async function handleTx (txData: PreparedTxData, type: string, payload: string, gasCoin: string): Promise<AxiosResponse> {
   const seed = await vault.getActiveWalletSeed()
   const address = await vault.getActiveWalletAddress()
   const nonceResponse = await gate.getNonce(address)
@@ -19,7 +19,7 @@ export async function handleTx (txData: PreparedTxData, type: string, payload: s
     nonce,
     chainId: '0x01',
     gasPrice: '0x01',
-    gasCoin: coinToBuffer('BIP'),
+    gasCoin: coinToBuffer(gasCoin),
     type,
     data: txData.serialize(),
     signatureType: '0x01',
@@ -28,7 +28,5 @@ export async function handleTx (txData: PreparedTxData, type: string, payload: s
 
   tx.signatureData = (new TxSignature()).sign(tx.hash(false), privateKey).serialize()
 
-  const serializedTx = tx.serialize().toString('hex')
-
-  return gate.txSend(`${serializedTx}`)
+  return gate.txSend(tx.serialize().toString('hex'))
 }

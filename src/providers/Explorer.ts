@@ -35,7 +35,7 @@ export class ExplorerDataProvider {
   }
 
   /**
-   * Get address deelgations
+   * Get address delegations
    *
    * @param address
    */

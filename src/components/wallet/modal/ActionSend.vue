@@ -8,7 +8,7 @@
     cancelText="Close"
     @ok="hash ? resetHash() : submit()"
     :confirmLoading="loading"
-    :okButtonProps="{ props: { disabled: loading || invalid } }"
+    :okButtonProps="{ props: { disabled: loading || (!hash && invalid) } }"
     :cancelButtonProps="{ props: {disabled: loading} }"
     @cancel="close"
   >
@@ -52,6 +52,7 @@
           <wallet-select :wallets="wallets" :change="changeAddress" />
         </a-input-group>
       </a-form-item>
+
       <!-- Amount & Coin -->
       <a-form-item>
         <a-input-group compact>
@@ -60,25 +61,41 @@
         </a-input-group>
       </a-form-item>
 
-      <!-- Payload -->
-      <a-form-item class="">
-        <a-switch id="with-payload" v-model="withPayload" />
-        <label for="with-payload" title="Payload">Message</label>
+      <!-- Advanced -->
+      <a-form-item class="advanced">
+        <a-switch id="advanced" v-model="advanced" />
+        <label for="advanced">Advanced Mode</label>
+      </a-form-item >
+
+      <!-- Gas Coin -->
+      <a-form-item class="fee-coin" v-if="advanced">
+        <label>Coin to pay fee:</label>
+        <wallet-coin-select
+          :coins="walletCoins"
+          :change="changeGasCoin"
+          placeholder="Coin to pay fee"
+        />
       </a-form-item>
-      <a-form-item v-if="withPayload">
+
+      <!-- Payload Input -->
+      <a-form-item v-if="advanced">
         <a-textarea
           v-model="payload"
           :disabled="loading"
           placeholder="Message"
-          :autosize="{ minRows: 3, maxRows: 6 }"
+          :autoSize="{ minRows: 3, maxRows: 6 }"
         />
       </a-form-item>
     </a-form>
 
     <!-- Loading Indicator -->
     <loading v-show="loading" />
+
     <!-- Low balance indicator -->
-    <div class="insufficient-funds" v-if="amount > maxAmount && !hash">Insufficient funds</div>
+    <template v-if="this.amount !== ''">
+      <div class="insufficient-funds" v-if="incufficientFeeFunds">Insufficient funds for fee</div>
+      <div class="insufficient-funds" v-if="!incufficientFeeFunds && incufficientFunds">Insufficient funds</div>
+    </template>
   </a-modal>
 </template>
 
@@ -104,6 +121,7 @@ import AddressBookSelect from '@/components/common/form/AddressBookSelect.vue'
   components: { AddressBookSelect, Icon, FieldAmount, Loading, TxSuccess, WalletSelect, WalletCoinSelect }
 })
 export default class ActionSend extends Mixins(TxForm) {
+  type = ETxType.Send
   address = ''
   coin: string = ECoin.BIP
   amount = ''
@@ -115,12 +133,21 @@ export default class ActionSend extends Mixins(TxForm) {
     AppSendMode.Wallet
   ]
 
+  get incufficientFunds (): boolean {
+    return !this.hash && this.amount > this.maxAmount
+  }
+
+  get incufficientFeeFunds (): boolean {
+    return !this.hash && this.amount !== '' && new Big(this.gasCoinAmount).isLessThan(new Big(this.fee))
+  }
+
   get invalid (): boolean {
     return (
       !this.coin ||
       !this.address ||
       this.amount === '' ||
       this.invalidPayload ||
+      new Big(this.gasCoinAmount).isLessThan(new Big(this.fee)) ||
       this.amount > this.maxAmount ||
       !isValidAddress(this.address) ||
       (new Big(this.amount).toNumber()) < 0
@@ -146,20 +173,21 @@ export default class ActionSend extends Mixins(TxForm) {
   }
 
   @Watch('mode')
-  onModeChange () {
+  onModeChange (): void {
     this.address = ''
     this.hash = ''
     this.loading = false
   }
 
   @Watch('coin')
-  onCoinChange () {
+  onCoinChange (): void {
     this.amount = ''
   }
 
   @Watch('coin', { immediate: true })
+  @Watch('gasCoin', { immediate: true })
   @Watch('payload', { immediate: true })
-  onPayloadChange () {
+  onPayloadChange (): void {
     this.changeMaxAmount()
 
     if (this.amount >= this.maxAmount) {
@@ -167,11 +195,11 @@ export default class ActionSend extends Mixins(TxForm) {
     }
   }
 
-  changeAddress (address: string) {
+  changeAddress (address: string): void {
     this.address = address
   }
 
-  changeAmount (amount: string) {
+  changeAmount (amount: string): void {
     this.amount = amount
   }
 
@@ -187,11 +215,7 @@ export default class ActionSend extends Mixins(TxForm) {
 
     if (!balance) return
 
-    let amount = new Big(balance.amount)
-
-    if (this.coin === ECoin.BIP) {
-      amount = amount.minus(this.getFee(ETxType.Send))
-    }
+    const amount = new Big(balance.amount).minus(this.fee)
 
     this.maxAmount = amount ? `${amount.toFixed()}` : ''
   }
@@ -202,6 +226,7 @@ export default class ActionSend extends Mixins(TxForm) {
     this.amount = ''
     this.payload = ''
     this.loading = false
+    this.advanced = false
   }
 
   resetHash (): void {
@@ -214,16 +239,17 @@ export default class ActionSend extends Mixins(TxForm) {
 
       const response = await this.postman.txSend({
         address: this.address,
+        gasCoin: this.gasCoin,
         coin: this.coin,
         amount: this.amount,
         payload: this.payload
       })
 
-      this.reset()
+      this.resetForm()
       this.hash = response.data.data.hash
     } catch (e) {
-      this.reset()
-      this.ui.commitError(e.message)
+      this.resetForm()
+      this.ui.commitError(e)
     }
   }
 

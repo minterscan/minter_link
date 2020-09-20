@@ -6,9 +6,7 @@
 import { browser } from 'webextension-polyfill-ts'
 import { Component, Vue } from 'vue-property-decorator'
 
-@Component({
-  name: 'ClipboardButton'
-})
+@Component
 export default class ClipboardButton extends Vue {
   async expand (): Promise<void> {
     await browser.tabs.create({ url: browser.runtime.getURL('tab.html') })

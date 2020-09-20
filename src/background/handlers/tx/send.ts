@@ -8,7 +8,7 @@ import { toBuffer, convertToPip } from 'minterjs-util'
 import { TxSendRequest, PreparedTxData } from '@/model/Tx'
 
 // Tx.Send
-export async function handleTxSend (message: Letter): Promise<AxiosResponse> {
+export async function handleTxSend (message: Letter): Promise<AxiosResponse|undefined> {
   const data: TxSendRequest = message.body
   const txData: PreparedTxData = new TxDataSend({
     to: toBuffer(data.address),
@@ -16,5 +16,5 @@ export async function handleTxSend (message: Letter): Promise<AxiosResponse> {
     value: `0x${convertToPip(data.amount, 'hex')}`
   })
 
-  return handleTx(txData, TX_TYPE.SEND, data.payload)
+  return handleTx(txData, TX_TYPE.SEND, data.payload, data.gasCoin)
 }

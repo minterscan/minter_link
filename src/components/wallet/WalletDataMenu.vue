@@ -1,5 +1,9 @@
 <template>
-  <a-radio-group v-model="tab" class="cp wallet-data-menu">
+  <a-radio-group
+    v-model="tab"
+    button-style="solid"
+    class="cp wallet-data-menu"
+  >
     <a-radio-button
       :key="key"
       :value="key"
@@ -16,11 +20,9 @@ import Base from '@/mixins/Base'
 import { Component, Watch } from 'vue-property-decorator'
 import { UIWalletButtons, UIWalletData } from '@/model/Wallet'
 
-@Component({
-  name: 'WalletDataMenu'
-})
+@Component
 export default class WalletDataMenu extends Base {
-  tab: UIWalletData = UIWalletData.Transactions
+  tab = UIWalletData.Transactions
   buttons: UIWalletButtons = {
     [UIWalletData.Transactions]: {
       icon: 'thunderbolt',

@@ -2,9 +2,10 @@ import { UIWalletData } from '@/model/Wallet'
 import { Module, Mutation, VuexModule } from 'vuex-module-decorators'
 
 @Module({ namespaced: true, name: 'ui' })
-export default class UI extends VuexModule {
+export default class UIStore extends VuexModule {
   loading = true
   error: Error | null = null
+  menuVisible = false
   walletTab: UIWalletData = UIWalletData.Transactions
 
   @Mutation
@@ -13,16 +14,17 @@ export default class UI extends VuexModule {
   }
 
   @Mutation
-  commitError (payload: string | null) {
-    if (payload) {
-      this.error = new Error(payload)
-    } else {
-      this.error = null
-    }
+  commitError (payload: Error | null) {
+    this.error = payload
   }
 
   @Mutation
   commitWalletTab (payload: UIWalletData) {
     this.walletTab = payload
+  }
+
+  @Mutation
+  commitMenuVisible (payload: boolean) {
+    this.menuVisible = payload
   }
 }

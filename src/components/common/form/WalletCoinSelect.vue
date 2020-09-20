@@ -44,7 +44,7 @@ export default class CoinSelect extends Mixins(Base) {
     this.change(this.value)
   }
 
-  filterOption (input: string, option: VNode) {
+  filterOption (input: string, option: VNode): boolean {
     if (!option.componentOptions) { return false }
     if (!option.componentOptions.children) { return false }
     if (!option.componentOptions.children.length) { return false }

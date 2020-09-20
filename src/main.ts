@@ -12,6 +12,7 @@ import 'ant-design-vue/dist/antd.less'
 export default function init (App: VueConstructor) {
   Vue.use(Antd)
   Vue.use(VueRouter)
+  Vue.config.devtools = true
   Vue.config.productionTip = false
 
   new Vue({

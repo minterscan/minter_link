@@ -5,18 +5,15 @@
 </template>
 
 <script lang="ts">
-import config from '@/config'
 import Base from '@/mixins/Base'
 import { Component, Prop } from 'vue-property-decorator'
 
-@Component({
-  name: 'BlockLink'
-})
+@Component
 export default class BlockLink extends Base {
-@Prop({ default: '' }) height!: string
+  @Prop({ default: '' }) height!: string
 
-get url (): string {
-  return `${config.explorerBaseUrl}/block/${this.height}`
-}
+  get url (): string {
+    return `${this.config.explorerBaseUrl}/block/${this.height}`
+  }
 }
 </script>

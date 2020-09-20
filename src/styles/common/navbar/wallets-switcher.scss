@@ -1,4 +1,5 @@
 .cp.wallets-switcher {
+  color: #fff;
   display: flex;
   justify-content: space-between;
 
@@ -25,6 +26,11 @@
 
   .item {
     @extend .flex-center;
-    width: 15rem;
+    width: 18rem;
+
+    span {
+      font-size: 2rem;
+      margin: 0 1rem 0 0;
+    }
   }
 }

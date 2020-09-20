@@ -10,26 +10,38 @@
   }
 
   .hash-from-payload {
-    width: 11rem;
     display: flex;
     align-items: center;
 
     .hash-from {
-      width: 8rem;
+      width: 13rem;
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
     }
 
-    svg {
+    .tx-link,
+    .address-link,
+    .validator-link {
+      padding: 0;
+      display: inline-block;
+    }
+
+    .me {
+      color: $color-action;
+    }
+
+    .icon-payload {
       cursor: pointer;
-      margin: 0 0 0 1rem;
+      margin: 0 0 0 .5rem;
       font-size: 1.5rem;
       transition: transform 0.2s ;
       outline: none;
       position: relative;
+      flex-shrink: 0;
     }
 
-    svg:hover {
+    .icon-payload:hover {
       animation-duration: .6s;
       animation-name: bounce-top;
       animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);

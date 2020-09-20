@@ -1,7 +1,7 @@
-import { APP_PORT } from '@/model/App'
-import { Vault } from '@/model/Vault'
 import { browser } from 'webextension-polyfill-ts'
 import { Letter, LetterSubject } from '@/model/Letter'
+import { ConnectRequest, SignRequest, PaymentRequest } from 'minter-connect'
+import { Vault, VaultConnectedWebsites, DeleteConnectedWebsiteRequest } from '@/model/Vault'
 import {
   MinterWalletAddRequest,
   MinterWalletBalance,
@@ -11,7 +11,9 @@ import {
 } from '@/model/Wallet'
 import {
   TxBuyRequest,
-  TxDelegateRequest, TxSellAllRequest, TxSellRequest,
+  TxDelegateRequest,
+  TxSellAllRequest,
+  TxSellRequest,
   TxSendRequest,
   TxUnbondRequest
 } from '@/model/Tx'
@@ -21,6 +23,7 @@ import { Validator } from '@/model/Validator'
 import { ExplorerAddressTxsRequest } from '@/model/Explorer'
 import { AddressBook, AddressBookItem } from '@/model/AddressBook'
 import { EstimateResponse, EstimateBuyRequest, EstimateSellRequest } from '@/model/Estimate'
+import { Settings } from '@/model/Settings'
 
 /**
  * Main data bus service between extensions, background and content scripts
@@ -44,18 +47,14 @@ export class PostmanService {
   async sendToTab<T> (message: Letter, tabId = 0): Promise<void> {
     try {
       if (!tabId) {
-        const tabs = await browser.tabs.query({ active: true })
+        const tabs = await browser.tabs.query({ active: true, currentWindow: true })
 
         if (!tabs[0].id || !tabs[0].url) return
 
         tabId = tabs[0].id
       }
 
-      const port = browser.tabs.connect(tabId, { name: APP_PORT })
-
-      if (!port) return
-
-      port.postMessage(message)
+      browser.tabs.sendMessage(tabId, message)
     } catch (e) {
       // Do nothing
     }
@@ -113,9 +112,30 @@ export class PostmanService {
   }
 
   /**
+   * Delete Vault
+   */
+  async vaultDelete () {
+    return this.send({
+      subject: LetterSubject.CmdVaultDelete
+    })
+  }
+
+  /**
+   * Try to unlock Vault and return wallet seed
+   *
+   * @param body
+   */
+  async getWalletSeed (body: { password: string; address: string }): Promise<string> {
+    return this.send({
+      subject: LetterSubject.GetWalletSeed,
+      body
+    })
+  }
+
+  /**
    * Get Vault status
    */
-  async getVaultStatus (): Promise<string> {
+  async getVaultStatus (): Promise<boolean> {
     return this.send({
       subject: LetterSubject.GetVaultStatus
     })
@@ -233,11 +253,9 @@ export class PostmanService {
    * Delete password from Keyring
    */
   async deletePassword (): Promise<void> {
-    const message = {
-      subject: LetterSubject.DeletePassword
-    }
+    const message = { subject: LetterSubject.DeletePassword }
 
-    this.sendToTab(message)
+    // await this.sendToTab(message)
     return this.send(message)
   }
 
@@ -258,7 +276,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async setVaultActiveWalletMeta (body: MinterWalletMeta): Promise<Vault> {
+  async setVaultWalletMeta (body: { address: string; meta: MinterWalletMeta }): Promise<Vault> {
     return this.send({
       subject: LetterSubject.SetVaultActiveWalletMeta,
       body
@@ -395,6 +413,136 @@ export class PostmanService {
   }
 
   /**
+   * Get Settings Public Data
+   *
+   * @param body
+   */
+
+  async getSettingsPublicData (): Promise<Settings> {
+    return this.send({
+      subject: LetterSubject.GetSettingsPublicData
+    })
+  }
+
+  /**
+   * Set Auto Lock
+   *
+   * @param body
+   */
+  async setSettingsAutoLock (body: number): Promise<number> {
+    return this.send({
+      subject: LetterSubject.SetSettingsAutoLock,
+      body
+    })
+  }
+
+  /**
+   * Connect Request
+   *
+   * @param body
+   */
+  async connectRequest (body: ConnectRequest): Promise<void> {
+    return this.send({
+      subject: LetterSubject.ConnectRequest,
+      body
+    })
+  }
+
+  /**
+   * Reject Connect Request
+   *
+   * @param tabId
+   */
+  async connectReject (tabId: number): Promise<void> {
+    return this.sendToTab({
+      subject: LetterSubject.ConnectReject
+    }, tabId)
+  }
+
+  /**
+   * Accept Connect Request
+   *
+   * @param tabId
+   */
+  async connectAccept (tabId: number): Promise<void> {
+    return this.sendToTab({
+      subject: LetterSubject.ConnectAccept
+    }, tabId)
+  }
+
+  /**
+   * Auth Request
+   *
+   * @param body
+   */
+  async signRequest (body: SignRequest): Promise<void> {
+    return this.send({
+      subject: LetterSubject.SignRequest,
+      body
+    })
+  }
+
+  /**
+   * Auth Payment Request
+   *
+   * @param tabId
+   */
+  async signReject (tabId: number): Promise<void> {
+    return this.sendToTab({
+      subject: LetterSubject.SignReject
+    }, tabId)
+  }
+
+  /**
+   * Auth Payment Request
+   *
+   * @param message
+   * @param tabId
+   */
+  async signAccept (message: string, tabId: number): Promise<void> {
+    return this.sendToTab({
+      subject: LetterSubject.SignAccept,
+      body: message
+    }, tabId)
+  }
+
+  /**
+   * Sign message
+   *
+   * @param body
+   */
+  async sign (body: string): Promise<string> {
+    return this.send({
+      subject: LetterSubject.CmdSign,
+      body
+    })
+  }
+
+  /**
+   * Add connected website to Vault
+   *
+   * @param body
+   */
+  async addConnectedWebsite (body: string): Promise<VaultConnectedWebsites> {
+    return this.send({
+      subject: LetterSubject.CmdConnectedWebsitesAdd,
+      body
+    })
+  }
+
+  /**
+   * Delete connected website from Vault
+   *
+   * @param body
+   */
+  async deleteConnectedWebsite (body: DeleteConnectedWebsiteRequest): Promise<VaultConnectedWebsites> {
+    return this.send({
+      subject: LetterSubject.CmdConnectedWebsitesDelete,
+      body
+    })
+  }
+
+  /**
    * Payment Request
    *
    * @param body
@@ -420,13 +568,15 @@ export class PostmanService {
   /**
    * Accept Payment Request
    *
+   * @param body
    * @param tabId
    */
-  async paymentAccept (tabId: number): Promise<void> {
+  async paymentAccept (body: string, tabId: number): Promise<void> {
     return this.sendToTab({
-      subject: LetterSubject.PaymentAccept
+      subject: LetterSubject.PaymentAccept,
+      body
     }, tabId)
   }
 }
 
-export default new PostmanService()
+export default PostmanService

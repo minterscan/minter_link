@@ -1,7 +1,7 @@
 <template>
   <div class="cp delegations" v-if="visible">
     <div class="head" v-if="delegations.length">
-      {{ total | toFixed(0) }} BIP
+      Total: ~{{ total | pretty }} BIP
     </div>
 
     <!-- Data -->
@@ -16,15 +16,15 @@
         <!-- List -->
         <ul class="list" v-else>
           <li v-for="(delegation, key) in delegations" :key="key">
-            <span class="pub-key">
-              <validator-link :pubKey="delegation.pub_key" :name="delegation.validator_meta.name" />
-            </span>
-            <span class="value">
-              {{ delegation.value | pretty }}
-            </span>
-            <span class="coin">
-              {{ delegation.coin }}
-            </span>
+            <div class="pub-key">
+              <validator-link :pubKey="delegation.pub_key" :meta="delegation.validator_meta" />
+            </div>
+            <div class="coin-value">
+              <span>{{ delegation.value | pretty }} {{ delegation.coin }}</span>
+              <span class="small" v-if="delegation.coin !== 'BIP'">
+                {{ delegation.bip_value | pretty }} BIP
+              </span>
+            </div>
           </li>
         </ul>
       </template>
@@ -58,7 +58,7 @@ export default class WalletDelegations extends Mixins(Base, TxHelper) {
   get delegations (): Delegation[] {
     if (!this.data) return []
 
-    return this.data.data.sort((a, b) => a.bip_value > b.bip_value ? -1 : 1)
+    return this.data.data.slice().sort((a, b) => +a.bip_value > +b.bip_value ? -1 : 1)
   }
 
   get total (): number {
@@ -68,7 +68,7 @@ export default class WalletDelegations extends Mixins(Base, TxHelper) {
   }
 
   @Watch('state.wallet.address', { immediate: true })
-  async onWalletAddressChange (address: string) {
+  async onWalletAddressChange (address: string): Promise<void> {
     this.loading = true
     this.unsubscribe()
     this.fetch(address)
@@ -76,21 +76,21 @@ export default class WalletDelegations extends Mixins(Base, TxHelper) {
     this.loading = false
   }
 
-  async fetch (address: string) {
+  async fetch (address: string): Promise<void> {
     try {
       this.data = await this.postman.getAddressDelegations(address)
     } catch (e) {
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
     }
   }
 
-  subscribe (address: string) {
+  subscribe (address: string): void {
     this.subscription = window.setInterval(() => {
       this.fetch(address)
     }, 10000)
   }
 
-  unsubscribe () {
+  unsubscribe (): void {
     window.clearInterval(this.subscription)
   }
 }

@@ -45,14 +45,33 @@ const routes = [
     component: () => import(/* webpackChunkName: "contacts" */ '@/views/address-book/AddressBook.vue')
   },
   {
-    path: ERouter.Notification,
-    name: 'notification',
+    path: ERouter.RequestPayment,
+    name: 'request-payment',
     meta: { protected: true },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/Notification.vue')
+    component: () => import(/* webpackChunkName: "request-payment" */ '@/views/requests/Payment.vue')
+  },
+  {
+    path: ERouter.RequestConnect,
+    name: 'request-connect',
+    meta: { protected: true },
+    component: () => import(/* webpackChunkName: "request-connect" */ '@/views/requests/Connect.vue')
+  },
+  {
+    path: ERouter.RequestSign,
+    name: 'request-sign',
+    meta: { protected: true },
+    component: () => import(/* webpackChunkName: "request-sign" */ '@/views/requests/Sign.vue')
+  },
+  {
+    path: ERouter.Settings,
+    name: 'settings',
+    meta: { protected: true },
+    component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings.vue')
   },
   {
     path: ERouter.About,
     name: 'about',
+    meta: { protected: true },
     component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
   }
 ]

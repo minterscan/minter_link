@@ -8,13 +8,13 @@ import { Component, Mixins } from 'vue-property-decorator'
 @Component
 export default class MetaForm extends Mixins(Base) {
   protected label = ''
-  protected color = ''
+  protected icon = ''
 
   changeLabel (label: string) {
     this.label = label
   }
 
-  changeColor (color: string) {
-    this.color = color
+  changeIcon (icon: string) {
+    this.icon = icon
   }
 }

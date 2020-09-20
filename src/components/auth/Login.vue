@@ -13,7 +13,7 @@
       </a-input>
     </a-form-item>
     <a-form-item>
-      <a-button ghost type="primary" size="large" block @click="submit()">
+      <a-button ghost type="action" size="large" block @click="submit()">
         Unlock
       </a-button>
     </a-form-item>
@@ -23,12 +23,10 @@
 <script lang="ts">
 import Base from '@/mixins/Base'
 import Input from '@/mixins/Input'
+import { AppEvent } from '@/model/App'
 import { ERouter } from '@/model/Router'
 import Logo from '@/components/common/Logo.vue'
 import { Component, Mixins } from 'vue-property-decorator'
-import { AppEvent } from '@/model/App'
-
-const AUTO_REDIRECT_TIMEOUT = 200
 
 @Component({
   name: 'Login',
@@ -46,9 +44,9 @@ export default class Login extends Mixins(Base, Input) {
 
       setTimeout(() => {
         this.navigate(ERouter.Vault)
-      }, AUTO_REDIRECT_TIMEOUT)
+      }, this.config.const.autoRedirectTimeout)
     } catch (e) {
-      this.ui.commitError(e.message)
+      this.ui.commitError(e)
     } finally {
       this.password = ''
     }

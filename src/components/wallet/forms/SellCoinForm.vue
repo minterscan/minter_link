@@ -2,8 +2,6 @@
   <div class="cp convert-form">
     <!-- Loading Indicator -->
     <loading v-show="loading" />
-    <!-- Low balance indicator -->
-    <div class="insufficient-funds" v-if="valueToSell > maxAmount">Insufficient funds</div>
 
     <!-- Estimate -->
     <convert-estimate
@@ -33,22 +31,38 @@
         />
       </a-form-item>
 
-      <!-- Payload Switcher -->
-      <a-form-item>
-        <a-switch id="with-payload" v-model="withPayload" />
-        <label for="with-payload" title="Payload">Payload</label>
+      <!-- Advanced -->
+      <a-form-item class="advanced">
+        <a-switch id="advanced" v-model="advanced" />
+        <label for="advanced">Advanced Mode</label>
+      </a-form-item >
+
+      <!-- Gas Coin -->
+      <a-form-item class="fee-coin" v-if="advanced">
+          <label>Coin to pay fee:</label>
+          <wallet-coin-select
+          :coins="walletCoins"
+          :change="changeGasCoin"
+          placeholder="Coin to pay fee"
+        />
       </a-form-item>
 
-      <!-- Payload -->
-      <a-form-item v-if="withPayload">
+      <!-- Payload Input -->
+      <a-form-item v-if="advanced">
         <a-textarea
           v-model="payload"
           :disabled="loading"
           placeholder="Message"
-          :autosize="{ minRows: 3, maxRows: 6 }"
+          :autoSize="{ minRows: 3, maxRows: 6 }"
         />
       </a-form-item>
     </a-form>
+
+    <!-- Low balance indicatoЩr -->
+    <template v-if="this.valueToSell !== ''">
+      <div class="insufficient-funds" v-if="incufficientFeeFunds">Insufficient funds for fee</div>
+      <div class="insufficient-funds" v-if="!incufficientFeeFunds && incufficientFunds">Insufficient funds</div>
+    </template>
   </div>
 </template>
 
@@ -76,9 +90,9 @@ import WalletCoinSelect from '@/components/common/form/WalletCoinSelect.vue'
   }
 })
 export default class SellCoinForm extends Mixins(TxForm) {
-  coinToSell: string = ECoin.BIP
   coinToBuy = ''
   valueToSell = ''
+  coinToSell: string = ECoin.BIP
 
   get mode (): UIWalletConvertMode {
     return UIWalletConvertMode.Sell
@@ -96,14 +110,18 @@ export default class SellCoinForm extends Mixins(TxForm) {
     )
   }
 
+  get incufficientFunds (): boolean {
+    return !this.hash && this.valueToSell > this.maxAmount
+  }
+
   @Watch('coinToSell')
-  onCoinChange () {
+  onCoinChange (): void {
     this.valueToSell = ''
   }
 
   @Watch('coinToSell', { immediate: true })
   @Watch('payload', { immediate: true })
-  onPayloadChange () {
+  onPayloadChange (): void {
     this.changeMaxAmount()
 
     if (this.valueToSell >= this.maxAmount) {
@@ -140,29 +158,32 @@ export default class SellCoinForm extends Mixins(TxForm) {
     this.maxAmount = amount ? `${amount.toFixed()}` : ''
   }
 
-  reset (): void {
+  resetForm (): void {
     this.coinToBuy = ''
-    this.coinToSell = ''
+    this.coinToSell = ECoin.BIP
     this.valueToSell = ''
     this.payload = ''
     this.loading = false
+    this.advanced = false
   }
 
   async submit (): Promise<void> {
     try {
       this.loading = true
+
       const response = await this.postman.txSell({
+        gasCoin: this.gasCoin,
         coinToBuy: this.coinToBuy,
         coinToSell: this.coinToSell,
         valueToSell: this.valueToSell,
         payload: this.payload
       })
-      const hash = response.data.data.hash
-      this.$root.$emit(AppEvent.TxHash, hash)
-      this.loading = false
+
+      this.resetForm()
+      this.$root.$emit(AppEvent.TxHash, response.data.data.hash)
     } catch (e) {
-      this.reset()
-      this.ui.commitError(e.message)
+      this.loading = false
+      this.ui.commitError(e)
     }
   }
 }

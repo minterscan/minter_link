@@ -36,7 +36,7 @@ export type UIWalletButton = {
 
 export type MinterWalletMeta = {
   label: string;
-  color: string;
+  icon: string;
 }
 
 export type MinterWalletBalance = {

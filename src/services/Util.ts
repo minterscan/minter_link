@@ -10,7 +10,7 @@ import { txTypeList } from 'minterjs-tx'
  *
  * @param value
  */
-export function base64decode (value: string) {
+export function base64decode (value: string): string {
   return Base64.decode(value)
 }
 
@@ -19,12 +19,10 @@ export function base64decode (value: string) {
  *
  * @param value
  */
-export function shortenString (value: string) {
-  const visibleChars = 5
+export function shortenString (value: string, visible = 5, length = 20): string {
+  if (value.length <= length) { return value }
 
-  if (value.length <= 20) { return value }
-
-  return value.substr(0, visibleChars) + '...' + value.substr(-visibleChars)
+  return value.substr(0, visible) + '...' + value.substr(-visible)
 }
 
 /**
@@ -32,7 +30,7 @@ export function shortenString (value: string) {
  *
  * @param value
  */
-export function getReadableTxType (value: ETxType) {
+export function getReadableTxType (value: ETxType): string {
   const name = txTypeList[value].name
 
   return name.charAt(0).toUpperCase() + name.slice(1)
@@ -43,7 +41,7 @@ export function getReadableTxType (value: ETxType) {
  *
  * @param value
  */
-export function pipToBip (value: number) {
+export function pipToBip (value: number): string {
   return new Big(value).dividedBy(10 ** 18).toString()
 }
 
@@ -52,7 +50,7 @@ export function pipToBip (value: number) {
  *
  * @param value
  */
-export function pretty (value: number | string) {
+export function pretty (value: number | string): string {
   if (value === null) { return '' }
   if (value === undefined) { return '' }
   if (value > 0.001 || value < -0.001 || Number(value) === 0) {
@@ -68,8 +66,20 @@ export function pretty (value: number | string) {
  * @param value
  * @param decimals
  */
-export function toFixed (value: number, decimals = 2) {
+export function toFixed (value: number, decimals = 2): string {
   return value.toFixed(decimals)
+}
+
+/**
+ * Convert timestamp to human readable string
+ *
+ * @param data
+ */
+export function timestamp (value: number): string {
+  const dateObject = new Date(value)
+  const humanDateFormat = dateObject.toLocaleString()
+
+  return humanDateFormat
 }
 
 /**
@@ -77,6 +87,6 @@ export function toFixed (value: number, decimals = 2) {
  *
  * @param data
  */
-export function getQuery (data: Record<string, string>) {
+export function getQuery (data: Record<string, string>): string {
   return new URLSearchParams(data).toString()
 }

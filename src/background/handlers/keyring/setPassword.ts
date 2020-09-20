@@ -1,9 +1,7 @@
-import keyring from '@/services/Keyring'
 import { Letter } from '@/model/Letter'
+import keyring from '@/services/Keyring'
 
 // Set Keyring key
-export function handleSetPassword (message: Letter): Promise<number> {
-  return new Promise((resolve) => {
-    resolve(keyring.create(message.body))
-  })
+export async function handleSetPassword (message: Letter): Promise<number | undefined> {
+  return keyring.create(message.body)
 }

@@ -1,33 +1,34 @@
 <template>
   <div class="view vault-import-wallet">
-    <template>
-      <h2 class="ant-typography">Import wallet from Seed Phrase</h2>
-      <p>Paste your 12 word phrase to access your wallet</p>
-      <a-form>
-        <!-- Seed -->
-        <a-form-item label="" layout="vertical">
-          <a-textarea
-            ref="input"
-            v-model="seed"
-            placeholder="Wallet Seed"
-            :autosize="{ minRows: 5, maxRows: 5 }"
-          />
-        </a-form-item>
+    <!-- Header -->
+    <view-header title="Import wallet" />
 
-        <!-- Meta -->
-        <wallet-meta-form :changeColor="changeColor" :changeLabel="changeLabel" :fresh="true" />
+    <!-- Content -->
+    <p>Paste your 12 word phrase to access your wallet</p>
+    <a-form>
+      <!-- Seed -->
+      <a-form-item label="" layout="vertical">
+        <a-textarea
+          ref="input"
+          v-model="seed"
+          placeholder="Wallet Seed"
+          :autoSize="{ minRows: 2, maxRows: 2 }"
+        />
+      </a-form-item>
 
-        <!-- Buttons -->
-        <a-form-item>
-          <a-button type="primary" @click="submit()">
-            Import
-          </a-button>
-          <a-button @click="cancel()">
-            Cancel
-          </a-button>
-        </a-form-item>
-      </a-form>
-    </template>
+      <!-- Meta -->
+      <wallet-meta-form :changeIcon="changeIcon" :changeLabel="changeLabel" :fresh="true" />
+
+      <!-- Buttons -->
+      <a-form-item>
+        <a-button type="primary" @click="submit()">
+          Import
+        </a-button>
+        <a-button @click="cancel()">
+          Cancel
+        </a-button>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 
@@ -36,18 +37,17 @@ import Input from '@/mixins/Input'
 import MetaForm from '@/mixins/MetaForm'
 import { ERouter } from '@/model/Router'
 import { Component, Mixins } from 'vue-property-decorator'
+import ViewHeader from '@/components/common/ViewHeader.vue'
 import WalletMetaForm from '@/components/wallet/forms/WalletMetaForm.vue'
-
-const AUTO_REDIRECT_TIMEOUT = 100
 
 @Component({
   name: 'VaultImportWallet',
-  components: { WalletMetaForm }
+  components: { ViewHeader, WalletMetaForm }
 })
 export default class VaultImportWallet extends Mixins(Input, MetaForm) {
-  protected seed = ''
+  seed = ''
 
-  protected async submit (): Promise<void> {
+  async submit (): Promise<void> {
     this.ui.commitLoading(true)
 
     // SetTimeout to prevent browser freeze on seed processing
@@ -57,7 +57,7 @@ export default class VaultImportWallet extends Mixins(Input, MetaForm) {
           seed: this.seed.trim(),
           meta: {
             label: this.label.trim(),
-            color: this.color
+            icon: this.icon
           }
         })
 
@@ -65,9 +65,9 @@ export default class VaultImportWallet extends Mixins(Input, MetaForm) {
         await this.navigate(ERouter.Vault)
       } catch (e) {
         this.ui.commitLoading(false)
-        this.ui.commitError(e.message)
+        this.ui.commitError(e)
       }
-    }, AUTO_REDIRECT_TIMEOUT)
+    }, this.config.const.autoRedirectTimeout)
   }
 
   cancel (): void {

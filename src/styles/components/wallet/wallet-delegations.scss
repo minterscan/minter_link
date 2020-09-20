@@ -4,16 +4,19 @@
   margin: -2rem 0 0 0;
 
   .pub-key {
-    width: 10rem;
+    width: 15rem;
   }
 
-  .value {
+  .coin-value {
     flex-grow: 1;
     text-align: right;
+
+    span {
+      display: block;;
+    }
   }
 
-  .coin {
-    width: 12rem;
-    text-align: right;
+  .small {
+    font-size: .85rem;
   }
 }

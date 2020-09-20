@@ -1,10 +1,7 @@
 <template>
-  <div class="actions">
-    <clipboard-button :text="state.wallet.address" shape="circle">
-      <a-icon type="copy" slot="content" />
-    </clipboard-button>
-    <a-button shape="circle" icon="setting" @click="editWallet()" />
-    <a-button shape="circle" icon="close" @click="deleteWallet()" />
+  <div class="cp wallet-menu" v-if="visible">
+    <clipboard-button :text="state.wallet.address" type="primary" />
+    <a-button type="primary" shape="circle" icon="setting" @click="editWallet()" />
   </div>
 </template>
 
@@ -13,36 +10,19 @@ import Base from '@/mixins/Base'
 import { AppEvent } from '@/model/App'
 import { Component, Mixins } from 'vue-property-decorator'
 import ClipboardButton from '@/components/common/ClipboardButton.vue'
+import { ERouter } from '@/model/Router'
 
 @Component({
   name: 'WalletMenu',
   components: { ClipboardButton }
 })
 export default class WalletMenu extends Mixins(Base) {
-  editWallet (): void {
-    this.$root.$emit(AppEvent.WalletMetaOpen)
+  get visible (): boolean {
+    return this.$route.path === ERouter.Vault
   }
 
-  deleteWallet (): void {
-    this.$confirm({
-      parentContext: this,
-      title: 'Are you sure want to delete this wallet?',
-      content: 'It can not be undone!',
-      okText: 'Delete',
-      okType: 'danger',
-      cancelText: 'Cancel',
-      onOk: async () => {
-        try {
-          if (!this.state.vault) { return }
-
-          const activeWallet = await this.postman.deleteWallet()
-          this.state.commitVaultWalletDelete(this.state.vault.activeWallet)
-          this.state.commitVaultActiveWallet(activeWallet)
-        } catch (e) {
-          this.ui.commitError(e.message)
-        }
-      }
-    })
+  editWallet (): void {
+    this.$root.$emit(AppEvent.WalletMetaOpen)
   }
 }
 </script>

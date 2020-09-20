@@ -8,25 +8,25 @@
         <a-textarea
           v-model="encodedString"
           placeholder="Encoded account string"
-          :autosize="{ minRows: 3, maxRows: 6 }"
+          :autoSize="{ minRows: 3, maxRows: 6 }"
         />
       </a-form-item>
 
       <!-- Alert -->
       <a-form-item>
         <a-alert
-          type="warning"
-          message="Be careful! After Import all existing data in Minter Link, including wallets and contacts will be overwritten!"
+          type="error"
+          message="After import all past data, including wallets and contacts will be lost!"
         />
       </a-form-item>
 
       <!-- Submit -->
       <a-form-item>
         <a-button type="primary" @click="submit()" :disabled="!encodedString">
-          Import
+          I understand, import
         </a-button>
         <a-button @click="close()">
-          Close
+          Back
         </a-button>
       </a-form-item>
     </a-form>
@@ -38,15 +38,11 @@ import Base from '@/mixins/Base'
 import { ERouter } from '@/model/Router'
 import { Component, Mixins } from 'vue-property-decorator'
 
-const AUTO_REDIRECT_TIMEOUT = 1000
-
-@Component({
-  name: 'VaultImport'
-})
+@Component
 export default class VaultImport extends Mixins(Base) {
-  protected encodedString = ''
+  encodedString = ''
 
-  protected submit (): void {
+  submit (): void {
     this.ui.commitLoading(true)
 
     setTimeout(async () => {
@@ -55,22 +51,22 @@ export default class VaultImport extends Mixins(Base) {
         this.ui.commitLoading(false)
         this.navigate(ERouter.Home)
       } catch (e) {
-        this.ui.commitError(e.message)
+        this.ui.commitError(e)
       } finally {
         this.reset()
       }
-    }, AUTO_REDIRECT_TIMEOUT)
+    }, this.config.const.autoRedirectTimeout)
   }
 
-  protected close (): void {
+  close (): void {
     this.navigate(ERouter.Home)
   }
 
-  protected reset (): void {
+  reset (): void {
     this.encodedString = ''
   }
 
-  protected destroyed (): void {
+  destroyed (): void {
     this.reset()
   }
 }

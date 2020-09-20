@@ -1,15 +1,20 @@
 <template>
   <div class="cp merchant-info">
+    <!-- Filled -->
     <template v-if="data">
-      <div class="name" v-if="data.name">{{ data.name }}</div>
+      <div class="name">
+        {{ data.name || data.url }}
+      </div>
       <div class="url">
-        <a :href="data.url" target="_blank" v-if="data.url">{{ data.url }}</a>
+        <a :href="data.url" target="_blank">{{ data.url }}</a>
       </div>
     </template>
+
+    <!-- Empty -->
     <a-alert
       v-else
       type="error"
-      message="Be careful! Merchant' data is empty. Probably, it's a scam attempt."
+      message="Be careful! Merchant' data is empty. Double check all information before accept."
     />
   </div>
 </template>

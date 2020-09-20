@@ -1,6 +1,26 @@
 .view {
-  height: 100%;
+  height: 0;
+  flex-grow: 1;
   padding: 1.5rem;
   position: relative;
-  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.08);
+
+  .view-header {
+    display: flex;
+    align-items: center;
+    margin: 0 0 1rem 0;
+
+    .back {
+      margin: 0 .5rem 0 0;
+    }
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  .view-content {
+    height: 0;
+    flex-grow: 1;
+    overflow: auto;
+  }
 }

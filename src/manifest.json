@@ -1,13 +1,11 @@
 {
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "description": "Minter Multi Wallet",
+  "description": "Minter Link — Minter Blockchain Multi Wallet & DApps connect",
   "default_locale": "en",
   "permissions": [
     "storage",
-    "activeTab",
-    "<all_urls>",
-    "*://*/*"
+    "activeTab"
   ],
   "icons": {
     "16": "icons/16.png",
@@ -41,8 +39,5 @@
       "19": "icons/19.png",
       "38": "icons/38.png"
     }
-  },
-  "options_ui": {
-    "page": "options.html"
   }
 }

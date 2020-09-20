@@ -5,7 +5,7 @@ export type ExplorerAddressTxsRequest = {
 }
 
 export type ExplorerLinks = {
-  fist: string;
+  first: string;
   last: string;
   prev: string;
   next: string;
