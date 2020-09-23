@@ -12,6 +12,7 @@
     <!-- Loading Indicator -->
     <loading v-show="loading" />
 
+    <!-- Message -->
     <a-alert
       type="error"
       message="Are you sure want to delete this wallet? It can not be undone!"

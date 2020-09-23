@@ -16,7 +16,7 @@
       <a-form-item>
         <a-alert
           type="error"
-          message="After import all past data, including wallets and contacts will be lost!"
+          message="Be careful, after import all past data, including wallets and contacts will be lost!"
         />
       </a-form-item>
 

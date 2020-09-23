@@ -12,6 +12,7 @@
     <!-- Loading Indicator -->
     <loading v-show="loading" />
 
+    <!-- Message -->
     <a-alert
       type="error"
       message="Be careful! All data, including wallets and contacts will be lost!"

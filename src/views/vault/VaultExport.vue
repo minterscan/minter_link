@@ -9,17 +9,22 @@
 
     <!-- Content -->
     <p>Click the button to copy your encoded account string</p>
-    <a-form>
-      <!-- Input -->
-      <a-form-item label="" layout="vertical">
-        <a-textarea
-          disabled
-          v-model="encodedVault"
-          placeholder="Encoded account string"
-          :autoSize="{ minRows: 3, maxRows: 16 }"
-        />
-      </a-form-item>
-    </a-form>
+
+    <!-- Input -->
+    <a-form-item label="" layout="vertical">
+      <a-textarea
+        disabled
+        v-model="encodedVault"
+        placeholder="Encoded account string"
+        :autoSize="{ minRows: 3, maxRows: 16 }"
+      />
+    </a-form-item>
+
+    <!-- Message -->
+    <a-alert
+      type="info"
+      message="Encoded strings contains all your current wallets & contacts"
+    />
   </div>
 </template>
 
