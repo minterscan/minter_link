@@ -4,47 +4,39 @@
     <view-header title="About" />
 
     <!-- Content -->
-    <div class="ant-typography">
+    <div class="ant-typography content">
+      <!-- Unicorn -->
+      <icon class="fucking-awesome-unicorn" name="unicorn" scale="15" />
+
+      <!-- About -->
       <p>
-        <b>Minter Link</b> is open-source multi-wallet browser extension for
-        <a href="https://minter.network" target="_blank" title="Minter">Minter</a> network.
+        <b>Minter Link</b> is an
+        <a href="https://github.com/minterscan/minter_link" target="_blank">open-source</a>
+        multi-wallet browser extension <br> for
+        <a href="https://minter.org" target="_blank" title="Minter">Minter network</a>
+        proudly developed by
+        <a href="https://minterscan.net" target="_blank">Minterscan</a>
       </p>
-      <h2>Links</h2>
-      <ul>
-        <li v-for="(item, key) in links" :key="key">
-          <a :href="item.url" :title="item.title" target="_blank">{{ item.title }}</a>
-        </li>
-      </ul>
+
+      <!-- Donate -->
+      <p>
+        <address-link address="Mx77703bc82c53979e8e8f7f0a29bbe5cf12777777" text="Support us" />
+      </p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Base from '@/mixins/Base'
-import pckg from './../../package.json'
 import Logo from '@/components/common/Logo.vue'
 import Icon from 'vue-awesome/components/Icon.vue'
 import { Component, Mixins } from 'vue-property-decorator'
 import ViewHeader from '@/components/common/ViewHeader.vue'
+import AddressLink from '@/components/common/address/AddressLink.vue'
 
 @Component({
   name: 'About',
-  components: { Icon, Logo, ViewHeader }
+  components: { AddressLink, Icon, Logo, ViewHeader }
 })
-export default class About extends Mixins(Base) {
-  links = [
-    {
-      url: pckg.repository.url,
-      title: 'Source Code'
-    },
-    {
-      url: 'https://minterscan.net',
-      title: 'Blockchain Explorer'
-    },
-    {
-      url: 'https://en.minter.wiki',
-      title: 'Knowledge Base'
-    }
-  ]
-}
+export default class About extends Mixins(Base) {}
 </script>
