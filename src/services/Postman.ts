@@ -272,6 +272,17 @@ export class PostmanService {
   }
 
   /**
+   * Get active Wallet
+   *
+   * @param body
+   */
+  async getVaultActiveWallet (): Promise<string> {
+    return this.send({
+      subject: LetterSubject.GetVaultActiveWallet
+    })
+  }
+
+  /**
    * Set active Wallet Meta
    *
    * @param body
@@ -464,9 +475,10 @@ export class PostmanService {
    *
    * @param tabId
    */
-  async connectAccept (tabId: number): Promise<void> {
+  async connectAccept (body: string, tabId: number): Promise<void> {
     return this.sendToTab({
-      subject: LetterSubject.ConnectAccept
+      subject: LetterSubject.ConnectAccept,
+      body
     }, tabId)
   }
 

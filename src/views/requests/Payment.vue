@@ -56,13 +56,13 @@
 
       <!-- Buttons -->
       <div class="buttons">
-        <a-button type="primary" @click.stop="submit()" :disabled="invalid || loading" v-if="!hash">
-          Accept
+        <a-button type="primary" size="large" @click.stop="submit()" :disabled="invalid || loading" v-if="!hash">
+          Pay
         </a-button>
-        <a-button type="danger" @click="reject()" v-if="!hash && !loading">
+        <a-button type="danger" size="large" @click="reject()" v-if="!hash && !loading" ghost>
           Reject
         </a-button>
-        <a-button type="primary" @click="close()" v-if="hash && !loading">
+        <a-button type="primary" size="large" @click="close()" v-if="hash && !loading">
           Close
         </a-button>
       </div>

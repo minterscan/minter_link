@@ -19,6 +19,7 @@ import { handleGetVaultExist } from '@/background/handlers/vault/getExist'
 import { handleGetVaultEncoded } from '@/background/handlers/vault/getEncoded'
 import { handleGetVaultPublicData } from '@/background/handlers/vault/getPublicData'
 import { handleSetVaultActiveWallet } from '@/background/handlers/vault/setActiveWallet'
+import { handleGetVaultActiveWallet } from '@/background/handlers/vault/getActiveWallet'
 import { handleSetVaultActiveWalletMeta } from '@/background/handlers/vault/setActiveWalletMeta'
 import { handleCmdWalletCreate } from '@/background/handlers/vault/walletCreate'
 import { handleCmdWalletImport } from '@/background/handlers/vault/walletImport'
@@ -63,6 +64,7 @@ export const handlers: BrowserMessageHandlers = {
   [LetterSubject.SetPassword]: handleSetPassword,
   [LetterSubject.DeletePassword]: handleDeletePassword,
   [LetterSubject.SetVaultActiveWallet]: handleSetVaultActiveWallet,
+  [LetterSubject.GetVaultActiveWallet]: handleGetVaultActiveWallet,
   [LetterSubject.SetVaultActiveWalletMeta]: handleSetVaultActiveWalletMeta,
   [LetterSubject.CmdVaultCreate]: handleCmdVaultCreate,
   [LetterSubject.CmdVaultPing]: handleCmdVaultPing,

@@ -35,10 +35,10 @@
 
       <!-- Buttons -->
       <div class="buttons">
-        <a-button type="primary" @click="submit()" :disabled="loading || !state.wallet">
-          Accept
+        <a-button type="primary" size="large" @click="submit()" :disabled="loading || !state.wallet">
+          Connect
         </a-button>
-        <a-button type="danger outlined" @click="reject()" :disabled="loading">
+        <a-button type="danger" size="large" @click="reject()" :disabled="loading" ghost>
           Reject
         </a-button>
       </div>
@@ -140,7 +140,8 @@ export default class RequestConnect extends Mixins(RequestWindow, Wallet) {
     if (!this.state.wallet) return
 
     await this.postman.addConnectedWebsite(this.merchant?.url)
-    await this.postman.connectAccept(this.tabId)
+    const address = await this.postman.getVaultActiveWallet()
+    await this.postman.connectAccept(address, this.tabId)
     window.close()
   }
 

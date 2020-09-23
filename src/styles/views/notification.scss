@@ -38,6 +38,7 @@
   }
 
   .warning {
+    margin-top: 24px;
     text-align: center;
   }
 
@@ -97,8 +98,7 @@
     margin-bottom: 12px;
   }
 
-  .payload,
-  .merchant-address {
+  .payload {
     margin-bottom: 24px;
   }
 
@@ -149,6 +149,10 @@
   .buttons {
     @extend .flex-center;
     margin: 1rem 0 0 0;
+
+    .ant-btn {
+      flex-grow: 1;
+    }
 
     button:last-child {
       margin-right: 0;

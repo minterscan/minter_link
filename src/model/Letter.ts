@@ -18,6 +18,7 @@ export enum LetterSubject {
   GetPasswordExpiry = 'get:password:expiry',
   SetPassword = 'set:password',
   SetVaultActiveWallet = 'set:vault:active_wallet',
+  GetVaultActiveWallet = 'get:vault:active_wallet',
   SetVaultActiveWalletMeta = 'set:vault:active_wallet:meta',
   CmdConnectedWebsitesAdd = 'cmd:vault:websites:item:add',
   CmdConnectedWebsitesDelete = 'cmd:vault:websites:item:delete',

@@ -1,3 +1,4 @@
+import { Window } from '@/services/Window'
 import { Runtime } from 'webextension-polyfill-ts'
 
 interface WindowsStore {
@@ -5,9 +6,9 @@ interface WindowsStore {
     [domain: string]: Runtime.Port;
   };
   interact: {
-    connect: boolean;
-    payment: boolean;
-    sign: boolean;
+    connect: Window | null;
+    payment: Window | null;
+    sign: Window | null;
   };
 }
 
@@ -16,9 +17,9 @@ interface WindowsStore {
 const store: WindowsStore = {
   ports: {},
   interact: {
-    connect: false,
-    payment: false,
-    sign: false
+    connect: null,
+    payment: null,
+    sign: null
   }
 }
 

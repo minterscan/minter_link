@@ -10,7 +10,6 @@ export default class ContentScript {
   channel: Channel | null = null
   status = false
   wallet = ''
-  readonly domain = location.hostname
   readonly handlers: {
     [key: string]: Function;
   } = {
@@ -29,11 +28,17 @@ export default class ContentScript {
     this.connect()
   }
 
+  get url (): string {
+    const port = location.port ? `:${location.port}` : ''
+
+    return `${location.protocol}//${location.hostname}${port}`
+  }
+
   /**
    * Connect to background port channel
    */
   connect () {
-    this.channel = new Channel(this.domain)
+    this.channel = new Channel(this.url)
 
     this.channel.port.onDisconnect.addListener(this.portReconnect)
   }
@@ -102,12 +107,15 @@ export default class ContentScript {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any;
   } {
+    const name = (event as CustomEvent).detail.merchant.name
+    const data = (event as CustomEvent).detail.data
+
     return {
       merchant: {
-        name: (event as CustomEvent).detail.merchant.name,
-        url: this.domain
+        name,
+        url: this.url
       },
-      data: (event as CustomEvent).detail.data
+      data
     }
   }
 
@@ -167,8 +175,8 @@ export default class ContentScript {
   /**
    * Dispatch Connect accepted event to tab
    */
-  async dispatchConnectAccept (): Promise<boolean> {
-    const event = new CustomEvent(MinterLinkEvent.ConnectAccept, { detail: true })
+  async dispatchConnectAccept (address: string): Promise<boolean> {
+    const event = new CustomEvent(MinterLinkEvent.ConnectAccept, { detail: address })
 
     document.dispatchEvent(event)
 

@@ -27,11 +27,6 @@
         <!-- Merchant info -->
         <merchant-info :data="merchant" />
 
-        <!-- Merchant address -->
-        <div class="merchant-address">
-          <address-link :address="address" />
-        </div>
-
         <!-- Warning -->
         <p class="warning">
           Website requests digital signature.
@@ -46,10 +41,10 @@
 
       <!-- Buttons -->
       <div class="buttons">
-        <a-button type="primary" @click="submit()" :disabled="loading">
-          Accept
+        <a-button type="primary" size="large" @click="submit()" :disabled="loading">
+          Sign
         </a-button>
-        <a-button type="danger" @click="reject()" :disabled="loading">
+        <a-button type="danger" size="large" @click="reject()" :disabled="loading" ghost>
           Reject
         </a-button>
       </div>
@@ -152,6 +147,7 @@ export default class RequestSign extends Mixins(RequestWindow, Wallet) {
       }, this.config.const.autoRedirectTimeout)
     } catch (e) {
       this.loading = false
+
       this.reject()
     }
   }

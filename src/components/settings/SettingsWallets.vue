@@ -42,7 +42,13 @@
                 access granted {{ timestamp | timestamp }}
               </div>
               <div class="actions">
-                <a-button shape="circle" icon="close" size="small" @click="deleteWebsite(wallet.address, domain)" />
+                <a-button
+                  ghost
+                  size="small"
+                  icon="close"
+                  type="danger"
+                  @click="deleteWebsite(wallet.address, domain)"
+                />
               </div>
             </li>
           </ul>

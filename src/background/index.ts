@@ -19,9 +19,9 @@ browser.runtime.onConnect.addListener(port => {
     delete windows.ports[id]
 
     // On notification ports close
-    if (port.name === EPort.Sign) windows.interact.sign = false
-    if (port.name === EPort.Connect) windows.interact.connect = false
-    if (port.name === EPort.Payment) windows.interact.payment = false
+    if (port.name === EPort.Sign) windows.interact.sign = null
+    if (port.name === EPort.Connect) windows.interact.connect = null
+    if (port.name === EPort.Payment) windows.interact.payment = null
   })
 
   // Not sure about this, but seems working
@@ -30,7 +30,7 @@ browser.runtime.onConnect.addListener(port => {
   windows.ports[id] = port
 
   // Content Script listener
-  port.onMessage.addListener((message: Letter, port: Runtime.Port) => {
+  port.onMessage.addListener((message: Letter) => {
     contentScriptHandlers[message.subject as ContentScriptLetterSubject](message)
   })
 })

@@ -20,19 +20,20 @@ export async function notifyVaultStatusChange () {
 // Notify Content Script about Active Wallet change
 export async function notifyVaultActiveWalletChange () {
   try {
-    let address = await vault.getActiveWalletAddress()
+    const address = await vault.getActiveWalletAddress()
     const connectedWebsites = await vault.getConnectedWebsites()
 
     Object.keys(windows.ports).map(key => {
+      let body = address
       const name = windows.ports[key].name
 
       if (!(address in connectedWebsites) || !(name in connectedWebsites[address])) {
-        address = ''
+        body = ''
       }
 
       windows.ports[key].postMessage({
         subject: ContentScriptLetterSubject.ResponseVaultActiveWallet,
-        body: address
+        body
       })
     })
   } catch (e) {
