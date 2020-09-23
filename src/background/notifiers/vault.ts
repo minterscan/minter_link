@@ -1,6 +1,7 @@
 import keyring from '@/services/Keyring'
 import vault from '@/drivers/VaultDriver'
 import windows from '@/background/store/windows'
+import { ApplicationError } from '@/model/Error'
 import { ContentScriptLetterSubject } from '@/model/Letter'
 
 // Notify Content Script about Vault status change
@@ -13,7 +14,7 @@ export async function notifyVaultStatusChange () {
       })
     })
   } catch (e) {
-    console.error(e)
+    throw new ApplicationError(e.message)
   }
 }
 
@@ -37,6 +38,6 @@ export async function notifyVaultActiveWalletChange () {
       })
     })
   } catch (e) {
-    console.error(e)
+    throw new ApplicationError(e.message)
   }
 }
