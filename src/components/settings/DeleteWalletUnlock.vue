@@ -6,7 +6,7 @@
     :maskClosable="true"
     :visible="visible"
     :confirmLoading="loading"
-    title="Delete vault"
+    title="Delete wallet"
     wrapClassName="cp vault-unlock"
   >
     <!-- Loading Indicator -->
@@ -14,12 +14,12 @@
 
     <a-alert
       type="error"
-      message="Be careful! All data, including wallets and contacts will be lost!"
+      message="Are you sure want to delete this wallet? It can not be undone!"
     />
 
     <!-- Form -->
     <a-form>
-      <a-form-item label="Type your password to confirm">
+      <a-form-item label="Type your password">
         <a-input
           ref="input"
           size="large"
@@ -41,7 +41,7 @@
           Cancel
         </a-button>
         <a-button key="submit" type="primary" :disabled="password === ''" :loading="loading" @click="submit()">
-          Delete all data
+          Delete wallet
         </a-button>
       </div>
     </template>
@@ -71,7 +71,7 @@ export default class DeleteVaultUnlock extends Mixins(Base, Input) {
   }
 
   mounted (): void {
-    this.$root.$on(AppEvent.VaultDeleteUnlock, () => {
+    this.$root.$on(AppEvent.WalletDeleteUnlock, () => {
       this.visible = true
       this.loading = false
     })
@@ -86,9 +86,16 @@ export default class DeleteVaultUnlock extends Mixins(Base, Input) {
 
       await this.postman.vaultPing(this.password)
 
-      setTimeout(() => {
+      setTimeout(async () => {
         this.close()
-        this.$root.$emit(AppEvent.VaultUnlocked)
+
+        if (!this.state.vault) { return }
+
+        const activeWallet = await this.postman.deleteWallet()
+
+        // Switch active wallet
+        this.state.commitVaultWalletDelete(this.state.vault.activeWallet)
+        this.state.commitVaultActiveWallet(activeWallet)
       }, this.config.const.autoRedirectTimeout)
     } catch (e) {
       this.password = ''

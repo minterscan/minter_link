@@ -18,17 +18,12 @@
 
     <!-- Buttons -->
     <template slot="footer">
-      <a-button ghost type="danger" @click="deleteWallet()">
-        Delete
+      <a-button key="back" @click="close()">
+        Close
       </a-button>
-      <div>
-        <a-button key="back" @click="close()">
-          Close
-        </a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="submit()">
-          Save changes
-        </a-button>
-      </div>
+      <a-button key="submit" type="primary" :loading="loading" @click="submit()">
+        Save changes
+      </a-button>
     </template>
   </a-modal>
 </template>
@@ -63,33 +58,6 @@ export default class WalletEdit extends Mixins(Base, MetaForm) {
     })
     this.$root.$on(AppEvent.FormSuccess, () => {
       this.loading = false
-    })
-  }
-
-  deleteWallet (): void {
-    this.$confirm({
-      parentContext: this,
-      title: 'Are you sure want to delete this wallet?',
-      content: 'It can not be undone!',
-      okText: 'Delete',
-      okType: 'danger',
-      cancelText: 'Cancel',
-      onOk: async () => {
-        try {
-          if (!this.state.vault) { return }
-
-          const activeWallet = await this.postman.deleteWallet()
-
-          // Switch active wallet
-          this.state.commitVaultWalletDelete(this.state.vault.activeWallet)
-          this.state.commitVaultActiveWallet(activeWallet)
-
-          // Close modal window
-          this.visible = false
-        } catch (e) {
-          this.ui.commitError(e)
-        }
-      }
     })
   }
 

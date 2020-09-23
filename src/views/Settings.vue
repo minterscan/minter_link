@@ -27,6 +27,7 @@
     <!-- Modals -->
     <export-seed-unlock />
     <delete-vault-unlock />
+    <delete-wallet-unlock />
   </div>
 </template>
 
@@ -39,10 +40,18 @@ import SettingsGeneral from '@/components/settings/SettingsGeneral.vue'
 import SettingsWallets from '@/components/settings/SettingsWallets.vue'
 import ExportSeedUnlock from '@/components/settings/ExportSeedUnlock.vue'
 import DeleteVaultUnlock from '@/components/settings/DeleteVaultUnlock.vue'
+import DeleteWalletUnlock from '@/components/settings/DeleteWalletUnlock.vue'
 
 @Component({
   name: 'Settings',
-  components: { SettingsGeneral, SettingsWallets, ExportSeedUnlock, DeleteVaultUnlock, ViewHeader }
+  components: {
+    SettingsGeneral,
+    SettingsWallets,
+    ExportSeedUnlock,
+    DeleteVaultUnlock,
+    DeleteWalletUnlock,
+    ViewHeader
+  }
 })
 export default class About extends Mixins(Base) {
   tab = UISettingsData.General

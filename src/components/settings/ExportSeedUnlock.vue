@@ -2,13 +2,11 @@
   <a-modal
     centered
     :keyboard="true"
-    okText="Save changes"
-    cancelText="Close"
     @cancel="close()"
     :maskClosable="true"
     :visible="visible"
     :confirmLoading="loading"
-    title="Unlock vault"
+    title="Export wallet seed phrase"
     wrapClassName="cp vault-unlock"
   >
     <!-- Loading Indicator -->
@@ -16,7 +14,7 @@
 
     <!-- Form -->
     <a-form>
-      <a-form-item label="Type your password">
+      <a-form-item label="Type your password to proceed">
         <a-input
           ref="input"
           size="large"

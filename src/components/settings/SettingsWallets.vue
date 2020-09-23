@@ -15,7 +15,8 @@
             <address-link :address="wallet.address" />
           </div>
           <div class="end">
-            <a-button icon="upload" @click="vaultUnlock(wallet.address)">Export</a-button>
+            <a-button icon="upload" @click="exportWallet(wallet.address)" />
+            <a-button icon="close" @click="deleteWallet(wallet.address)" ghost type="danger" />
           </div>
         </div>
 
@@ -39,7 +40,7 @@
             <li v-for="(timestamp, domain) in websites[wallet.address]" :key="domain">
               <div class="content">
                 <a :href="domain" :title="domain" target="_blank" class="ant-typography">{{ domain }}</a>
-                access granted {{ timestamp | timestamp }}
+                connected {{ timestamp | timestamp }}
               </div>
               <div class="actions">
                 <a-button
@@ -124,12 +125,17 @@ export default class SettingsConnections extends Mixins(Base) {
     }, this.config.const.autoRedirectTimeout)
   }
 
-  vaultUnlock (address: string): void {
+  exportWallet (address: string): void {
     this.seed = ''
     this.activeWallet = address
+
     if (this.seedCloseInterval) clearInterval(this.seedCloseInterval)
 
     this.$root.$emit(AppEvent.ExportSeedUnlock, address)
+  }
+
+  deleteWallet (address: string): void {
+    this.$root.$emit(AppEvent.WalletDeleteUnlock, address)
   }
 }
 </script>

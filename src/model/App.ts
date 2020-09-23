@@ -17,6 +17,7 @@ export enum AppEvent {
   WalletActionUnbondClose = 'wallet:action:unbond:close',
   AddressBookItemOpen = 'address_book:item:open',
   ExportSeedUnlock = 'vault:export_seed:unlock:open',
+  WalletDeleteUnlock = 'vault:wallet_delete:unlock:open',
   VaultDeleteUnlock = 'vault:delete:unlock:open',
   VaultUnlocked = 'vault:unlocked'
 }
