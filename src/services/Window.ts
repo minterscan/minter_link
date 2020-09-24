@@ -9,11 +9,19 @@ export class Window {
   window!: Windows.Window
 
   async open (url: string) {
+    const type = 'popup'
+    const width = config.notification.width
+    const height = config.notification.height
+    const left = (screen.width / 2) - (width / 2)
+    const top = (screen.height / 2) - (height / 2)
+
     this.window = await browser.windows.create({
       url,
-      type: 'popup',
-      width: config.notification.width,
-      height: config.notification.height
+      type,
+      top,
+      left,
+      width,
+      height
     })
   }
 
