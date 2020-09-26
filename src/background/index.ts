@@ -11,7 +11,7 @@ browser.runtime.onConnect.addListener(port => {
   if (!port.sender.tab) return
   if (!port.sender.tab.id) return
 
-  const id = port.sender?.tab?.id
+  const id = port.sender.tab.id
 
   // On port disconnect
   port.onDisconnect.addListener(() => {
