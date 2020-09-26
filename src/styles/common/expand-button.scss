@@ -4,6 +4,7 @@ button.expand {
   bottom: 1rem;
   right: 1rem;
   opacity: .5;
+  line-height: 1 !important;
   transition: opacity .15s ease-in-out;
 
   &:hover {
