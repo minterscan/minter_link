@@ -1,7 +1,6 @@
 
-import { SignResponse } from 'minter-connect'
 import CryptoJS, { WordArray } from 'crypto-js'
-import { addHexPrefix, toBuffer, bufferToHex } from 'ethereumjs-util/dist/bytes'
+import { addHexPrefix, toBuffer } from 'ethereumjs-util/dist/bytes'
 import { ecsign, toRpcSig, hashPersonalMessage } from 'ethereumjs-util/dist/signature'
 
 /**
@@ -12,13 +11,13 @@ export class CryptoService {
     return CryptoJS.SHA3(message).toString()
   }
 
-  async sign (message: string, privateKey: Buffer): Promise<SignResponse> {
+  async sign (message: string, privateKey: Buffer): Promise<string> {
     const messageHex = Buffer.from(message).toString('hex')
     const personalMessage = hashPersonalMessage(toBuffer(addHexPrefix(messageHex)))
     const signature = ecsign(personalMessage, privateKey)
     const sigHex = toRpcSig(signature.v, signature.r, signature.s)
 
-    return { signature: sigHex, personalMessage: bufferToHex(personalMessage) }
+    return sigHex
   }
 
   encryptAES (message: string, password: string): WordArray {
