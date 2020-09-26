@@ -237,7 +237,7 @@ export default class ActionSend extends Mixins(TxForm) {
     try {
       this.loading = true
 
-      const response = await this.postman.txSend({
+      const hash = await this.postman.txSend({
         address: this.address,
         gasCoin: this.gasCoin,
         coin: this.coin,
@@ -246,7 +246,7 @@ export default class ActionSend extends Mixins(TxForm) {
       })
 
       this.resetForm()
-      this.hash = response.data.data.hash
+      this.hash = hash
     } catch (e) {
       this.resetForm()
       this.ui.commitError(e)

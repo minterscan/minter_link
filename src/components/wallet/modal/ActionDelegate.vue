@@ -17,9 +17,12 @@
 
     <!-- Initial state -->
     <a-form v-else>
+      <!-- Validator -->
       <a-form-item class="select-form-item">
         <validator-select :validators="validators" :change="changeValidator" />
       </a-form-item>
+
+      <!-- Amount & Coin -->
       <a-form-item>
         <a-input-group compact>
           <field-amount :change="changeStake" :max="maxAmount" :defaultValue="stake" />
@@ -151,7 +154,7 @@ export default class ActionDelegate extends Mixins(TxForm) {
     try {
       this.loading = true
 
-      const response = await this.postman.txDelegate({
+      const hash = await this.postman.txDelegate({
         pubKey: this.pubKey,
         coin: this.coin,
         gasCoin: this.gasCoin,
@@ -160,7 +163,7 @@ export default class ActionDelegate extends Mixins(TxForm) {
       })
 
       this.resetForm()
-      this.hash = response.data.data.hash
+      this.hash = hash
     } catch (e) {
       this.loading = false
       this.ui.commitError(e)

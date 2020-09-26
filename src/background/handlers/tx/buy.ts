@@ -1,5 +1,4 @@
 import { handleTx } from './tx'
-import { AxiosResponse } from 'axios'
 import { Letter } from '@/model/Letter'
 import { convertToPip } from 'minterjs-util'
 import { TX_TYPE } from 'minterjs-tx/src/tx-types'
@@ -10,7 +9,7 @@ import { TxBuyRequest, PreparedTxData } from '@/model/Tx'
 const MAX_VALUE_TO_SELL = Number.MAX_SAFE_INTEGER
 
 // Tx.BuyCoin
-export async function handleTxBuy (message: Letter): Promise<AxiosResponse|undefined> {
+export async function handleTxBuy (message: Letter): Promise<string> {
   const data: TxBuyRequest = message.body
   const txData: PreparedTxData = new TxDataBuy({
     coinToBuy: coinToBuffer(data.coinToBuy),
@@ -18,6 +17,7 @@ export async function handleTxBuy (message: Letter): Promise<AxiosResponse|undef
     valueToBuy: `0x${convertToPip(data.valueToBuy, 'hex')}`,
     maximumValueToSell: `0x${convertToPip(MAX_VALUE_TO_SELL, 'hex')}`
   })
+  const result = await handleTx(txData, TX_TYPE.BUY, data.payload, data.gasCoin)
 
-  return handleTx(txData, TX_TYPE.BUY, data.payload, data.gasCoin)
+  return result.data.data.hash
 }

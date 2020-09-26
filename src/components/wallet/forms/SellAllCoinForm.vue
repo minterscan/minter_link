@@ -126,7 +126,7 @@ export default class SellAllCoinForm extends Mixins(Base, TxForm) {
     try {
       this.loading = true
 
-      const response = await this.postman.txSellAll({
+      const hash = await this.postman.txSellAll({
         gasCoin: this.gasCoin,
         coinToBuy: this.coinToBuy,
         coinToSell: this.coinToSell,
@@ -134,7 +134,7 @@ export default class SellAllCoinForm extends Mixins(Base, TxForm) {
       })
 
       this.resetForm()
-      this.$root.$emit(AppEvent.TxHash, response.data.data.hash)
+      this.$root.$emit(AppEvent.TxHash, hash)
     } catch (e) {
       this.loading = false
       this.ui.commitError(e)

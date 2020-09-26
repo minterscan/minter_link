@@ -129,6 +129,7 @@ export default class ActionConvert extends Mixins(Base) {
   }
 
   submit (): void {
+    this.loading = true
     this.$root.$emit(AppEvent.FormSubmit)
   }
 

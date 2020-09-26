@@ -119,14 +119,15 @@ export default class BuyCoinForm extends Mixins(TxForm) {
   async submit (): Promise<void> {
     try {
       this.loading = true
-      const response = await this.postman.txBuy({
+
+      const hash = await this.postman.txBuy({
         gasCoin: this.gasCoin,
         coinToBuy: this.coinToBuy,
         coinToSell: this.coinToSell,
         valueToBuy: this.valueToBuy,
         payload: this.payload
       })
-      const hash = response.data.data.hash
+
       this.$root.$emit(AppEvent.TxHash, hash)
       this.loading = false
     } catch (e) {

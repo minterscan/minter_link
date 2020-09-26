@@ -17,7 +17,6 @@ import {
   TxSendRequest,
   TxUnbondRequest
 } from '@/model/Tx'
-import { AxiosResponse } from 'axios'
 import { Coin } from '@/model/Coin'
 import { Validator } from '@/model/Validator'
 import { ExplorerAddressTxsRequest } from '@/model/Explorer'
@@ -300,7 +299,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async txSend (body: TxSendRequest): Promise<AxiosResponse> {
+  async txSend (body: TxSendRequest): Promise<string> {
     return this.send({
       subject: LetterSubject.TxSend,
       body
@@ -312,7 +311,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async txBuy (body: TxBuyRequest): Promise<AxiosResponse> {
+  async txBuy (body: TxBuyRequest): Promise<string> {
     return this.send({
       subject: LetterSubject.TxBuy,
       body
@@ -324,7 +323,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async txSell (body: TxSellRequest): Promise<AxiosResponse> {
+  async txSell (body: TxSellRequest): Promise<string> {
     return this.send({
       subject: LetterSubject.TxSell,
       body
@@ -336,7 +335,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async txSellAll (body: TxSellAllRequest): Promise<AxiosResponse> {
+  async txSellAll (body: TxSellAllRequest): Promise<string> {
     return this.send({
       subject: LetterSubject.TxSellAll,
       body
@@ -348,7 +347,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async txDelegate (body: TxDelegateRequest): Promise<AxiosResponse> {
+  async txDelegate (body: TxDelegateRequest): Promise<string> {
     return this.send({
       subject: LetterSubject.TxDelegate,
       body
@@ -360,7 +359,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async txUnbond (body: TxUnbondRequest): Promise<AxiosResponse> {
+  async txUnbond (body: TxUnbondRequest): Promise<string> {
     return this.send({
       subject: LetterSubject.TxUnbond,
       body

@@ -165,7 +165,7 @@ export default class Payment extends Mixins(Wallet, RequestWindow) {
       this.loading = true
       this.$root.$emit(AppEvent.FormSubmit)
 
-      const response = await this.postman.txSend({
+      const hash = await this.postman.txSend({
         address: this.address,
         gasCoin: ECoin.BIP,
         coin: this.coin,
@@ -173,13 +173,11 @@ export default class Payment extends Mixins(Wallet, RequestWindow) {
         payload: this.payload
       })
 
-      this.hash = response.data.data.hash
+      this.hash = hash
       this.loading = false
-      this.$root.$emit(AppEvent.FormSuccess)
     } catch (e) {
       this.loading = false
       this.ui.commitError(e)
-      this.$root.$emit(AppEvent.FormReset)
     }
   }
 

@@ -117,6 +117,7 @@ export default class ActionUnbond extends Mixins(TxForm) {
     this.pubKey = ''
     this.coin = ''
     this.stake = ''
+    this.payload = ''
     this.loading = false
     this.advanced = false
   }
@@ -129,7 +130,7 @@ export default class ActionUnbond extends Mixins(TxForm) {
     try {
       this.loading = true
 
-      const response = await this.postman.txUnbond({
+      const hash = await this.postman.txUnbond({
         pubKey: this.pubKey,
         coin: this.coin,
         stake: this.stake,
@@ -138,7 +139,7 @@ export default class ActionUnbond extends Mixins(TxForm) {
       })
 
       this.resetForm()
-      this.hash = response.data.data.hash
+      this.hash = hash
     } catch (e) {
       this.loading = false
       this.ui.commitError(e)
