@@ -125,12 +125,15 @@ export class VaultDriver extends EncryptedStorageDriver {
   }
 
   /**
-   * Delete active Wallet from Vault
+   * Delete Wallet by address, returns new active Wallet
+   *
+   * @param {string} address
+   * @returns {string}
    */
-  async deleteWallet (): Promise<string> {
+  async deleteWallet (address: string): Promise<string> {
     const ledger = await this.open()
 
-    delete ledger.vault.wallets[ledger.vault.activeWallet]
+    delete ledger.vault.wallets[address]
 
     const keys = Object.keys(ledger.vault.wallets)
     const encryptedData = crypto.encryptAES(JSON.stringify(ledger), this.keyring.key)

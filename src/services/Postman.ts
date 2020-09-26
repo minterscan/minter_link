@@ -168,9 +168,10 @@ export class PostmanService {
   /**
    * Delete active Wallet from Vault
    */
-  async deleteWallet (): Promise<string> {
+  async deleteWallet (body: string): Promise<string> {
     return this.send({
-      subject: LetterSubject.CmdWalletDelete
+      subject: LetterSubject.CmdWalletDelete,
+      body
     })
   }
 

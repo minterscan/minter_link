@@ -64,6 +64,7 @@ export default class DeleteVaultUnlock extends Mixins(Base, Input) {
   error = ''
   visible = false
   loading = false
+  address = ''
   password = ''
 
   @Watch('visible')
@@ -72,9 +73,10 @@ export default class DeleteVaultUnlock extends Mixins(Base, Input) {
   }
 
   mounted (): void {
-    this.$root.$on(AppEvent.WalletDeleteUnlock, () => {
+    this.$root.$on(AppEvent.WalletDeleteUnlock, (address: string) => {
       this.visible = true
       this.loading = false
+      this.address = address
     })
   }
 
@@ -85,17 +87,17 @@ export default class DeleteVaultUnlock extends Mixins(Base, Input) {
     try {
       this.loading = true
 
+      // Check if password is correct
       await this.postman.vaultPing(this.password)
 
       setTimeout(async () => {
         this.close()
 
-        if (!this.state.vault) { return }
+        const activeWallet = await this.postman.deleteWallet(this.address)
 
-        const activeWallet = await this.postman.deleteWallet()
-
+        // Delete wallet from state
+        this.state.commitVaultWalletDelete(this.address)
         // Switch active wallet
-        this.state.commitVaultWalletDelete(this.state.vault.activeWallet)
         this.state.commitVaultActiveWallet(activeWallet)
       }, this.config.const.autoRedirectTimeout)
     } catch (e) {
