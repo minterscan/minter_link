@@ -4,8 +4,9 @@
     size="large"
     @change="change"
     class="form-select"
+    :defaultValue="defaultValue"
     :placeholder="placeholder"
-    :filterOption="false"
+    :filterOption="filterOption"
     optionFilterProp="children"
     @search="handleCoinSearch"
     dropdownClassName="form-dropdown"
@@ -18,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import { ECoin } from '@/model/Wallet'
 import { VNode } from 'vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
@@ -26,6 +28,7 @@ const MAX_COINS_COUNT = 6
 @Component
 export default class CoinSelect extends Vue {
   coinsFiltered: string[] = []
+  defaultValue = ECoin.BIP
 
   @Prop() change!: Function
   @Prop({ default: () => [] }) coins!: string[]
@@ -34,6 +37,11 @@ export default class CoinSelect extends Vue {
   @Watch('coins')
   onCoinsChange (coins: string[]): void {
     this.coinsFiltered = coins.slice(0, MAX_COINS_COUNT)
+  }
+
+  @Watch('defaultValue', { immediate: true })
+  onDefaultValueChange (value: string): void {
+    this.change(value)
   }
 
   filterOption (input: string, option: VNode): boolean {
