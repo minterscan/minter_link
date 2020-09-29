@@ -48,7 +48,18 @@ export default class App extends Mixins(Base, Error) {
   }
 
   mounted (): void {
+    this.fetch()
     this.ui.commitLoading(true)
+  }
+
+  async fetch (): Promise<void> {
+    try {
+      const status = await this.postman.getNetworkStatus()
+
+      this.network.commitStatus(status)
+    } catch (e) {
+      this.ui.commitError(e)
+    }
   }
 }
 </script>

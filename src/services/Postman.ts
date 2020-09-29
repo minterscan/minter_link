@@ -23,6 +23,7 @@ import { Validator } from '@/model/Validator'
 import { ExplorerAddressTxsRequest } from '@/model/Explorer'
 import { AddressBook, AddressBookItem } from '@/model/AddressBook'
 import { EstimateResponse, EstimateBuyRequest, EstimateSellRequest } from '@/model/Estimate'
+import { NetworkStatus } from '@/model/Network'
 
 /**
  * Main data bus service between extensions, background and content scripts
@@ -215,16 +216,25 @@ export class PostmanService {
    */
   async getValidators (): Promise<Validator[]> {
     return this.send({
-      subject: LetterSubject.GetValidators
+      subject: LetterSubject.GetNetworkValidators
     })
   }
 
   /**
    * Get Network coins list
    */
-  async getCoins (): Promise<Coin[]> {
+  async getNetworkCoins (): Promise<Coin[]> {
     return this.send({
-      subject: LetterSubject.GetCoins
+      subject: LetterSubject.GetNetworkCoins
+    })
+  }
+
+  /**
+   * Get Network status
+   */
+  async getNetworkStatus (): Promise<NetworkStatus> {
+    return this.send({
+      subject: LetterSubject.GetNetworkStatus
     })
   }
 

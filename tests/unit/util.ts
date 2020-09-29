@@ -1,0 +1,8 @@
+export const message = 'foo'
+export const password = 'bar'
+export const hashSHA3 = '1597842aac52bc9d13fe249d808afbf44da13524759477404c3592ee331173e89fe1cbf21a7e4360990d565fad4643cdb209d80fa41a91dea97e665022c92135'
+export const hashAES = 'U2FsdGVkX18SGimkEXgx1n4xfj5WUqKpkxSqXfEWtEI='
+export const seed = 'resist cruise west language calm melt evolve that scorpion silent omit master'
+export const privateKey = '27b64c9cb52995c18cc25b425fa727b69cfa02615b700112f7442f1691e03928'
+export const address = 'Mx17eba80bece444e6e2ae2934c2798de8b36e4c83'
+export const signature = '0xadcb4ac47e71d3f9fb93680df18b4cd293bd87c65fcad62540a0b99879c0c2b022d9c1af6e9085f117ad864a4fcf5c08c69f30c65f52ac1979404580326335311b'

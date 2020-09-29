@@ -5,7 +5,7 @@ import { handleTxSellAll } from '@/background/handlers/tx/sellAll'
 import { handleTxSend } from '@/background/handlers/tx/send'
 import { handleTxUnbond } from '@/background/handlers/tx/unbond'
 import { handleTxDelegate } from '@/background/handlers/tx/delegate'
-import { handleGetValidators } from '@/background/handlers/minter/validators'
+import { handleGetNetworkValidators } from '@/background/handlers/network/validators'
 import { handleGetWalletTxs } from '@/background/handlers/wallet/getTxs'
 import { handleGetWalletBalances } from '@/background/handlers/wallet/getBalances'
 import { handleGetWalletDelegations } from '@/background/handlers/wallet/getDelegations'
@@ -24,7 +24,8 @@ import { handleSetVaultActiveWalletMeta } from '@/background/handlers/vault/setA
 import { handleCmdWalletCreate } from '@/background/handlers/vault/walletCreate'
 import { handleCmdWalletImport } from '@/background/handlers/vault/walletImport'
 import { handleCmdWalletDelete } from '@/background/handlers/vault/walletDelete'
-import { handleGetCoins } from '@/background/handlers/minter/coins'
+import { handleGetNetworkCoins } from '@/background/handlers/network/coins'
+import { handleGetNetworkStatus } from '@/background/handlers/network/status'
 import { handleCmdAddressBookItemAdd } from '@/background/handlers/address-book/addItem'
 import { handleCmdAddressBookItemDelete } from '@/background/handlers/address-book/deleteItem'
 import { handleGetAddressBookPublicData } from '@/background/handlers/address-book/getPublicData'
@@ -82,8 +83,9 @@ export const handlers: BrowserMessageHandlers = {
   [LetterSubject.GetWalletDelegations]: handleGetWalletDelegations,
   [LetterSubject.GetWalletTxs]: handleGetWalletTxs,
   [LetterSubject.GetWalletSeed]: handleGetWalletSeed,
-  [LetterSubject.GetValidators]: handleGetValidators,
-  [LetterSubject.GetCoins]: handleGetCoins,
+  [LetterSubject.GetNetworkValidators]: handleGetNetworkValidators,
+  [LetterSubject.GetNetworkCoins]: handleGetNetworkCoins,
+  [LetterSubject.GetNetworkStatus]: handleGetNetworkStatus,
   [LetterSubject.TxSend]: handleTxSend,
   [LetterSubject.TxBuy]: handleTxBuy,
   [LetterSubject.TxSell]: handleTxSell,

@@ -62,6 +62,15 @@ export class ExplorerDataProvider {
 
     return response.data.data
   }
+
+  /**
+   * Get Network status
+   */
+  static async getStatus (): Promise<any> {
+    const response = await axios.get(`${baseUrl}/status`)
+
+    return response.data.data
+  }
 }
 
 export default ExplorerDataProvider

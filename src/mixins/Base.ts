@@ -4,6 +4,7 @@ import UIStore from '@/store/ui'
 import StateStore from '@/store/state'
 import { Config } from '@/model/Config'
 import { ERouter } from '@/model/Router'
+import NetworkStore from '@/store/network'
 import SettingsStore from '@/store/settings'
 import AddressBookStore from '@/store/addressBook'
 import { browser } from 'webextension-polyfill-ts'
@@ -15,6 +16,7 @@ import ws, { MinterWsDataProvider } from '@/providers/MinterWs'
 
 const ui = getModule(UIStore, RootStore)
 const state = getModule(StateStore, RootStore)
+const network = getModule(NetworkStore, RootStore)
 const settings = getModule(SettingsStore, RootStore)
 const addressBook = getModule(AddressBookStore, RootStore)
 
@@ -34,6 +36,10 @@ export default class Base extends Vue {
 
   get state (): StateStore {
     return state
+  }
+
+  get network (): NetworkStore {
+    return network
   }
 
   get settings (): SettingsStore {

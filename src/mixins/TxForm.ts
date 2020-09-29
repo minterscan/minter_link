@@ -121,7 +121,7 @@ export default class TxForm extends Mixins(Base) {
 
   async fetchNetworkCoins () {
     try {
-      const coins = await this.postman.getCoins()
+      const coins = await this.postman.getNetworkCoins()
 
       this.coins = Object.freeze(coins.map((item) => item.symbol))
     } catch (e) {
