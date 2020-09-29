@@ -70,6 +70,12 @@ it('toFixed default', () => {
   expect(result).toEqual('187.81')
 })
 
+it('toFixed string', () => {
+  const result = toFixed('187.814878373498109306')
+
+  expect(result).toEqual('187.81')
+})
+
 it('toFixed decimals', () => {
   const result = toFixed(187.814878373498109306, 4)
 

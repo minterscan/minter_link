@@ -66,8 +66,8 @@ export function pretty (value: number | string | undefined | null): string {
  * @param value
  * @param decimals
  */
-export function toFixed (value: number, decimals = 2): string {
-  return value.toFixed(decimals)
+export function toFixed (value: number | string, decimals = 2): string {
+  return new Big(value).toFixed(decimals)
 }
 
 /**

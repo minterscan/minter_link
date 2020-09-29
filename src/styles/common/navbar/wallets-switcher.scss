@@ -27,10 +27,19 @@
   .item {
     @extend .flex-center;
     width: 18rem;
+    flex-direction: column;
 
-    span {
-      font-size: 2rem;
-      margin: 0 1rem 0 0;
+    .top {
+      @extend .flex-center;
+      line-height: 1;
+
+      span {
+        margin: 0 1rem 0 0;
+      }
+    }
+
+    a {
+      color: #fff;
     }
   }
 }

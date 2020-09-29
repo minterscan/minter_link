@@ -215,7 +215,9 @@ export default class ActionSend extends Mixins(TxForm) {
 
     if (!balance) return
 
-    const amount = new Big(balance.amount).minus(this.fee)
+    let amount = new Big(balance.amount)
+
+    if (this.coin === this.gasCoin) amount = amount.minus(this.fee)
 
     this.maxAmount = amount ? `${amount.toFixed()}` : ''
   }

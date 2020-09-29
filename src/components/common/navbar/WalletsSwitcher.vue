@@ -7,8 +7,11 @@
 
     <!-- Wallet Label -->
     <div class="item">
-      <span v-if="state.wallet">{{ state.wallet.meta.icon }}</span>
-      {{ state.walletLabel | short(7, 16) }}
+      <div class="top">
+        <span v-if="state.wallet">{{ state.wallet.meta.icon }}</span>
+        <span>{{ state.walletLabel | short(7, 16) }}</span>
+      </div>
+      <address-link :address="state.wallet.address" :short="true" />
     </div>
 
     <!-- Next -->
@@ -25,10 +28,11 @@ import { ERouter } from '@/model/Router'
 import { UIWalletData } from '@/model/Wallet'
 import Icon from 'vue-awesome/components/Icon.vue'
 import { Component, Mixins } from 'vue-property-decorator'
+import AddressLink from '@/components/common/address/AddressLink.vue'
 
 @Component({
   name: 'WalletsSwitcher',
-  components: { Icon }
+  components: { Icon, AddressLink }
 })
 export default class NavbarWalletsSwitcher extends Mixins(Base) {
   loading = false
