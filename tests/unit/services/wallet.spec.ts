@@ -1,6 +1,6 @@
-import { 
+import {
   seed,
-  address, 
+  address,
   privateKey
 } from './../util'
 import WalletService from '@/services/Wallet'

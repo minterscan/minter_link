@@ -1,10 +1,10 @@
-import { 
+import {
   hashSHA3,
   hashAES,
-  message, 
+  message,
   password,
   privateKey,
-  signature 
+  signature
 } from '../util'
 import crypto from '@/services/Crypto'
 
@@ -16,7 +16,7 @@ it('encrypt message with SHA3', () => {
 
 it('sign message with private key', async () => {
   const result = await crypto.sign(message, Buffer.from(privateKey, 'hex'))
-  
+
   expect(result).toEqual(signature)
 })
 

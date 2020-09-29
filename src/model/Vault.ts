@@ -8,8 +8,8 @@ export type Vault = {
 
 export type VaultConnectedWebsites = {
   [address: string]: {
-    [domain: string]: number
-  }
+    [domain: string]: number;
+  };
 }
 
 export type VaultWallets = {

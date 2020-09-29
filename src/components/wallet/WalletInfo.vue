@@ -27,7 +27,7 @@ export default class WalletInfo extends Mixins(Base) {
 
   @Watch('bip')
   @Watch('network.status')
-  onBipChange (bip: string) {
+  onBipChange () {
     this.usd = new Big(this.bip).multipliedBy(this.network.status?.bipPriceUsd ?? 1).toString()
   }
 

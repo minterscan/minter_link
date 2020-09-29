@@ -4,6 +4,7 @@ import { Coin } from '@/model/Coin'
 import { Validator } from '@/model/Validator'
 import { ExplorerAddressTxsRequest } from '@/model/Explorer'
 import { MinterWalletBalance, MinterWalletDelegations, MinterWalletTxs } from '@/model/Wallet'
+import { NetworkStatus } from '@/model/Network'
 
 const baseUrl = config.explorerApiBaseUrl
 
@@ -66,7 +67,7 @@ export class ExplorerDataProvider {
   /**
    * Get Network status
    */
-  static async getStatus (): Promise<any> {
+  static async getStatus (): Promise<NetworkStatus> {
     const response = await axios.get(`${baseUrl}/status`)
 
     return response.data.data

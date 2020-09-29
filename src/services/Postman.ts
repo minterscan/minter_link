@@ -34,6 +34,7 @@ export class PostmanService {
    *
    * @param message
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async send (message: Letter): Promise<any> {
     return browser.runtime.sendMessage(message)
   }
