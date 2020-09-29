@@ -1,6 +1,6 @@
 import Base from '@/mixins/Base'
-import { ApplicationError, ErrorCode, ErrorMessageMap } from '@/model/Error'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { ApplicationError, ErrorCode, ErrorMessageMap } from '@/model/Error'
 
 /**
  * Error handler
@@ -28,7 +28,7 @@ export default class Error extends Mixins(Base) {
   // Draw error message via Ant
   // https://www.antdv.com/components/message/
   draw (error: ApplicationError) {
-    const message = (error.message in ErrorMessageMap) ? ErrorMessageMap[error.message] : error.message
+    const message = (error.message in ErrorMessageMap) ? ErrorMessageMap[error.message as ErrorCode] : error.message
 
     this.$message.error(message)
   }

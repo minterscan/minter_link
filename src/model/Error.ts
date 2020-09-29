@@ -6,6 +6,7 @@ export enum ErrorCode {
   SeedInvalid = '20',
   IncufficientFunds = '107',
   CoinSupplyOverflow = '112',
+  CoinReserveTooSmall = '116',
   SellAllIncufficientFunds = '303',
   StakeNotFound = '404',
   StakeLow = '409',
@@ -13,11 +14,7 @@ export enum ErrorCode {
   StorageDestroy = '901'
 }
 
-export type MessageMap = {
-  [code: string]: string;
-}
-
-export const ErrorMessageMap: MessageMap = {
+export const ErrorMessageMap: Record<ErrorCode, string> = {
   [ErrorCode.Unauthorized]: 'Unathorized',
   [ErrorCode.PasswordShort]: 'Password too short',
   [ErrorCode.PasswordMismatch]: 'Passwords does not match',
@@ -27,6 +24,7 @@ export const ErrorMessageMap: MessageMap = {
   [ErrorCode.StorageDestroy]: 'Can not destroy storage',
   [ErrorCode.IncufficientFunds]: 'Insufficient funds',
   [ErrorCode.CoinSupplyOverflow]: 'Coin supply overflow',
+  [ErrorCode.CoinReserveTooSmall]: 'Coin reserve too small',
   [ErrorCode.SellAllIncufficientFunds]: 'Insufficient funds',
   [ErrorCode.StakeNotFound]: 'Stake not found',
   [ErrorCode.StakeLow]: 'Stake is too low'
