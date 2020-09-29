@@ -39,7 +39,7 @@ export class KeyringService {
   }
 
   /**
-   * Get decrypted key
+   * Get encrypted key & update expire
    */
   get key (): string {
     if (!this.expired) {
@@ -49,7 +49,12 @@ export class KeyringService {
     return this._key
   }
 
-  setKey (value: string) {
+  /**
+   * Set encripted key
+   *
+   * @param value
+   */
+  private setKey (value: string) {
     const oldValue = this._key
 
     this._key = value
@@ -57,7 +62,12 @@ export class KeyringService {
     if (oldValue !== value) this.notifySubscribers(ObservableProps.Key, value)
   }
 
-  setExpiry (value: number) {
+  /**
+   * Set expiry
+   *
+   * @param value
+   */
+  private setExpiry (value: number) {
     const oldValue = this._expiry
 
     this._expiry = value
@@ -82,14 +92,14 @@ export class KeyringService {
    *
    * @param password
    */
-  attach (password: string): void {
+  private attach (password: string): void {
     this.setKey(crypto.encryptSHA3(password))
   }
 
   /**
    * Update key expiration
    */
-  touch (): void {
+  private touch (): void {
     this.setExpiry(Date.now() + settings.autoLock)
 
     global.clearTimeout(this._destroyTimeout)

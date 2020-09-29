@@ -1,7 +1,7 @@
 import { browser, Runtime } from 'webextension-polyfill-ts'
-import { Letter, ContentScriptLetterSubject } from '@/model/Letter'
+import { ContentScriptLetterSubject } from '@/model/Letter'
 
-export default class Channel {
+export default class ChannelService {
   public readonly port: Runtime.Port
 
   constructor (domain: string) {
@@ -9,19 +9,10 @@ export default class Channel {
   }
 
   /**
-   * Post Message to opened port
-   *
-   * @param message
-   */
-  postMessage (message: Letter): void {
-    this.port.postMessage(message)
-  }
-
-  /**
    * Request Vault status
    */
   requestVaultStatus (): void {
-    return this.postMessage({
+    this.port.postMessage({
       subject: ContentScriptLetterSubject.RequestVaultStatus
     })
   }
@@ -30,7 +21,7 @@ export default class Channel {
    * Request Vault status
    */
   requestActiveWallet (): void {
-    return this.postMessage({
+    this.port.postMessage({
       subject: ContentScriptLetterSubject.RequestVaultActiveWallet
     })
   }

@@ -30,14 +30,7 @@ export class Window {
   }
 
   get id (): number {
-    const id = 0
-
-    if (!this.window) return id
-    if (!this.window.tabs) return id
-    if (!this.window.tabs.length) return id
-    if (!this.window.tabs[0].id) return id
-
-    return this.window.tabs[0].id
+    return this.window?.tabs?.[0]?.id ?? 0
   }
 }
 

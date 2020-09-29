@@ -2,7 +2,7 @@ import { MinterWallet, MinterWalletMeta } from '@/model/Wallet'
 import { generateMnemonic, isValidMnemonic, walletFromMnemonic } from 'minterjs-wallet'
 
 /**
- * MInter Wallet Service
+ * Minter Wallet Service
  */
 export default class WalletService {
   /**
@@ -37,7 +37,7 @@ export default class WalletService {
    *
    * @param seed
    */
-  static getAddress (seed: string): string | undefined {
+  static getAddress (seed: string): string {
     const wallet = walletFromMnemonic(seed)
 
     return wallet.getAddressString()
@@ -50,7 +50,7 @@ export default class WalletService {
    * @param meta
    */
   static getMinterWallet (seed: string, meta: MinterWalletMeta): MinterWallet {
-    const address = WalletService.getAddress(seed) || ''
+    const address = WalletService.getAddress(seed)
 
     return {
       seed,

@@ -7,6 +7,7 @@ export function injectScript () {
     container.insertBefore(scriptTag, container.children[0])
     container.removeChild(scriptTag)
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error('Minter Link provider injection failed.', e)
   }
 }

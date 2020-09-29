@@ -18,11 +18,11 @@ import {
   TxUnbondRequest
 } from '@/model/Tx'
 import { Coin } from '@/model/Coin'
+import { Settings } from '@/model/Settings'
 import { Validator } from '@/model/Validator'
 import { ExplorerAddressTxsRequest } from '@/model/Explorer'
 import { AddressBook, AddressBookItem } from '@/model/AddressBook'
 import { EstimateResponse, EstimateBuyRequest, EstimateSellRequest } from '@/model/Estimate'
-import { Settings } from '@/model/Settings'
 
 /**
  * Main data bus service between extensions, background and content scripts
@@ -33,7 +33,7 @@ export class PostmanService {
    *
    * @param message
    */
-  async send<T> (message: Letter): Promise<T> {
+  private async send (message: Letter): Promise<any> {
     return browser.runtime.sendMessage(message)
   }
 
@@ -43,7 +43,7 @@ export class PostmanService {
    * @param message
    * @param tabId
    */
-  async sendToTab<T> (message: Letter, tabId = 0): Promise<void> {
+  private async sendToTab (message: Letter, tabId = 0): Promise<void> {
     try {
       if (!tabId) {
         const tabs = await browser.tabs.query({ active: true, currentWindow: true })

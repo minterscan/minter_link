@@ -41,7 +41,7 @@ export function getReadableTxType (value: ETxType): string {
  *
  * @param value
  */
-export function pipToBip (value: number): string {
+export function pipToBip (value: string | number): string {
   return new Big(value).dividedBy(10 ** 18).toString()
 }
 
@@ -50,7 +50,7 @@ export function pipToBip (value: number): string {
  *
  * @param value
  */
-export function pretty (value: number | string): string {
+export function pretty (value: number | string | undefined | null): string {
   if (value === null) { return '' }
   if (value === undefined) { return '' }
   if (value > 0.001 || value < -0.001 || Number(value) === 0) {
