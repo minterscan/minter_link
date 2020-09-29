@@ -84,8 +84,9 @@ it('toFixed decimals', () => {
 
 it('timestamp', () => {
   const result = timestamp(1601328058032)
+  const expected = new Date(1601328058032).toLocaleString()
 
-  expect(result).toEqual('9/28/2020, 11:20:58 PM')
+  expect(result).toEqual(expected)
 })
 
 it('getQuery', () => {
