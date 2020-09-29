@@ -12,8 +12,14 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "test:cover": "jest --coverage",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
   },
+  "pre-commin": [
+    "precommit-msg",
+    "lint",
+    "test:unit"
+  ],
   "dependencies": {
     "ant-design-vue": "^1.6.5",
     "axios": "^0.19.2",
@@ -72,6 +78,7 @@
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "node-sass": "^4.12.0",
+    "pre-commit": "^1.2.2",
     "sass-loader": "^8.0.2",
     "sinon-chrome": "^3.0.1",
     "typescript": "^3.8.3",
