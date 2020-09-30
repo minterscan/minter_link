@@ -26,27 +26,24 @@ export default class StateStore extends VuexModule {
   /**
    * All wallets
    */
-  get wallets (): VaultWallets | undefined {
-    return this.vault?.wallets
+  get wallets (): VaultWallets {
+    return this.vault.wallets
   }
 
   /**
    * Active Wallet
    */
-  get wallet (): MinterWallet | undefined {
-    return this.vault?.wallets[this.vault.activeWallet]
+  get wallet (): MinterWallet {
+    return this.vault.wallets[this.vault.activeWallet]
   }
 
   /**
    * Active Wallet label or address
    */
   get walletLabel (): string {
-    if (!this.vault) { return '' }
-    if (!this.wallets || !Object.keys(this.wallets).length) { return '' }
+    if (!Object.keys(this.wallets).length) { return '' }
 
-    const wallet = this.wallets[this.vault.activeWallet]
-
-    return wallet ? (wallet.meta.label || wallet.address) : ''
+    return this.wallet.meta.label || this.wallet.address
   }
 
   @Mutation
@@ -76,57 +73,41 @@ export default class StateStore extends VuexModule {
 
   @Mutation
   commitVaultActiveWallet (address: string) {
-    if (!this.vault) return
-
     Vue.set(this.vault, 'activeWallet', address)
   }
 
   @Mutation
   commitVaultWalletAdd (wallet: MinterWallet) {
-    if (!this.vault) { return }
-
     Vue.set(this.vault.wallets, wallet.address, wallet)
   }
 
   @Mutation
   commitVaultWalletDelete (address: string) {
-    if (!this.vault) { return }
-
     Vue.delete(this.vault.wallets, address)
   }
 
   @Mutation
   commitVaultWalletLabel (label: string) {
-    if (!this.vault) { return }
-
     Vue.set(this.vault.wallets[this.vault.activeWallet].meta, 'label', label)
   }
 
   @Mutation
   commitVaultWalletIcon (icon: string) {
-    if (!this.vault) { return }
-
     Vue.set(this.vault.wallets[this.vault.activeWallet].meta, 'icon', icon)
   }
 
   @Mutation
   commitVaultWalletTxs (data: { address: string; txs: MinterWalletTxs }) {
-    if (!this.vault) { return }
-
     Vue.set(this.vault.wallets[data.address], 'txs', data.txs)
   }
 
   @Mutation
   commitVaultWalletBalance (data: { address: string; balances: MinterWalletBalance[] }) {
-    if (!this.vault) { return }
-
     Vue.set(this.vault.wallets[data.address], 'balances', data.balances)
   }
 
   @Mutation
   commitVaultConnectedWebsites (connectedWebsites: VaultConnectedWebsites) {
-    if (!this.vault) { return }
-
     Vue.set(this.vault, 'connectedWebsites', connectedWebsites)
   }
 }

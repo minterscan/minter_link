@@ -10,9 +10,9 @@
     optionFilterProp="children"
     dropdownClassName="form-dropdown"
   >
-    <a-select-option v-for="(item, key) in addressBook.sorted" :key="key" :value="item.address">
-      <div class="name">{{ item.label }}</div>
-      <div class="public-key">{{ item.address }}</div>
+    <a-select-option v-for="(address, index) in addressBook.sorted" :key="index" :value="address">
+      <div class="name">{{ addressBook.book[address].label }}</div>
+      <div class="public-key">{{ address }}</div>
     </a-select-option>
   </a-select>
 </template>
@@ -28,9 +28,9 @@ export default class WalletSelect extends Mixins(Base) {
   @Prop({ default: 'Contact' }) placeholder!: string
 
   get defaultValue (): string {
-    if (!Object.keys(this.addressBook.sorted).length) return ''
+    if (this.addressBook.sorted.length) return ''
 
-    return Object.keys(this.addressBook.sorted)[0]
+    return this.addressBook.sorted[0]
   }
 
   @Watch('defaultValue', { immediate: true })

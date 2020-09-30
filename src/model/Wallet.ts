@@ -11,6 +11,7 @@ export type MinterWallet = {
   address: string;
   balances?: MinterWalletBalance[];
   meta: MinterWalletMeta;
+  txs?: MinterWalletTxs;
 }
 
 export enum UIWalletData {

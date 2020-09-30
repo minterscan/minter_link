@@ -8,11 +8,11 @@
     </view-header>
 
     <!-- Content -->
-    <div class="view-content" v-if="Object.keys(addressBook.sorted).length">
+    <div class="view-content" v-if="addressBook.sorted.length">
       <address-book-item
-        :key="key"
-        :item="item"
-        v-for="(item, key) in addressBook.sorted" />
+        :key="index"
+        :item="addressBook.book[address]"
+        v-for="(address, index) in addressBook.sorted" />
     </div>
 
     <!-- Empty list -->
