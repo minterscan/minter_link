@@ -1,7 +1,7 @@
 ![Logo](./img/minter-logo.svg)
 
 [![Tag](https://img.shields.io/github/v/tag/minterscan/minter_link)](https://img.shields.io/github/v/tag/minterscan/minter_link)
-[![Coverage Status](https://coveralls.io/repos/github/minterscan/minter_link/badge.svg?branch=master)](https://coveralls.io/github/minterscan/minter_connect?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/minterscan/minter_link/badge.svg?branch=master)](https://coveralls.io/github/minterscan/minter_link?branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/minterscan/minter_link/blob/master/LICENSE)
 
 **Minter Link** is a cross-browser [Minter](https://minter.org/) multi wallet extension. 
