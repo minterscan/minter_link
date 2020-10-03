@@ -1,18 +1,16 @@
 import Tx from 'minterjs-tx'
-import gate from '@/providers/Gate'
-import { AxiosResponse } from 'axios'
 import Wallet from '@/services/Wallet'
 import vault from '@/drivers/VaultDriver'
 import { PreparedTxData } from '@/model/Tx'
+import gate from '@/providers/GateProvider'
 import { coinToBuffer } from 'minterjs-tx/src/helpers'
 import TxSignature from 'minterjs-tx/src/tx-signature'
 
 // Tx wrapper
-export async function handleTx (txData: PreparedTxData, type: string, payload: string, gasCoin: string): Promise<AxiosResponse> {
+export async function handleTx (txData: PreparedTxData, type: string, payload: string, gasCoin: string): Promise<string> {
   const seed = await vault.getActiveWalletSeed()
   const address = await vault.getActiveWalletAddress()
-  const nonceResponse = await gate.getNonce(address)
-  const nonce = +nonceResponse.data.data.nonce + 1
+  const nonce = +(await gate.getNonce(address)) + 1
   const privateKey = Wallet.getPrivateKey(seed)
 
   const tx = new Tx({

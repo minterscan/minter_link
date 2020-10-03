@@ -14,7 +14,7 @@ export async function handleTxSellAll (message: Letter): Promise<string> {
     coinToSell: coinToBuffer(data.coinToSell),
     minimumValueToBuy: `0x${convertToPip(0, 'hex')}`
   })
-  const result = await handleTx(txData, TX_TYPE.SELL_ALL, data.payload, data.gasCoin)
+  const hash = await handleTx(txData, TX_TYPE.SELL_ALL, data.payload, data.gasCoin)
 
-  return result.data.data.hash
+  return hash
 }

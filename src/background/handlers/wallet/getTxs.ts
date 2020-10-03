@@ -1,5 +1,5 @@
 import { Letter } from '@/model/Letter'
-import Explorer from '@/providers/Explorer'
+import Explorer from '@/providers/ExplorerProvider'
 import { MinterWalletTxs } from '@/model/Wallet'
 
 // Get Wallet txs by address

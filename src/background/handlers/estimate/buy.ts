@@ -1,4 +1,4 @@
-import gate from '@/providers/Gate'
+import gate from '@/providers/GateProvider'
 import { Letter } from '@/model/Letter'
 import { convertToPip } from 'minterjs-util'
 import { EstimateBuyRequest, EstimateResponse } from '@/model/Estimate'
@@ -9,5 +9,5 @@ export async function handleEstimateBuy (message: Letter): Promise<EstimateRespo
 
   preparedData.valueToBuy = convertToPip(preparedData.valueToBuy)
 
-  return (await gate.estimateBuy(preparedData)).data.data
+  return gate.estimateBuy(preparedData)
 }

@@ -1,4 +1,4 @@
-import Explorer from '@/providers/Explorer'
+import Explorer from '@/providers/ExplorerProvider'
 import { Validator } from '@/model/Validator'
 
 // Get all available Minter validators

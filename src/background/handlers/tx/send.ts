@@ -14,7 +14,7 @@ export async function handleTxSend (message: Letter): Promise<string> {
     coin: coinToBuffer(data.coin),
     value: `0x${convertToPip(data.amount, 'hex')}`
   })
-  const result = await handleTx(txData, TX_TYPE.SEND, data.payload, data.gasCoin)
+  const hash = await handleTx(txData, TX_TYPE.SEND, data.payload, data.gasCoin)
 
-  return result.data.data.hash
+  return hash
 }

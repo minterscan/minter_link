@@ -14,7 +14,7 @@ export async function handleTxDelegate (message: Letter): Promise<string> {
     coin: coinToBuffer(data.coin),
     stake: `0x${convertToPip(data.stake, 'hex')}`
   })
-  const result = await handleTx(txData, TX_TYPE.DELEGATE, message.body.payload, data.gasCoin)
+  const hash = await handleTx(txData, TX_TYPE.DELEGATE, message.body.payload, data.gasCoin)
 
-  return result.data.data.hash
+  return hash
 }
