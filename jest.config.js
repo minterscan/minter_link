@@ -6,5 +6,8 @@ module.exports = {
     '!src/tab/main.ts' // No need to cover bootstrap file
   ],
   setupFilesAfterEnv: ['./jest.setup.js'],
-  preset: '@vue/cli-plugin-unit-jest/presets/typescript-and-babel'
+  preset: '@vue/cli-plugin-unit-jest/presets/typescript-and-babel',
+  transformIgnorePatterns: [
+    'node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)'
+  ]
 }

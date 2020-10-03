@@ -36,7 +36,6 @@
     "minterjs-util": "^0.15.1",
     "minterjs-wallet": "^4.0.4",
     "pretty-num": "^0.3.0",
-    "ts-jest": "^26.4.0",
     "vue": "^2.6.11",
     "vue-awesome": "^4.0.2",
     "vue-class-component": "^7.2.2",
@@ -47,6 +46,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@types/clipboard": "^2.0.1",
     "@types/crypto-js": "^3.1.43",
@@ -81,6 +81,7 @@
     "pre-commit": "^1.2.2",
     "sass-loader": "^8.0.2",
     "sinon-chrome": "^3.0.1",
+    "ts-jest": "^26.4.0",
     "typescript": "^3.8.3",
     "vue-cli-plugin-browser-extension": "~0.24.0",
     "vue-template-compiler": "^2.6.11",
