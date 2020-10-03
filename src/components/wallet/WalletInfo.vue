@@ -1,7 +1,6 @@
 <template>
   <div class="cp wallet-info">
     <div class="info">
-      <div class="head"></div>
       <div class="balance">
         <div class="bip">{{ bip | pretty }} BIP</div>
         <div class="usd">${{ usd | toFixed }}</div>
