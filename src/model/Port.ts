@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export enum EPort {
   Connect = 'port:connect',
   Sign = 'port:sign',

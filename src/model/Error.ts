@@ -10,6 +10,7 @@ export enum ErrorCode {
   SellAllIncufficientFunds = '303',
   StakeNotFound = '404',
   StakeLow = '409',
+  NetworkError = '800',
   StorageSave = '900',
   StorageDestroy = '901'
 }
@@ -26,6 +27,7 @@ export const ErrorMessageMap: Record<ErrorCode, string> = {
   [ErrorCode.CoinSupplyOverflow]: 'Coin supply overflow',
   [ErrorCode.CoinReserveTooSmall]: 'Coin reserve too small',
   [ErrorCode.SellAllIncufficientFunds]: 'Insufficient funds',
+  [ErrorCode.NetworkError]: 'Network Error',
   [ErrorCode.StakeNotFound]: 'Stake not found',
   [ErrorCode.StakeLow]: 'Stake is too low'
 }

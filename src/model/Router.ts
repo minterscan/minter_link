@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export enum ERouter {
   Fallback = '*',
   Home = '/',

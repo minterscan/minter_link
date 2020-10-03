@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export enum UISettingsData {
   General = 'general',
   Wallets = 'wallets'
