@@ -1,6 +1,7 @@
 import config from '@/config'
 import RootStore from '@/store'
 import UIStore from '@/store/ui'
+import Centrifuge from 'centrifuge'
 import StateStore from '@/store/state'
 import { Config } from '@/model/Config'
 import { ERouter } from '@/model/Router'
@@ -9,10 +10,10 @@ import SettingsStore from '@/store/settings'
 import AddressBookStore from '@/store/addressBook'
 import { browser } from 'webextension-polyfill-ts'
 import { getModule } from 'vuex-module-decorators'
+import { PostmanService } from '@/services/Postman'
 import { Vue, Component } from 'vue-property-decorator'
 import crypto, { CryptoService } from '@/services/Crypto'
-import { PostmanService } from '@/services/Postman'
-import ws, { MinterWsDataProvider } from '@/providers/MinterWs'
+import MinterWsProvider from '@/providers/MinterWsProvider'
 
 const ui = getModule(UIStore, RootStore)
 const state = getModule(StateStore, RootStore)
@@ -26,7 +27,12 @@ const addressBook = getModule(AddressBookStore, RootStore)
 
 @Component
 export default class Base extends Vue {
-  get ws (): MinterWsDataProvider {
+  get ws (): MinterWsProvider {
+    const centrifuge = new Centrifuge(config.explorerWsUrl, { debug: true })
+    const ws = new MinterWsProvider(centrifuge)
+
+    ws.connect()
+
     return ws
   }
 
