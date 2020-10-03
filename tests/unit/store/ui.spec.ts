@@ -3,7 +3,11 @@ import UIStore from '@/store/ui'
 import { UIWalletData } from '@/model/Wallet'
 import { getModule } from 'vuex-module-decorators'
 
-const ui = getModule(UIStore, RootStore)
+let ui: UIStore
+
+beforeEach(() => {
+  ui = getModule(UIStore, RootStore)
+})
 
 it('get ui', () => {
   expect(ui.loading).toBeTruthy()

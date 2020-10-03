@@ -2,7 +2,11 @@ import RootStore from '@/store'
 import NetworkStore from '@/store/network'
 import { getModule } from 'vuex-module-decorators'
 
-const network = getModule(NetworkStore, RootStore)
+let network: NetworkStore
+
+beforeEach(() => {
+  network = getModule(NetworkStore, RootStore)
+})
 
 it('get status', () => {
   expect(network.status.averageBlockTime).toEqual(0)

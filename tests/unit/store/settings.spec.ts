@@ -3,7 +3,11 @@ import RootStore from '@/store'
 import SettingsStore from '@/store/settings'
 import { getModule } from 'vuex-module-decorators'
 
-const settings = getModule(SettingsStore, RootStore)
+let settings: SettingsStore
+
+beforeEach(() => {
+  settings = getModule(SettingsStore, RootStore)
+})
 
 it('get autolock', () => {
   expect(settings.autoLock).toEqual(config.defaultSettings.autoLock)
