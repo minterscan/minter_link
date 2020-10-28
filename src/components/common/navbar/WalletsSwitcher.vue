@@ -2,13 +2,13 @@
   <div class="cp wallets-switcher" v-if="state.vault && visible">
     <!-- Prev -->
     <div class="arrow prev" v-if="walletsLength > 1" @click="prev()">
-      <icon name="arrowLeft" scale="2" />
+      <icon name="arrowLeft" scale="2.5" />
     </div>
 
     <!-- Wallet Label -->
-    <div class="item">
+    <div class="item" v-if="state.wallet">
       <div class="top">
-        <span v-if="state.wallet">{{ state.wallet.meta.icon }}</span>
+        <span>{{ state.wallet.meta.icon }}</span>
         <span>{{ state.walletLabel | short(7, 16) }}</span>
       </div>
       <address-link :address="state.wallet.address" :short="true" />
@@ -16,7 +16,7 @@
 
     <!-- Next -->
     <div class="arrow next" v-if="walletsLength > 1" @click="next()">
-      <icon name="arrowRight" scale="2" />
+      <icon name="arrowRight" scale="2.5" />
     </div>
   </div>
 </template>

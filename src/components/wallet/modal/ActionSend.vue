@@ -123,7 +123,7 @@ import AddressBookSelect from '@/components/common/form/AddressBookSelect.vue'
 export default class ActionSend extends Mixins(TxForm) {
   type = ETxType.Send
   address = ''
-  coin: string = ECoin.BIP
+  coin = 0
   amount = ''
   loading = false
   mode: AppSendMode = AppSendMode.Address
@@ -143,7 +143,6 @@ export default class ActionSend extends Mixins(TxForm) {
 
   get invalid (): boolean {
     return (
-      !this.coin ||
       !this.address ||
       this.amount === '' ||
       this.invalidPayload ||
@@ -203,7 +202,7 @@ export default class ActionSend extends Mixins(TxForm) {
     this.amount = amount
   }
 
-  changeCoin (coin: string): void {
+  changeCoin (coin: number): void {
     this.coin = coin
   }
 
@@ -211,7 +210,7 @@ export default class ActionSend extends Mixins(TxForm) {
     if (!this.state.wallet) return
     if (!this.state.wallet.balances) return
 
-    const balance = this.state.wallet.balances.find((item) => item.coin === this.coin)
+    const balance = this.state.wallet.balances.find((item) => item.coin.id === this.coin)
 
     if (!balance) return
 

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export enum AppEvent {
   Login = 'login',
   TxHash = 'tx:hash',

@@ -12,7 +12,7 @@
             {{ state.walletLabel | short }}
           </div>
           <div class="address"><address-link :address="state.wallet.address" /></div>
-          <div class="balance">{{ $options.filters.pretty(balance) }} {{ coin }}</div>
+          <div class="balance">{{ $options.filters.pretty(balance) }} {{ getCoin(coin) }}</div>
         </div>
 
         <!-- Empty Wallet -->
@@ -47,10 +47,10 @@
 </template>
 
 <script lang="ts">
+import Coins from '@/mixins/Coins'
 import Wallet from '@/mixins/Wallet'
 import { EPort } from '@/model/Port'
-import Channel from '@/services/Channel'
-import { VaultWallets } from '@/model/Vault'
+import Channel from '@/services/ChannelService'
 import Icon from 'vue-awesome/components/Icon.vue'
 import RequestWindow from '@/mixins/RequestWindow'
 import { Dictionary } from 'vue-router/types/router'
@@ -68,7 +68,7 @@ import AddressLink from '@/components/common/address/AddressLink.vue'
     MerchantInfo
   }
 })
-export default class RequestConnect extends Mixins(RequestWindow, Wallet) {
+export default class RequestConnect extends Mixins(Coins, RequestWindow, Wallet) {
   address = ''
   channel: Channel
 
@@ -83,23 +83,6 @@ export default class RequestConnect extends Mixins(RequestWindow, Wallet) {
       !this.merchant ||
       !this.merchant.url
     )
-  }
-
-  get wallets (): VaultWallets {
-    if (!this.state.vault) return {}
-
-    return this.state.vault?.wallets
-  }
-
-  get balance (): string {
-    if (!this.state.wallet) return ''
-    if (!this.state.wallet.balances) return ''
-
-    const balance = this.state.wallet.balances.find(item => item.coin === this.coin)
-
-    if (!balance) return ''
-
-    return balance.amount
   }
 
   mounted () {

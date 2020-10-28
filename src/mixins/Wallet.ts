@@ -5,7 +5,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 @Component
 export default class Wallet extends Mixins(Base) {
   @Watch('state.wallet.address', { immediate: true })
-  onWalletAddressChange (address: string, oldAddress: string) {
+  onWalletAddressChange (address: string, oldAddress: string): void {
     if (!address) return
 
     this.unsubscribe(oldAddress)
@@ -14,7 +14,7 @@ export default class Wallet extends Mixins(Base) {
   }
 
   // Fetch wallet balances from explorer
-  async fetch (address: string) {
+  async fetch (address: string): Promise<void> {
     try {
       const balances = await this.postman.getAddressBalances(address)
 
@@ -25,16 +25,16 @@ export default class Wallet extends Mixins(Base) {
   }
 
   // Subscribe to wallet balances updates from explorer WS
-  subscribe (address: string) {
-    this.ws.subscribeToWallet(address, this.onBalanceUpdate)
+  subscribe (address: string): void {
+    this.ws.subscribeToAddress(address, this.onBalanceUpdate)
   }
 
   // Unsubscribe from explorer WS
-  unsubscribe (address: string) {
-    if (address) this.ws.unsubscribeFromWallet(address)
+  unsubscribe (address: string): void {
+    if (address) this.ws.unsubscribeFromAddress(address)
   }
 
-  onBalanceUpdate (balances: MinterWalletBalance[]) {
+  onBalanceUpdate (balances: MinterWalletBalance[]): void {
     if (!this.state.wallet) return
 
     this.state.commitVaultWalletBalance({

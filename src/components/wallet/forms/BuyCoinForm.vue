@@ -6,8 +6,8 @@
     <!-- Estimate -->
     <convert-estimate
       :mode="mode"
-      :coinToBuy="coinToBuy"
-      :coinToSell="coinToSell"
+      :coinIdToBuy="coinToBuy"
+      :coinIdToSell="coinToSell"
       :valueToBuy="valueToBuy"
     />
 
@@ -15,7 +15,7 @@
     <a-form>
       <a-form-item class="select-form-item">
         <coin-select
-          :coins="coins"
+          :coins="network.coins"
           placeholder="Coin to Get"
           :change="changeCoinToBuy"
         />
@@ -94,19 +94,17 @@ export default class BuyCoinForm extends Mixins(TxForm) {
   get invalid (): boolean {
     return (
       !this.valueToBuy ||
-      !this.coinToBuy ||
-      !this.coinToSell ||
       this.invalidPayload ||
       this.coinToBuy === this.coinToSell ||
       (new Big(this.valueToSell).toNumber()) < 0
     )
   }
 
-  changeCoinToBuy (coin: string): void {
+  changeCoinToBuy (coin: number): void {
     this.coinToBuy = coin
   }
 
-  changeCoinToSell (coin: string): void {
+  changeCoinToSell (coin: number): void {
     this.coinToSell = coin
   }
 
@@ -122,8 +120,8 @@ export default class BuyCoinForm extends Mixins(TxForm) {
 
       const hash = await this.postman.txBuy({
         gasCoin: this.gasCoin,
-        coinToBuy: this.coinToBuy,
-        coinToSell: this.coinToSell,
+        coinIdToBuy: this.coinToBuy,
+        coinIdToSell: this.coinToSell,
         valueToBuy: this.valueToBuy,
         payload: this.payload
       })

@@ -42,21 +42,48 @@ export default class App extends Mixins(Base, Error) {
       return this.navigate(ERouter.Home)
     }
 
+    this.fetchNetworkCoins()
+    this.fetchNetworkStatus()
+    this.fetchNetworkValidators()
     this.state.commitVault(await this.postman.getVaultPublicData())
     this.settings.commitSettings(await this.postman.getSettingsPublicData())
     this.addressBook.commitBook(await this.postman.getAddressBookPublicData())
   }
 
   mounted (): void {
-    this.fetch()
     this.ui.commitLoading(true)
   }
 
-  async fetch (): Promise<void> {
+  async fetchNetworkStatus (): Promise<void> {
     try {
       const status = await this.postman.getNetworkStatus()
 
       this.network.commitStatus(status)
+    } catch (e) {
+      this.ui.commitError(e)
+    }
+  }
+
+  async fetchNetworkCoins () {
+    try {
+      const coins = await this.postman.getNetworkCoins()
+
+      this.network.commitCoins(coins.map((item) => {
+        return {
+          id: item.id,
+          symbol: item.symbol
+        }
+      }))
+    } catch (e) {
+      this.ui.commitError(e)
+    }
+  }
+
+  async fetchNetworkValidators () {
+    try {
+      const validators = await this.postman.getValidators()
+
+      this.network.commitValidators(validators.sort((a, b) => +a.stake > +b.stake ? -1 : 1))
     } catch (e) {
       this.ui.commitError(e)
     }

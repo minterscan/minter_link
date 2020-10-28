@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export enum LetterSubject {
   CmdWalletImport = 'cmd:wallet:import',
   CmdWalletDelete = 'cmd:wallet:delete',

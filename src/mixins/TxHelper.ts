@@ -57,7 +57,7 @@ export default class TxHelper extends Mixins(Base) {
       if (!currentUserDeliveryList) { return '' }
       if (!currentUserDeliveryList.length) { return '' }
 
-      return currentUserDeliveryList[0].coin
+      return currentUserDeliveryList[0].coin.symbol
     }
 
     return ''
@@ -90,10 +90,10 @@ export default class TxHelper extends Mixins(Base) {
       return 'Multiple coins'
     } else {
       return pretty(this.getAmount(tx) || 0) + ' ' + (
-        tx.data.coin ||
+        tx.data.coin?.symbol ||
         tx.data.symbol ||
         this.getConvertCoinSymbol(tx) ||
-        (tx.data.check && tx.data.check.coin) ||
+        tx.data.check?.coin?.symbol ||
         this.getMultisendCoin(tx)
       )
     }
@@ -103,11 +103,11 @@ export default class TxHelper extends Mixins(Base) {
     if (!tx.data) return ''
 
     if (tx.type === ETxType.SellCoin || tx.type === ETxType.SellAllCoin) {
-      return tx.data.coin_to_sell || ''
+      return tx.data.coin_to_sell?.symbol || ''
     }
 
     if (tx.type === ETxType.BuyCoin) {
-      return tx.data.coin_to_buy || ''
+      return tx.data.coin_to_buy?.symbol || ''
     }
 
     return ''

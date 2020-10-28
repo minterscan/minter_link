@@ -33,7 +33,7 @@ export default class StateStore extends VuexModule {
   /**
    * Active Wallet
    */
-  get wallet (): MinterWallet {
+  get wallet (): MinterWallet | undefined {
     return this.vault.wallets[this.vault.activeWallet]
   }
 
@@ -41,9 +41,7 @@ export default class StateStore extends VuexModule {
    * Active Wallet label or address
    */
   get walletLabel (): string {
-    if (!Object.keys(this.wallets).length) { return '' }
-
-    return this.wallet.meta.label || this.wallet.address
+    return this.wallet?.meta.label || this.wallet?.address || ''
   }
 
   @Mutation

@@ -1,15 +1,28 @@
+import { MinterWallet } from '@/model/Wallet'
 import RootStore from '@/store'
 import StateStore from '@/store/state'
 import { getModule } from 'vuex-module-decorators'
 
 /* eslint-disable @typescript-eslint/camelcase */
 
-const state = getModule(StateStore, RootStore)
+let state: StateStore
+const WALLET = {
+  address: 'address',
+  meta: {
+    label: 'label',
+    icon: 'icon'
+  }
+}
 const VAULT = {
   activeWallet: '',
   wallets: {},
   connectedWebsites: {}
 }
+
+beforeEach(() => {
+  state = getModule(StateStore, RootStore)
+  state.commitVaultReset()
+})
 
 it('get state', () => {
   expect(state.loggedIn).toBeFalsy()
@@ -101,16 +114,45 @@ it('get wallet label fallback', () => {
 it('commit wallet label', () => {
   state.commitVaultWalletLabel('new label')
 
-  expect(state.wallet.meta.label).toEqual('new label')
+  expect(state.wallet?.meta.label).toEqual('new label')
+})
+
+it('should validate wallet label', () => {
+  // Arrange
+  const createWallet = (address: string): MinterWallet => ({
+    address,
+    meta: {
+      icon: '',
+      label: `Wallet ${address}`
+    }
+  })
+
+  state.commitVault({
+    activeWallet: 'testaddress1',
+    wallets: {
+      testaddress1: createWallet('testaddress1'),
+      testaddress2: createWallet('testaddress2')
+    },
+    connectedWebsites: {}
+  })
+  // Act
+  state.commitVaultWalletDelete('testaddress1')
+  // Assert
+  expect(state.walletLabel).toEqual('')
 })
 
 it('commit wallet label', () => {
-  state.commitVaultWalletIcon('new icon')
+  state.commitVaultWalletAdd(WALLET)
+  state.commitVaultActiveWallet(WALLET.address)
+  expect(state.wallet?.meta.icon).toEqual('icon')
 
-  expect(state.wallet.meta.icon).toEqual('new icon')
+  state.commitVaultWalletIcon('new icon')
+  expect(state.wallet?.meta.icon).toEqual('new icon')
 })
 
 it('commit wallet txs', () => {
+  state.commitVaultWalletAdd(WALLET)
+  state.commitVaultActiveWallet(WALLET.address)
   state.commitVaultWalletTxs({
     address: 'address',
     txs: {
@@ -131,19 +173,24 @@ it('commit wallet txs', () => {
     }
   })
 
-  expect(state.wallet.txs?.data).toEqual([])
+  expect(state.wallet?.txs?.data).toEqual([])
 })
 
 it('set wallet balances', () => {
+  state.commitVaultWalletAdd(WALLET)
+  state.commitVaultActiveWallet(WALLET.address)
   state.commitVaultWalletBalance({
     address: 'address',
     balances: [{
-      coin: 'BIP',
+      coin: {
+        id: 0,
+        symbol: 'BIP'
+      },
       amount: '1'
     }]
   })
 
-  expect(state.wallet.balances?.[0].coin).toEqual('BIP')
+  expect(state.wallet?.balances?.[0].coin.symbol).toEqual('BIP')
 })
 
 it('set set connected websites', () => {
@@ -158,7 +205,9 @@ it('set set connected websites', () => {
 })
 
 it('delete wallet', () => {
-  state.commitVaultWalletDelete('address')
+  state.commitVaultWalletAdd(WALLET)
+  expect(Object.keys(state.wallets).length).toEqual(1)
 
+  state.commitVaultWalletDelete('address')
   expect(Object.keys(state.wallets).length).toEqual(0)
 })

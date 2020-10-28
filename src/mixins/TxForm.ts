@@ -2,9 +2,11 @@ import Big from 'bignumber.js'
 import Base from '@/mixins/Base'
 import { ETxType } from '@/model/Tx'
 import { AppEvent } from '@/model/App'
-import { Validator } from '@/model/Validator'
 import { ECoin, MinterWalletBalance } from '@/model/Wallet'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
+
+// Ignore snake case for Minter Explorer API data
+/* eslint-disable @typescript-eslint/camelcase */
 
 /**
  * Transaction form
@@ -13,15 +15,13 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 @Component
 export default class TxForm extends Mixins(Base) {
   type = ETxType.Send
-  gasCoin: string = ECoin.BIP
+  gasCoin = 0
   gasCoinBipPrice = 1
-  coinToBuy = ''
-  coinToSell = ''
+  coinToBuy = 0
+  coinToSell = 0
   valueToBuy = ''
   valueToSell = ''
   maxAmount = ''
-  coins: readonly string[] = []
-  validators: readonly Validator[] = []
   walletCoins: string[] = []
   loading = false
   hash = ''
@@ -43,7 +43,7 @@ export default class TxForm extends Mixins(Base) {
     if (!this.state.wallet) return '0'
     if (!this.state.wallet.balances) return '0'
 
-    const balance = this.state.wallet.balances.find((item) => item.coin === this.gasCoin)
+    const balance = this.state.wallet.balances.find((item) => item.coin.id === this.gasCoin)
 
     if (!balance) return '0'
 
@@ -62,7 +62,7 @@ export default class TxForm extends Mixins(Base) {
   onWalletBalancesChange (balances: MinterWalletBalance[]) {
     if (!balances) return
 
-    this.walletCoins = balances.map((item) => item.coin).sort((a, b) => a < b ? -1 : 1)
+    this.walletCoins = balances.map((item) => item.coin.symbol).sort((a, b) => a < b ? -1 : 1)
   }
 
   @Watch('coinToBuy')
@@ -80,14 +80,12 @@ export default class TxForm extends Mixins(Base) {
   }
 
   @Watch('gasCoin', { immediate: true })
-  onGasCoinChange (value: string) {
+  onGasCoinChange (value: number) {
     if (value !== ECoin.BIP) this.fetchGasCoinBipPrice()
   }
 
   mounted (): void {
     this.listen()
-    this.fetchValidators()
-    this.fetchNetworkCoins()
   }
 
   getFee (txType: ETxType): string {
@@ -109,32 +107,12 @@ export default class TxForm extends Mixins(Base) {
     return `${fee}`
   }
 
-  async fetchValidators () {
-    try {
-      const validators = await this.postman.getValidators()
-
-      this.validators = Object.freeze(validators.sort((a, b) => +a.stake > +b.stake ? -1 : 1))
-    } catch (e) {
-      this.ui.commitError(e)
-    }
-  }
-
-  async fetchNetworkCoins () {
-    try {
-      const coins = await this.postman.getNetworkCoins()
-
-      this.coins = Object.freeze(coins.map((item) => item.symbol))
-    } catch (e) {
-      this.ui.commitError(e)
-    }
-  }
-
   async fetchGasCoinBipPrice () {
     try {
       const estimate = await this.postman.estimateSell({
-        coinToBuy: ECoin.BIP,
-        coinToSell: this.gasCoin,
-        valueToSell: '1'
+        coin_id_to_buy: '0',
+        coin_id_to_sell: `${this.gasCoin}`,
+        value_to_sell: '1'
       })
 
       this.gasCoinBipPrice = new Big(estimate.will_get).dividedBy(10 ** 18).toNumber()
@@ -148,7 +126,7 @@ export default class TxForm extends Mixins(Base) {
     this.$root.$on(AppEvent.FormReset, this.resetForm)
   }
 
-  changeGasCoin (coin: string): void {
+  changeGasCoin (coin: number): void {
     this.gasCoin = coin
   }
 
@@ -157,8 +135,8 @@ export default class TxForm extends Mixins(Base) {
   }
 
   resetForm (): void {
-    this.coinToBuy = ''
-    this.coinToSell = ''
+    this.coinToBuy = ECoin.BIP
+    this.coinToSell = ECoin.BIP
     this.valueToBuy = ''
     this.valueToSell = ''
     this.payload = ''

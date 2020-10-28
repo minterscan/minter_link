@@ -2,7 +2,11 @@ import RootStore from '@/store'
 import AddressBookStore from '@/store/addressBook'
 import { getModule } from 'vuex-module-decorators'
 
-const addressBook = getModule(AddressBookStore, RootStore)
+let addressBook: AddressBookStore
+
+beforeEach(() => {
+  addressBook = getModule(AddressBookStore, RootStore)
+})
 
 it('get book', () => {
   expect(addressBook.book).toStrictEqual({})

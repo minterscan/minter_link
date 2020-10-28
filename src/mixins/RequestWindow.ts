@@ -1,6 +1,7 @@
 import Base from '@/mixins/Base'
 import { ECoin } from '@/model/Wallet'
 import { Merchant } from 'minter-connect'
+import { VaultWallets } from '@/model/Vault'
 import { Component, Mixins } from 'vue-property-decorator'
 
 /**
@@ -11,8 +12,23 @@ import { Component, Mixins } from 'vue-property-decorator'
 export default class RequestWindow extends Mixins(Base) {
   tabId = 0
   loading = false
-  coin: string = ECoin.BIP
+  coin: number = ECoin.BIP
   merchant: Merchant | null = null
+
+  get wallets (): VaultWallets {
+    return this.state.vault?.wallets ?? {}
+  }
+
+  get balance (): string {
+    if (!this.state.wallet) return ''
+    if (!this.state.wallet.balances) return ''
+
+    const balance = this.state.wallet.balances.find(item => item.coin.id === this.coin)
+
+    if (!balance) return ''
+
+    return balance.amount
+  }
 
   beforeMount () {
     this.bind()

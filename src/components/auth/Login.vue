@@ -38,7 +38,10 @@ export default class Login extends Mixins(Base, Input) {
   protected async submit (): Promise<void> {
     try {
       await this.postman.vaultPing(this.password)
-      await this.postman.setPassword(this.password)
+      await this.postman.setPassword({
+        password: this.password,
+        passwordRepeat: this.password
+      })
 
       this.$root.$emit(AppEvent.Login)
 

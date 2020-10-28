@@ -2,7 +2,6 @@ import { handleTx } from './tx'
 import { Letter } from '@/model/Letter'
 import { convertToPip } from 'minterjs-util'
 import { TX_TYPE } from 'minterjs-tx/src/tx-types'
-import { coinToBuffer } from 'minterjs-tx/src/helpers'
 import TxDataSellAll from 'minterjs-tx/src/tx-data/sell-all'
 import { PreparedTxData, TxSellAllRequest } from '@/model/Tx'
 
@@ -10,11 +9,11 @@ import { PreparedTxData, TxSellAllRequest } from '@/model/Tx'
 export async function handleTxSellAll (message: Letter): Promise<string> {
   const data: TxSellAllRequest = message.body
   const txData: PreparedTxData = new TxDataSellAll({
-    coinToBuy: coinToBuffer(data.coinToBuy),
-    coinToSell: coinToBuffer(data.coinToSell),
+    coinToBuy: data.coinIdToBuy,
+    coinToSell: data.coinIdToSell,
     minimumValueToBuy: `0x${convertToPip(0, 'hex')}`
   })
-  const result = await handleTx(txData, TX_TYPE.SELL_ALL, data.payload, data.gasCoin)
+  const hash = await handleTx(txData, TX_TYPE.SELL_ALL, data.payload, data.gasCoin)
 
-  return result.data.data.hash
+  return hash
 }

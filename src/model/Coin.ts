@@ -1,4 +1,5 @@
 export type Coin = {
+  id: number;
   crr: number;
   volume: string;
   reserveBalance: string;

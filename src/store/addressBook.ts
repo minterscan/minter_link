@@ -10,17 +10,12 @@ export default class AddressBookStore extends VuexModule {
    * Sort items by ABC
    */
   get sorted (): string[] {
-    const sortedBook: string[] = []
-
-    Object.keys(this.book)
+    return Object.keys(this.book)
       .sort((a, b) => {
         if (this.book[a].label < this.book[b].label) return -1
         if (this.book[a].label > this.book[b].label) return 1
         return 0
       })
-      .map((key) => { sortedBook.push(key) })
-
-    return sortedBook
   }
 
   @Mutation

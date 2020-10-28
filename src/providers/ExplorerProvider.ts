@@ -1,23 +1,23 @@
-import axios from 'axios'
 import config from '@/config'
 import { Coin } from '@/model/Coin'
+import axios from '@/providers/AxiosProvider'
 import { Validator } from '@/model/Validator'
+import { NetworkStatus } from '@/model/Network'
 import { ExplorerAddressTxsRequest } from '@/model/Explorer'
 import { MinterWalletBalance, MinterWalletDelegations, MinterWalletTxs } from '@/model/Wallet'
-import { NetworkStatus } from '@/model/Network'
 
 const baseUrl = config.explorerApiBaseUrl
 
 /**
  * Explorer Data Provider
  */
-export class ExplorerDataProvider {
+export default class ExplorerProvider {
   /**
    * Get address balances
    *
    * @param address
    */
-  static async getAddress (address: string): Promise<MinterWalletBalance[]> {
+  static async getAddressBalances (address: string): Promise<MinterWalletBalance[]> {
     const response = await axios.get(`${baseUrl}/addresses/${address}`)
 
     return response.data.data.balances
@@ -73,5 +73,3 @@ export class ExplorerDataProvider {
     return response.data.data
   }
 }
-
-export default ExplorerDataProvider

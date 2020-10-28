@@ -32,19 +32,19 @@
 
                   <!-- Delegate / Unbond -->
                   <template v-if="tx.data.pub_key">
-                    →
+                    <span class="arrow">→</span>
                     <validator-link :pubKey="tx.data.pub_key" />
                   </template>
 
                   <!-- Send / Multisend -->
                   <template v-if="tx.data.to">
-                    →
+                    <span class="arrow">→</span>
                     <address-link :address="tx.data.to" :short="true" v-if="tx.data.to !== state.wallet.address" />
                     <span class="me" v-else>Me</span>
                   </template>
 
                   <template v-if="!tx.data.to && !tx.data.pub_key">
-                    → Blockchain
+                    <span class="arrow">→</span>Blockchain
                   </template>
                 </div>
               </div>
@@ -102,7 +102,6 @@ export default class WalletTxs extends Mixins(Base, TxHelper) {
   @Watch('state.wallet.address', { immediate: true })
   async onWalletAddressChange (address: string): Promise<void> {
     this.ui.commitLoading(true)
-    this.unsubscribe()
     this.fetch(address)
     this.subscribe()
     this.$nextTick(() => { this.ui.commitLoading(false) })

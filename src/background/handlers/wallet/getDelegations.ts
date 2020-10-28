@@ -1,5 +1,5 @@
 import { Letter } from '@/model/Letter'
-import Explorer from '@/providers/Explorer'
+import Explorer from '@/providers/ExplorerProvider'
 import { MinterWalletDelegations } from '@/model/Wallet'
 
 // Get Wallet delegations by address

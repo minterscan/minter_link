@@ -1,4 +1,4 @@
-import Explorer from '@/providers/Explorer'
+import Explorer from '@/providers/ExplorerProvider'
 import { NetworkStatus } from '@/model/Network'
 
 // Get Minter network status

@@ -24,6 +24,7 @@ import { ExplorerAddressTxsRequest } from '@/model/Explorer'
 import { AddressBook, AddressBookItem } from '@/model/AddressBook'
 import { EstimateResponse, EstimateBuyRequest, EstimateSellRequest } from '@/model/Estimate'
 import { NetworkStatus } from '@/model/Network'
+import { SetPasswordRequest } from '@/model/Keyring'
 
 /**
  * Main data bus service between extensions, background and content scripts
@@ -253,7 +254,7 @@ export class PostmanService {
    *
    * @param body
    */
-  async setPassword (body: string): Promise<number> {
+  async setPassword (body: SetPasswordRequest): Promise<number> {
     return this.send({
       subject: LetterSubject.SetPassword,
       body

@@ -11,8 +11,8 @@
     dropdownClassName="form-dropdown"
   >
     <a-icon slot="suffixIcon" type="wallet" />
-    <a-select-option v-for="(item, key) in coins" :key="key" :value="item.coin">
-      {{ item.coin }} ({{ item.amount | pretty }})
+    <a-select-option v-for="(item, key) in coins" :key="key" :value="item.coin.id">
+      {{ item.coin.symbol }} ({{ item.amount | pretty }})
     </a-select-option>
   </a-select>
 </template>
@@ -25,7 +25,7 @@ import { Component, Prop, Mixins } from 'vue-property-decorator'
 
 @Component
 export default class CoinSelect extends Mixins(Base) {
-  value: string = ECoin.BIP
+  value = ECoin.BIP
 
   @Prop() change!: Function
   @Prop({ default: 'Coin' }) placeholder!: string
@@ -35,7 +35,7 @@ export default class CoinSelect extends Mixins(Base) {
     if (!this.state.wallet.balances) return []
 
     return this.state.wallet.balances.slice().sort((a, b) => {
-      if (a.coin === ECoin.BIP) return -1
+      if (!a.coin.id) return -1
       else return a.coin < b.coin ? -1 : 1
     })
   }

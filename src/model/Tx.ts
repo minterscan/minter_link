@@ -11,12 +11,17 @@ export type Tx = {
   data: TxData;
 }
 
+export type TxCoin = {
+  id: number;
+  symbol: string;
+}
+
 export type TxData = {
-  coin?: string;
+  coin?: TxCoin;
   to?: string;
   value?: string;
-  coin_to_sell?: string;
-  coin_to_buy?: string;
+  coin_to_sell?: TxCoin;
+  coin_to_buy?: TxCoin;
   value_to_sell?: string;
   value_to_buy?: string;
   minimum_value_to_buy?: string;
@@ -41,7 +46,7 @@ export type TxData = {
 }
 
 export type Check = {
-  coin: string;
+  coin: TxCoin;
   nonce: string;
   value: string;
   sender: string;
@@ -49,7 +54,7 @@ export type Check = {
 }
 
 export type MultisendItem = {
-  coin: string;
+  coin: TxCoin;
   to: string;
   value: string;
 }
@@ -60,48 +65,48 @@ export type PreparedTxData = {
 
 export type TxSendRequest = {
   address: string;
-  gasCoin: string;
-  coin: string;
+  gasCoin: number;
+  coin: number;
   amount: string;
   payload: string;
 }
 
 export type TxDelegateRequest = {
   pubKey: string;
-  coin: string;
-  gasCoin: string;
+  coin: number;
+  gasCoin: number;
   stake: string;
   payload: string;
 }
 
 export type TxUnbondRequest = {
   pubKey: string;
-  coin: string;
-  gasCoin: string;
+  coin: number;
+  gasCoin: number;
   stake: string;
   payload: string;
 }
 
 export type TxBuyRequest = {
-  gasCoin: string;
-  coinToBuy: string;
+  gasCoin: number;
+  coinIdToBuy: number;
   valueToBuy: string;
-  coinToSell: string;
+  coinIdToSell: number;
   payload: string;
 }
 
 export type TxSellRequest = {
-  gasCoin: string;
-  coinToSell: string;
+  gasCoin: number;
+  coinIdToSell: number;
   valueToSell: string;
-  coinToBuy: string;
+  coinIdToBuy: number;
   payload: string;
 }
 
 export type TxSellAllRequest = {
-  gasCoin: string;
-  coinToSell: string;
-  coinToBuy: string;
+  gasCoin: number;
+  coinIdToSell: number;
+  coinIdToBuy: number;
   payload: string;
 }
 

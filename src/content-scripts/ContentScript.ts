@@ -1,5 +1,5 @@
 import pckg from './../../package.json'
-import Channel from '@/services/Channel'
+import Channel from '@/services/ChannelService'
 import { browser } from 'webextension-polyfill-ts'
 import { PostmanService } from '@/services/Postman'
 import { Letter, LetterSubject, ContentScriptLetterSubject } from '@/model/Letter'

@@ -48,6 +48,7 @@ import BuyCoinForm from '@/components/wallet/forms/BuyCoinForm.vue'
 import SellCoinForm from '@/components/wallet/forms/SellCoinForm.vue'
 import { MinterWalletBalance, UIWalletConvertMode } from '@/model/Wallet'
 import SellAllCoinForm from '@/components/wallet/forms/SellAllCoinForm.vue'
+import { TxCoin } from '@/model/Tx'
 
 @Component({
   name: 'ActionConvert',
@@ -63,7 +64,7 @@ export default class ActionConvert extends Mixins(Base) {
   hash = ''
   invalid = true
   loading = false
-  coins: string[] = []
+  coins: TxCoin[] = []
   mode = UIWalletConvertMode.Buy
   modes: UIWalletConvertMode[] = [
     UIWalletConvertMode.Buy,
