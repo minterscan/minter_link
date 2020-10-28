@@ -1,4 +1,4 @@
-import { Letter, LetterSubject } from './Letter';
+import { Letter, LetterSubject } from './Letter'
 
 export type SetPasswordRequest = {
   password: string;
@@ -6,6 +6,6 @@ export type SetPasswordRequest = {
 }
 
 export interface CreatePasswordLetter extends Letter {
-  subject: LetterSubject.SetPassword,
-  body: SetPasswordRequest
+  subject: LetterSubject.SetPassword;
+  body: SetPasswordRequest;
 }

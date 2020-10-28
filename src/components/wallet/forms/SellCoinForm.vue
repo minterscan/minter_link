@@ -6,8 +6,8 @@
     <!-- Estimate -->
     <convert-estimate
       :mode="mode"
-      :coinToBuy="coinToBuy"
-      :coinToSell="coinToSell"
+      :coinIdToBuy="coinToBuy"
+      :coinIdToSell="coinToSell"
       :valueToSell="valueToSell"
     />
 
@@ -25,7 +25,7 @@
       </a-form-item>
       <a-form-item class="select-form-item">
         <coin-select
-          :coins="coins"
+          :coins="network.coins"
           placeholder="Coin to Get"
           :change="changeCoinToBuy"
         />
@@ -90,9 +90,9 @@ import WalletCoinSelect from '@/components/common/form/WalletCoinSelect.vue'
   }
 })
 export default class SellCoinForm extends Mixins(TxForm) {
-  coinToBuy = ''
+  coinToBuy = ECoin.BIP
   valueToSell = ''
-  coinToSell: string = ECoin.BIP
+  coinToSell = ECoin.BIP
 
   get mode (): UIWalletConvertMode {
     return UIWalletConvertMode.Sell
@@ -101,8 +101,6 @@ export default class SellCoinForm extends Mixins(TxForm) {
   get invalid (): boolean {
     return (
       !this.valueToSell ||
-      !this.coinToBuy ||
-      !this.coinToSell ||
       this.invalidPayload ||
       this.valueToSell > this.maxAmount ||
       this.coinToBuy === this.coinToSell ||
@@ -129,11 +127,11 @@ export default class SellCoinForm extends Mixins(TxForm) {
     }
   }
 
-  changeCoinToBuy (coin: string): void {
+  changeCoinToBuy (coin: number): void {
     this.coinToBuy = coin
   }
 
-  changeCoinToSell (coin: string): void {
+  changeCoinToSell (coin: number): void {
     this.coinToSell = coin
   }
 
@@ -145,7 +143,7 @@ export default class SellCoinForm extends Mixins(TxForm) {
     if (!this.state.wallet) return
     if (!this.state.wallet.balances) return
 
-    const balance = this.state.wallet.balances.find((item) => item.coin === this.coinToSell)
+    const balance = this.state.wallet.balances.find((item) => item.coin.id === this.coinToSell)
 
     if (!balance) return
 
@@ -159,7 +157,7 @@ export default class SellCoinForm extends Mixins(TxForm) {
   }
 
   resetForm (): void {
-    this.coinToBuy = ''
+    this.coinToBuy = ECoin.BIP
     this.coinToSell = ECoin.BIP
     this.valueToSell = ''
     this.payload = ''
@@ -173,8 +171,8 @@ export default class SellCoinForm extends Mixins(TxForm) {
 
       const hash = await this.postman.txSell({
         gasCoin: this.gasCoin,
-        coinToBuy: this.coinToBuy,
-        coinToSell: this.coinToSell,
+        coinIdToBuy: this.coinToBuy,
+        coinIdToSell: this.coinToSell,
         valueToSell: this.valueToSell,
         payload: this.payload
       })

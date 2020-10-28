@@ -13,7 +13,7 @@
             {{ state.walletLabel | short }}
           </div>
           <div class="address"><address-link :address="state.wallet.address" /></div>
-          <div class="balance">{{ $options.filters.pretty(balance) }} {{ coin }}</div>
+          <div class="balance">{{ $options.filters.pretty(balance) }} {{ getCoin(coin) }}</div>
         </div>
 
         <!-- Empty Wallet -->
@@ -53,12 +53,12 @@
 </template>
 
 <script lang="ts">
+import Coins from '@/mixins/Coins'
 import { EPort } from '@/model/Port'
 import Wallet from '@/mixins/Wallet'
 import { AppEvent } from '@/model/App'
-import Channel from '@/services/Channel'
-import { VaultWallets } from '@/model/Vault'
 import { isValidAddress } from 'minterjs-util'
+import Channel from '@/services/ChannelService'
 import RequestWindow from '@/mixins/RequestWindow'
 import Icon from 'vue-awesome/components/Icon.vue'
 import { Dictionary } from 'vue-router/types/router'
@@ -78,7 +78,7 @@ import AddressLink from '@/components/common/address/AddressLink.vue'
     TxSuccess
   }
 })
-export default class RequestSign extends Mixins(RequestWindow, Wallet) {
+export default class RequestSign extends Mixins(Coins, RequestWindow, Wallet) {
   message = ''
   address = ''
   channel: Channel
@@ -95,23 +95,6 @@ export default class RequestSign extends Mixins(RequestWindow, Wallet) {
       this.message === '' ||
       !isValidAddress(this.address)
     )
-  }
-
-  get wallets (): VaultWallets {
-    if (!this.state.vault) return {}
-
-    return this.state.vault?.wallets
-  }
-
-  get balance (): string {
-    if (!this.state.wallet) return ''
-    if (!this.state.wallet.balances) return ''
-
-    const balance = this.state.wallet.balances.find(item => item.coin === this.coin)
-
-    if (!balance) return ''
-
-    return balance.amount
   }
 
   mounted () {

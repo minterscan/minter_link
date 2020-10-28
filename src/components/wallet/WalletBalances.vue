@@ -15,7 +15,7 @@
         <ul class="list" v-else>
           <li v-for="(balance, key) in balances" :key="key">
           <span class="coin">
-            {{ balance.coin }}
+            {{ balance.coin.symbol }}
           </span>
             <span class="amount">
             {{ balance.amount | pretty }}
@@ -32,7 +32,7 @@ import Base from '@/mixins/Base'
 import Loading from '@/components/common/Loading.vue'
 import DataEmpty from '@/components/common/DataEmpty.vue'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
-import { ECoin, MinterWalletBalance, UIWalletData } from '@/model/Wallet'
+import { MinterWalletBalance, UIWalletData } from '@/model/Wallet'
 
 @Component({
   name: 'WalletBalances',
@@ -47,7 +47,7 @@ export default class WalletBalances extends Mixins(Base) {
   }
 
   get empty (): boolean {
-    return this.balances.length === 1 && this.balances[0].coin === ECoin.BIP && !+this.balances[0].amount
+    return this.balances.length === 1 && !this.balances[0].coin.id && !+this.balances[0].amount
   }
 
   @Watch('state.wallet.balances', { immediate: true })

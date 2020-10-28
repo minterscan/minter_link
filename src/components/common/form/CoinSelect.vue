@@ -4,7 +4,7 @@
     size="large"
     @change="change"
     class="form-select"
-    :defaultValue="defaultValue"
+    :defaultValue="value"
     :placeholder="placeholder"
     :filterOption="filterOption"
     optionFilterProp="children"
@@ -12,13 +12,14 @@
     dropdownClassName="form-dropdown"
   >
     <a-icon slot="suffixIcon" type="wallet" />
-    <a-select-option v-for="(item, key) in coinsFiltered" :key="key" :value="item">
-      {{ item }}
+    <a-select-option v-for="(item, key) in coinsFiltered" :key="key" :value="item.id">
+      {{ item.symbol }}
     </a-select-option>
   </a-select>
 </template>
 
 <script lang="ts">
+import { TxCoin } from '@/model/Tx'
 import { ECoin } from '@/model/Wallet'
 import { VNode } from 'vue'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -27,19 +28,19 @@ const MAX_COINS_COUNT = 6
 
 @Component
 export default class CoinSelect extends Vue {
-  coinsFiltered: string[] = []
-  defaultValue = ECoin.BIP
+  value = ECoin.BIP
+  coinsFiltered: TxCoin[] = []
 
   @Prop() change!: Function
-  @Prop({ default: () => [] }) coins!: string[]
+  @Prop({ default: () => [] }) coins!: TxCoin[]
   @Prop({ default: 'Coin' }) placeholder!: string
 
-  @Watch('coins')
-  onCoinsChange (coins: string[]): void {
+  @Watch('coins', { immediate: true })
+  onCoinsChange (coins: TxCoin[]): void {
     this.coinsFiltered = coins.slice(0, MAX_COINS_COUNT)
   }
 
-  @Watch('defaultValue', { immediate: true })
+  @Watch('value', { immediate: true })
   onDefaultValueChange (value: string): void {
     this.change(value)
   }
@@ -56,7 +57,7 @@ export default class CoinSelect extends Vue {
   }
 
   handleCoinSearch (input: string): void {
-    const result: string[] = []
+    const result: TxCoin[] = []
     const query = input.trim().toLowerCase()
 
     if (!query) {
@@ -65,7 +66,7 @@ export default class CoinSelect extends Vue {
     }
 
     for (let i = 0; i < this.coins.length; i++) {
-      if (this.coins[i].toLowerCase().indexOf(query) === 0) {
+      if (this.coins[i].symbol.toLowerCase().indexOf(query) === 0) {
         result.push(this.coins[i])
       }
     }

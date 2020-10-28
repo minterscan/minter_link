@@ -1,18 +1,18 @@
 export type EstimateBuyRequest = {
-  coinToBuy: string;
-  valueToBuy: string;
-  coinToSell: string;
+  coin_id_to_buy: string;
+  value_to_buy: string;
+  coin_id_to_sell: string;
 }
 
 export type EstimateSellRequest = {
-  coinToSell: string;
-  valueToSell: string;
-  coinToBuy: string;
+  coin_id_to_sell: string;
+  value_to_sell: string;
+  coin_id_to_buy: string;
 }
 
 export type EstimateSellAllRequest = {
-  coinToSell: string;
-  coinToBuy: string;
+  coin_id_to_sell: string;
+  coin_id_to_buy: string;
 }
 
 export type EstimateResponse = {

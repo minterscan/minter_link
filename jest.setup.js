@@ -1,4 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 Object.assign(global, require('jest-chrome'))
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-jest.mock('webextension-polyfill', () => require('sinon-chrome/webextensions'))
+Object.assign(global, require('jest-webextension-mock'))
+
+// jest.mock('webextension-polyfill', () => require('sinon-chrome/webextensions'))
+// Object.assign(global, require('sinon-chrome/webextensions'))

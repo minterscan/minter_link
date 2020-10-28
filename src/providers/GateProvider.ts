@@ -22,7 +22,7 @@ export default class GateProvider {
   static async getNonce (address: string): Promise<number> {
     const response = await axios.get(`${baseUrl}/nonce/${address}`)
 
-    return parseInt(response.data.data.nonce)
+    return parseInt(response.data.nonce)
   }
 
   /**
@@ -31,11 +31,11 @@ export default class GateProvider {
    * @param serializedTx
    */
   static async txSend (serializedTx: string): Promise<string> {
-    const response = await axios.post(`${baseUrl}/transaction/push`, {
-      transaction: serializedTx
+    const response = await axios.post(`${baseUrl}/send_transaction`, {
+      tx: serializedTx
     })
 
-    return response.data.data.hash
+    return response.data.hash
   }
 
   /**
@@ -44,9 +44,9 @@ export default class GateProvider {
    * @param data
    */
   static async estimateBuy (data: EstimateBuyRequest): Promise<EstimateResponse> {
-    const response = await axios.get(`${baseUrl}/estimate/coin-buy?${getQuery(data)}`)
+    const response = await axios.get(`${baseUrl}/estimate_coin_buy?${getQuery(data)}`)
 
-    return response.data.data
+    return response.data
   }
 
   /**
@@ -55,8 +55,8 @@ export default class GateProvider {
    * @param data
    */
   static async estimateSell (data: EstimateSellRequest | EstimateSellAllRequest): Promise<EstimateResponse> {
-    const response = await axios.get(`${baseUrl}/estimate/coin-sell?${getQuery(data)}`)
+    const response = await axios.get(`${baseUrl}/estimate_coin_sell?${getQuery(data)}`)
 
-    return response.data.data
+    return response.data
   }
 }

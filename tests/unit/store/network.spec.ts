@@ -2,6 +2,8 @@ import RootStore from '@/store'
 import NetworkStore from '@/store/network'
 import { getModule } from 'vuex-module-decorators'
 
+/* eslint-disable @typescript-eslint/camelcase */
+
 let network: NetworkStore
 
 beforeEach(() => {
@@ -9,20 +11,20 @@ beforeEach(() => {
 })
 
 it('get status', () => {
-  expect(network.status.averageBlockTime).toEqual(0)
+  expect(network.status.avg_block_time).toEqual(0)
 })
 
 it('set status', () => {
   network.commitStatus({
-    averageBlockTime: 0,
-    bipPriceChange: 0,
-    bipPriceUsd: 0,
-    latestBlockHeight: 0,
-    latestBlockTime: '0',
-    marketCap: 0,
-    totalTransactions: 0,
-    transactionsPerSecond: 0
+    avg_block_time: 0,
+    bip_price_change: 0,
+    bip_price_usd: 0,
+    latest_block_height: 0,
+    latest_block_time: '0',
+    market_cap: 0,
+    total_transactions: 0,
+    transactions_per_second: 0
   })
 
-  expect(network.status.bipPriceUsd).toEqual(0)
+  expect(network.status.bip_price_usd).toEqual(0)
 })

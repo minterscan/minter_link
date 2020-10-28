@@ -19,14 +19,17 @@ import Base from '@/mixins/Base'
 import { UIWalletConvertMode } from '@/model/Wallet'
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 
+// Ignore snake case for Minter Explorer API data
+/* eslint-disable @typescript-eslint/camelcase */
+
 @Component
 export default class ConvertEstimate extends Mixins(Base) {
   willPay = ''
   willGet = ''
   commission = ''
 
-  @Prop() coinToBuy!: string
-  @Prop() coinToSell!: string
+  @Prop() coinIdToBuy!: number
+  @Prop() coinIdToSell!: number
   @Prop() valueToBuy!: string
   @Prop() valueToSell!: string
   @Prop() mode!: UIWalletConvertMode
@@ -34,15 +37,21 @@ export default class ConvertEstimate extends Mixins(Base) {
   get invalid (): boolean {
     return (
       (this.mode === UIWalletConvertMode.Buy && !this.valueToBuy) ||
-      (this.mode === UIWalletConvertMode.Buy && !this.coinToBuy) ||
-      (this.mode === UIWalletConvertMode.Buy && !this.coinToSell) ||
       (this.mode === UIWalletConvertMode.Sell && !this.valueToSell) ||
-      (this.mode === UIWalletConvertMode.Sell && !this.coinToBuy) ||
-      (this.mode === UIWalletConvertMode.Sell && !this.coinToSell) ||
-      (this.mode === UIWalletConvertMode.SellAll && !this.coinToBuy) ||
-      (this.mode === UIWalletConvertMode.SellAll && !this.coinToSell) ||
-      this.coinToBuy === this.coinToSell
+      this.coinIdToBuy === this.coinIdToSell
     )
+  }
+
+  get coinToBuy (): string {
+    const coin = this.network.coins.find(item => item.id === this.coinIdToBuy)
+
+    return coin?.symbol ?? 'BIP'
+  }
+
+  get coinToSell (): string {
+    const coin = this.network.coins.find(item => item.id === this.coinIdToSell)
+
+    return coin?.symbol ?? 'BIP'
   }
 
   @Watch('coinToBuy')
@@ -68,9 +77,9 @@ export default class ConvertEstimate extends Mixins(Base) {
   async estimateBuy (): Promise<void> {
     try {
       const estimate = await this.postman.estimateBuy({
-        coinToBuy: this.coinToBuy,
-        coinToSell: this.coinToSell,
-        valueToBuy: new Big(this.valueToBuy).toString()
+        coin_id_to_buy: `${this.coinIdToBuy}`,
+        coin_id_to_sell: `${this.coinIdToSell}`,
+        value_to_buy: new Big(this.valueToBuy).toString()
       })
 
       this.willPay = estimate.will_pay
@@ -83,9 +92,9 @@ export default class ConvertEstimate extends Mixins(Base) {
   async estimateSell (): Promise<void> {
     try {
       const estimate = await this.postman.estimateSell({
-        coinToBuy: this.coinToBuy,
-        coinToSell: this.coinToSell,
-        valueToSell: new Big(this.valueToSell).toString()
+        coin_id_to_buy: `${this.coinIdToBuy}`,
+        coin_id_to_sell: `${this.coinIdToSell}`,
+        value_to_sell: new Big(this.valueToSell).toString()
       })
 
       this.willGet = estimate.will_get

@@ -15,9 +15,7 @@ const maxios = axios as jest.Mocked<typeof axios>
 it('get nonce', async () => {
   maxios.get.mockResolvedValue({
     data: {
-      data: {
-        nonce: '1'
-      }
+      nonce: '1'
     }
   })
 
@@ -31,36 +29,32 @@ it('get nonce', async () => {
 it('send tx', async () => {
   maxios.post.mockResolvedValue({
     data: {
-      data: {
-        hash: 'hash'
-      }
+      hash: 'hash'
     }
   })
 
-  const url = `${baseUrl}/transaction/push`
+  const url = `${baseUrl}/send_transaction`
   const hash = await Gate.txSend('foo')
 
-  expect(maxios.post).toHaveBeenCalledWith(url, { transaction: 'foo' })
+  expect(maxios.post).toHaveBeenCalledWith(url, { tx: 'foo' })
   expect(hash).toEqual('hash')
 })
 
 it('estimate buy', async () => {
   maxios.get.mockResolvedValue({
     data: {
-      data: {
-        commission: '',
-        will_pay: '',
-        will_get: ''
-      }
+      commission: '',
+      will_pay: '',
+      will_get: ''
     }
   })
 
   const data = {
-    coinToBuy: '',
-    coinToSell: '',
-    valueToBuy: ''
+    coin_id_to_buy: '',
+    coin_id_to_sell: '',
+    value_to_buy: ''
   }
-  const url = `${baseUrl}/estimate/coin-buy?${getQuery(data)}`
+  const url = `${baseUrl}/estimate_coin_buy?${getQuery(data)}`
   const response = await Gate.estimateBuy(data)
 
   expect(maxios.get).toHaveBeenCalledWith(url)
@@ -72,20 +66,18 @@ it('estimate buy', async () => {
 it('estimate sell', async () => {
   maxios.get.mockResolvedValue({
     data: {
-      data: {
-        commission: '',
-        will_pay: '',
-        will_get: ''
-      }
+      commission: '',
+      will_pay: '',
+      will_get: ''
     }
   })
 
   const data = {
-    coinToBuy: '',
-    coinToSell: '',
-    valueToSell: ''
+    coin_id_to_buy: '',
+    coin_id_to_sell: '',
+    value_to_sell: ''
   }
-  const url = `${baseUrl}/estimate/coin-sell?${getQuery(data)}`
+  const url = `${baseUrl}/estimate_coin_sell?${getQuery(data)}`
   const response = await Gate.estimateSell(data)
 
   expect(maxios.get).toHaveBeenCalledWith(url)

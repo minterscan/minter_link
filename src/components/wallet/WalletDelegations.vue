@@ -17,11 +17,11 @@
         <ul class="list" v-else>
           <li v-for="(delegation, key) in delegations" :key="key">
             <div class="pub-key">
-              <validator-link :pubKey="delegation.pub_key" :meta="delegation.validator_meta" />
+              <validator-link :pubKey="delegation.validator.public_key" />
             </div>
             <div class="coin-value">
-              <span>{{ delegation.value | pretty }} {{ delegation.coin }}</span>
-              <span class="small" v-if="delegation.coin !== 'BIP'">
+              <span>{{ delegation.value | pretty }} {{ delegation.coin.symbol }}</span>
+              <span class="small" v-if="delegation.coin.id">
                 {{ delegation.bip_value | pretty }} BIP
               </span>
             </div>

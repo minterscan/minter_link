@@ -18,7 +18,7 @@
     <a-form v-else>
       <!-- Validator -->
       <a-form-item class="select-form-item">
-        <validator-select :validators="validators" :change="changeValidator" />
+        <validator-select :validators="network.validators" :change="changeValidator" />
       </a-form-item>
 
       <!-- Amount & Coin -->
@@ -32,7 +32,7 @@
             :disabled="loading"
             placeholder="Amount"
           />
-          <coin-select :coins="coins" :change="changeCoin" />
+          <coin-select :coins="network.coins" :change="changeCoin" />
         </a-input-group>
       </a-form-item>
 
@@ -79,6 +79,7 @@ import CoinSelect from '@/components/common/form/CoinSelect.vue'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import ValidatorSelect from '@/components/common/form/ValidatorSelect.vue'
 import WalletCoinSelect from '@/components/common/form/WalletCoinSelect.vue'
+import { ECoin } from '@/model/Wallet'
 
 @Component({
   name: 'ActionUnbond',
@@ -86,14 +87,13 @@ import WalletCoinSelect from '@/components/common/form/WalletCoinSelect.vue'
 })
 export default class ActionUnbond extends Mixins(TxForm) {
   pubKey = ''
-  coin = ''
+  coin = ECoin.BIP
   stake = ''
   loading = false
 
   get invalid (): boolean {
     return (
       !this.pubKey ||
-      !this.coin ||
       this.stake === '' ||
       this.invalidPayload ||
       !isValidPublicKeyString(this.pubKey)
@@ -105,7 +105,7 @@ export default class ActionUnbond extends Mixins(TxForm) {
     this.stake = ''
   }
 
-  changeCoin (coin: string): void {
+  changeCoin (coin: number): void {
     this.coin = coin
   }
 
@@ -115,7 +115,7 @@ export default class ActionUnbond extends Mixins(TxForm) {
 
   resetForm (): void {
     this.pubKey = ''
-    this.coin = ''
+    this.coin = ECoin.BIP
     this.stake = ''
     this.payload = ''
     this.loading = false

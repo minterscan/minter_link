@@ -1,45 +1,16 @@
 import Centrifuge from 'centrifuge'
+import MockCentrifuge from '../mocks/centrifuge'
 import MinterWsProvider from '@/providers/MinterWsProvider'
 
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-empty-function */
-
-interface Subscription {
-  subscribe: () => void;
-  unsubscribe: () => void;
-  removeAllListeners: () => void;
-}
-
-class MCentrifuge {
-  callbacks: Record<string, Function> = {}
-
-  connect () {}
-  subscribe (channel: string, callback: Function): Subscription {
-    this.callbacks[channel] = callback
-
-    return {
-      subscribe: () => {},
-      unsubscribe: () => {
-        delete this.callbacks[channel]
-      },
-      removeAllListeners: () => {}
-    }
-  }
-
-  getSub (channel: string): Function {
-    return this.callbacks[channel]
-  }
-
-  publish (channel: string, data: string) {
-    this.callbacks[channel](data)
-  }
-}
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 let centrifuge: Centrifuge
 let instance: MinterWsProvider
 
 beforeEach(() => {
-  centrifuge = new MCentrifuge() as unknown as Centrifuge
+  centrifuge = new MockCentrifuge() as unknown as Centrifuge
   instance = new MinterWsProvider(centrifuge)
 })
 

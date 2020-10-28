@@ -1,8 +1,8 @@
 export default {
   explorerBaseUrl: 'https://minterscan.net',
-  explorerApiBaseUrl: 'https://explorer-api.minter.network/api/v1',
+  explorerApiBaseUrl: 'https://explorer-api.minter.network/api/v2',
   explorerWsUrl: 'wss://explorer-rtm.minter.network/connection/websocket',
-  gateApiBaseUrl: 'https://gate-api.minter.network/api/v1',
+  gateApiBaseUrl: 'https://gate-api.minter.network/api/v2',
   notification: {
     width: 500,
     height: 700

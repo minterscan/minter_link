@@ -9,8 +9,8 @@
     optionFilterProp="children"
     dropdownClassName="form-dropdown"
   >
-    <a-select-option v-for="(item, key) in validators" :key="key" :value="item.public_key" :name="item.meta.name">
-      <div class="name" v-if="item.meta.name">{{ item.meta.name }}</div>
+    <a-select-option v-for="(item, key) in validators" :key="key" :value="item.public_key" :name="item.name">
+      <div class="name" v-if="item.name">{{ item.name }}</div>
       <div class="public-key">{{ item.public_key }}</div>
     </a-select-option>
   </a-select>

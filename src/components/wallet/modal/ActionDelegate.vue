@@ -19,7 +19,7 @@
     <a-form v-else>
       <!-- Validator -->
       <a-form-item class="select-form-item">
-        <validator-select :validators="validators" :change="changeValidator" />
+        <validator-select :validators="network.validators" :change="changeValidator" />
       </a-form-item>
 
       <!-- Amount & Coin -->
@@ -76,6 +76,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import FieldAmount from '@/components/common/form/FieldAmount.vue'
 import ValidatorSelect from '@/components/common/form/ValidatorSelect.vue'
 import WalletCoinSelect from '@/components/common/form/WalletCoinSelect.vue'
+import { ECoin } from '@/model/Wallet'
 
 @Component({
   name: 'ActionDelegate',
@@ -83,13 +84,12 @@ import WalletCoinSelect from '@/components/common/form/WalletCoinSelect.vue'
 })
 export default class ActionDelegate extends Mixins(TxForm) {
   pubKey = ''
-  coin = ''
+  coin = ECoin.BIP
   stake = ''
 
   get invalid (): boolean {
     return (
       !this.pubKey ||
-      !this.coin ||
       this.stake === '' ||
       this.invalidPayload ||
       this.stake > this.maxAmount ||
@@ -116,7 +116,7 @@ export default class ActionDelegate extends Mixins(TxForm) {
     this.pubKey = pubKey
   }
 
-  changeCoin (coin: string): void {
+  changeCoin (coin: number): void {
     this.coin = coin
   }
 
@@ -128,7 +128,7 @@ export default class ActionDelegate extends Mixins(TxForm) {
     if (!this.state.wallet) return
     if (!this.state.wallet.balances) return
 
-    const balance = this.state.wallet.balances.find((item) => item.coin === this.coin)
+    const balance = this.state.wallet.balances.find((item) => item.coin.id === this.coin)
 
     if (!balance) return
 
@@ -139,7 +139,7 @@ export default class ActionDelegate extends Mixins(TxForm) {
 
   resetForm (): void {
     this.pubKey = ''
-    this.coin = ''
+    this.coin = ECoin.BIP
     this.stake = ''
     this.payload = ''
     this.loading = false

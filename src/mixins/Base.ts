@@ -1,6 +1,7 @@
 import config from '@/config'
 import RootStore from '@/store'
 import UIStore from '@/store/ui'
+import { Route } from 'vue-router'
 import Centrifuge from 'centrifuge'
 import StateStore from '@/store/state'
 import { Config } from '@/model/Config'
@@ -73,9 +74,9 @@ export default class Base extends Vue {
     return browser.i18n.getMessage(key)
   }
 
-  async navigate (path: ERouter, query = {}): Promise<void> {
-    if (this.$route.path === path) return
+  async navigate (path: ERouter, query = {}): Promise<Route> {
+    if (this.$route.path === path) return this.$route
 
-    await this.$router.push({ path, query })
+    return this.$router.push({ path, query })
   }
 }

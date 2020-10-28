@@ -1,6 +1,6 @@
 {
   "name": "minter-link",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "private": true,
   "repository": {
     "type": "git",
@@ -32,8 +32,8 @@
     "ethereumjs-util": "^6.2.0",
     "js-base64": "^2.5.2",
     "minter-connect": "^1.0.0",
-    "minterjs-tx": "^7.5.1",
-    "minterjs-util": "^0.15.1",
+    "minterjs-tx": "^9.0.1",
+    "minterjs-util": "^0.18.2",
     "minterjs-wallet": "^4.0.4",
     "pretty-num": "^0.3.0",
     "vue": "^2.6.11",
@@ -75,6 +75,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.1",
     "jest-chrome": "^0.7.0",
+    "jest-webextension-mock": "^3.6.1",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "node-sass": "^4.12.0",

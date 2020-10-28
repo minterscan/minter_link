@@ -1,4 +1,4 @@
-import { Tx } from '@/model/Tx'
+import { Tx, TxCoin } from '@/model/Tx'
 import { ExplorerLinks, ExplorerMeta } from '@/model/Explorer'
 
 export type MinterWalletAddRequest = {
@@ -41,7 +41,7 @@ export type MinterWalletMeta = {
 }
 
 export type MinterWalletBalance = {
-  coin: string;
+  coin: TxCoin;
   amount: string;
 }
 
@@ -73,5 +73,5 @@ export type ValidatorMeta = {
 }
 
 export enum ECoin {
-  BIP = 'BIP'
+  BIP = 0
 }

@@ -15,7 +15,7 @@
             {{ state.walletLabel | short }}
           </div>
           <div class="address">{{ state.wallet.address }}</div>
-          <div class="balance">{{ $options.filters.pretty(balance) }} {{ coin }}</div>
+          <div class="balance">{{ balance | pretty }} {{ getCoin(coin) }}</div>
         </div>
 
         <!-- Empty Wallet -->
@@ -42,7 +42,7 @@
         <!-- Amount -->
         <a-alert showIcon :type="amount > balance ? 'error' : 'info'" class="amount">
           <template slot="message">
-            <div class="value">{{ `${ $options.filters.pretty(amount)} ${ coin }` }}</div>
+            <div class="value">{{ `${ $options.filters.pretty(amount)} ${ getCoin(coin) }` }}</div>
             <div class="not-enough" v-if="amount > balance">Not enough balance</div>
           </template>
           <icon name="bip" scale="1.5" slot="icon" />
@@ -71,13 +71,13 @@
 </template>
 
 <script lang="ts">
+import Coins from '@/mixins/Coins'
 import Wallet from '@/mixins/Wallet'
 import { EPort } from '@/model/Port'
 import { AppEvent } from '@/model/App'
 import { ECoin } from '@/model/Wallet'
-import Channel from '@/services/Channel'
-import { VaultWallets } from '@/model/Vault'
 import { isValidAddress } from 'minterjs-util'
+import Channel from '@/services/ChannelService'
 import Icon from 'vue-awesome/components/Icon.vue'
 import RequestWindow from '@/mixins/RequestWindow'
 import { Dictionary } from 'vue-router/types/router'
@@ -97,7 +97,7 @@ import AddressLink from '@/components/common/address/AddressLink.vue'
     TxSuccess
   }
 })
-export default class Payment extends Mixins(Wallet, RequestWindow) {
+export default class Payment extends Mixins(Coins, Wallet, RequestWindow) {
   address = ''
   amount = ''
   hash = ''
@@ -112,7 +112,7 @@ export default class Payment extends Mixins(Wallet, RequestWindow) {
 
   get invalid (): boolean {
     return (
-      !this.coin ||
+      isNaN(this.coin) ||
       !this.address ||
       this.amount === '' ||
       this.amount > this.balance ||
@@ -120,29 +120,12 @@ export default class Payment extends Mixins(Wallet, RequestWindow) {
     )
   }
 
-  get wallets (): VaultWallets {
-    if (!this.state.vault) return {}
-
-    return this.state.vault?.wallets
-  }
-
-  get balance (): string {
-    if (!this.state.wallet) return ''
-    if (!this.state.wallet.balances) return ''
-
-    const balance = this.state.wallet.balances.find(item => item.coin === this.coin)
-
-    if (!balance) return ''
-
-    return balance.amount
-  }
-
   mounted () {
     const query = this.$route.query as Dictionary<string>
 
     this.tabId = Number(query.tabId) || 0
     this.address = query.address || ''
-    this.coin = query.coin || ''
+    this.coin = +query.coin || 0
     this.amount = query.amount || ''
     this.payload = query.payload || ''
     this.merchant = {

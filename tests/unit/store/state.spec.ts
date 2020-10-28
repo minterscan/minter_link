@@ -182,12 +182,15 @@ it('set wallet balances', () => {
   state.commitVaultWalletBalance({
     address: 'address',
     balances: [{
-      coin: 'BIP',
+      coin: {
+        id: 0,
+        symbol: 'BIP'
+      },
       amount: '1'
     }]
   })
 
-  expect(state.wallet?.balances?.[0].coin).toEqual('BIP')
+  expect(state.wallet?.balances?.[0].coin.symbol).toEqual('BIP')
 })
 
 it('set set connected websites', () => {
